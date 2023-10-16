@@ -1,0 +1,16 @@
+16. - 22.10
+Classes > Decorators > Closures > First-Class Functions
+
+23. - 29.10. 
+async
+
+30. - 5.11.
+sqlalchemy library imported functions/classes
+
+6. - 12.11.
+strawberry
+
+13. - 19.11.
+uoishelpers
+
+20. - RU operace
