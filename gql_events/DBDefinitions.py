@@ -13,6 +13,7 @@ from sqlalchemy import (
     Sequence,
     Table,
     Boolean,
+    Uuid
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -26,16 +27,16 @@ def newUuidAsString():
 
 def UUIDColumn(name=None):
     if name is None:
-        return Column(String, primary_key=True, unique=True, default=newUuidAsString)
+        return Column(Uuid, primary_key=True, unique=True, default=newUuidAsString)
     else:
         return Column(
-            name, String, primary_key=True, unique=True, default=newUuidAsString
+            name, Uuid, primary_key=True, unique=True, default=newUuidAsString
         )
 
 def UUIDFKey(*, ForeignKey=None, nullable=False):
     if ForeignKey is None:
         return Column(
-            String, index=True, nullable=nullable
+            Uuid, index=True, nullable=nullable
         )
     else:
         return Column(
@@ -89,6 +90,8 @@ class EventGroupModel(BaseModel):
     id = UUIDColumn()
     event_id = Column(ForeignKey("events.id"), index=True)
     group_id = UUIDFKey()#Column(ForeignKey("groups.id"), index=True)
+                #Column(ForeignKey("groups.id"), index=True)
+                #UUIDFKey()
 
     created = Column(DateTime, server_default=sqlalchemy.sql.func.now())
     lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now())
@@ -190,7 +193,7 @@ def ComposeConnectionString():
     user = os.environ.get("POSTGRES_USER", "postgres")
     password = os.environ.get("POSTGRES_PASSWORD", "example")
     database = os.environ.get("POSTGRES_DB", "data")
-    hostWithPort = os.environ.get("POSTGRES_HOST", "postgres:5432")
+    hostWithPort = os.environ.get("POSTGRES_HOST", "localhost:5432")
 
     driver = "postgresql+asyncpg"  # "postgresql+psycopg2"
     connectionstring = f"{driver}://{user}:{password}@{hostWithPort}/{database}"
