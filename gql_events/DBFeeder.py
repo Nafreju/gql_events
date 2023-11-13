@@ -153,7 +153,7 @@ def get_demodata():
                 json_dict[key] = dateValueWOtzinfo
 
             if (key=="id") or ("_id" in key):
-                print(key, value, flush=True)
+                #print(key, value, flush=True)
                 if value not in [None, ""]:
                     json_dict[key] = uuid.UUID(value)
 
@@ -168,6 +168,7 @@ def get_demodata():
 async def initDB(asyncSessionMaker):
 
     defaultNoDemo = "_________"
+    
     if defaultNoDemo == os.environ.get("DEMO", defaultNoDemo):
         print("No Demo mode")
         dbModels = [

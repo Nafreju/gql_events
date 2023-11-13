@@ -324,7 +324,7 @@ class Query:
 
     @strawberryA.field(description="""Finds a particulat event""")
     async def event_type_by_id(
-        self, info: strawberryA.types.Info, id: strawberryA.ID
+        self, info: strawberryA.types.Info, id: uuid.UUID
     ) -> Union[EventTypeGQLModel, None]:
         result = await EventTypeGQLModel.resolve_reference(info, id=id)
         return result

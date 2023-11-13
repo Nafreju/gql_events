@@ -11,6 +11,8 @@ sqlalchemy library imported functions/classes
 strawberry
 
 13. - 19.11.
+při resolve reference jde string a ne uuid - eventTypeById je to předěláno
+rozdělit soubory na podsoubory a složky - dle steps nebo ostatních zadání
 uoishelpers
 
 20. - RU operace
