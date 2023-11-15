@@ -66,3 +66,9 @@ https://github.com/hrbolek/_uois
 https://graphql.org/
 https://docs.docker.com/compose/
  
+
+
+
+Read operace:
+xxxxById; xxxxPage
+EventGQLModel, EventTypeGQLModel, PresenceGQLModel, PresenceTypeGQLModel, InvitationTypeGQLModel,

@@ -53,6 +53,7 @@ class PresenceGQLModel:
 
     @classmethod
     async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
+        print(id)
         if id is None:
             return None
         loader = getLoaders(info).presences
@@ -322,14 +323,14 @@ class Query:
         result = f"Hello {id}"
         return result
 
-    @strawberryA.field(description="""Finds a particulat event""")
+    @strawberryA.field(description="""Finds a particular event""")
     async def event_type_by_id(
         self, info: strawberryA.types.Info, id: uuid.UUID
     ) -> Union[EventTypeGQLModel, None]:
         result = await EventTypeGQLModel.resolve_reference(info, id=id)
         return result
 
-    @strawberryA.field(description="""Finds a particulat event""")
+    @strawberryA.field(description="""Finds a particular event""")
     async def event_type_page(
         self, info: strawberryA.types.Info, skip: int = 0, limit: int = 10
     ) -> List[EventTypeGQLModel]:
@@ -346,9 +347,9 @@ class Query:
             result = await resolveEventPage(session, skip, limit)
             return result
 
-    @strawberryA.field(description="""Finds a particulat event""")
+    @strawberryA.field(description="""Finds a particular event""")
     async def event_by_id(
-        self, info: strawberryA.types.Info, id: strawberryA.ID
+        self, info: strawberryA.types.Info, id: uuid.UUID
     ) -> Union[EventGQLModel, None]:
         result = await EventGQLModel.resolve_reference(info, id=id)
         return result
@@ -376,6 +377,13 @@ class Query:
         async with withInfo(info) as session:
             result = await resolveEventsForGroup(session, id, startdate, enddate)
             return result
+
+    @strawberryA.field(description="""Finds a particular event""")
+    async def presence_by_id(
+        self, info: strawberryA.types.Info, id: uuid.UUID
+    ) -> Union[PresenceGQLModel, None]:
+        result = await PresenceGQLModel.resolve_reference(info, id=id)
+        return result
 
     @strawberryA.field(description="""Finds all presences for the event""")
     async def presences_by_event(
