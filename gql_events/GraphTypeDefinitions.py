@@ -407,6 +407,14 @@ class Query:
         result = await loader.filter_by(user_id=user_id)
         return result
 
+    @strawberryA.field(description="""Finds a particular presence type""")
+    async def presence_type_by_id(
+             self, info: strawberryA.types.Info, id: uuid.UUID
+    ) -> Union[PresenceTypeGQLModel, None]:
+        result = await PresenceTypeGQLModel.resolve_reference(info, id=id)
+        return result
+
+
     @strawberryA.field(description="""Returns presence types """)
     async def presence_type_page(
         self, info: strawberryA.types.Info, skip: int = 0, limit: int = 20
@@ -414,6 +422,13 @@ class Query:
     ) -> List[PresenceTypeGQLModel]:
         loader = getLoaders(info).presencetypes
         result = await loader.page(skip=skip, limit=limit)
+        return result
+    
+    @strawberryA.field(description="""Finds a particular invitation""")
+    async def invitation_type_by_id(
+             self, info: strawberryA.types.Info, id: uuid.UUID
+    ) -> Union[InvitationTypeGQLModel, None]:
+        result = await InvitationTypeGQLModel.resolve_reference(info, id=id)
         return result
 
     @strawberryA.field(description="""Returns invitation types """)
