@@ -72,3 +72,9 @@ https://docs.docker.com/compose/
 Read operace:
 xxxxById; xxxxPage
 EventGQLModel, EventTypeGQLModel, PresenceGQLModel, PresenceTypeGQLModel, InvitationTypeGQLModel,
+
+u PresenceGQLModel nedává příliš smysl Page - je tam PresenceByEventId, PresenceByUserId
+
+
+Update operace:
+EventGQLModel, EventTypeGQLModel, PresenceGQLModel, PresenceTypeGQLModel, InvitationTypeGQLModel,

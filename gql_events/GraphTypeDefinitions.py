@@ -392,7 +392,7 @@ class Query:
         event_id: strawberryA.ID
     ) -> List[PresenceGQLModel]:
         loader = getLoaders(info).presences
-        result = loader.filter_by(event_id=event_id)
+        result = await loader.filter_by(event_id=event_id)
         return result
 
     @strawberryA.field(description="""Finds all presences for the user in the period""")
