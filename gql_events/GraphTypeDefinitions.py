@@ -521,6 +521,24 @@ class InvitationTypeResultGQLModel:
         result = await InvitationTypeGQLModel.resolve_reference(info, self.id)
         return result
 
+@strawberryA.input 
+class EventTypeUpdateGQLModel:
+    id: strawberryA.ID
+    lastchange: datetime.datetime
+    name: Optional[str] = None
+    name_en: Optional[str] = None
+    created_by: Optional[str] = None
+
+@strawberryA.type
+class EventTypeResultGQLModel:
+    id: strawberryA.ID = None
+    msg: str = None
+
+    @strawberryA.field(description="""Result of user operation""")
+    async def event_types(self, info: strawberryA.types.Info) -> Union[EventTypeGQLModel, None]:
+        result = await EventTypeGQLModel.resolve_reference(info, self.id)
+        return result
+
 
 @strawberryA.input
 class PresenceInsertGQLModel:
@@ -609,6 +627,17 @@ class Mutation:
             
         return result
     
+    @strawberryA.mutation 
+    async def event_type_update(self, info: strawberryA.types.Info, event_type: EventTypeUpdateGQLModel) -> EventTypeResultGQLModel: 
+        loader = getLoaders(info).eventtypes
+        row = await loader.update(event_type)
+        result = EventTypeResultGQLModel()
+        result.id = event_type.id
+        result.msg = "ok"  
+        if row is None:
+            result.msg = "fail"
+            
+        return result
 ###########################################################################################################################
 #
 # Schema je pouzito v main.py, vsimnete si parametru types, obsahuje vyjmenovane modely. Bez explicitniho vyjmenovani
