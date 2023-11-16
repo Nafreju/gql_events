@@ -78,3 +78,5 @@ u PresenceGQLModel nedává příliš smysl Page - je tam PresenceByEventId, Pre
 
 Update operace:
 EventGQLModel, EventTypeGQLModel, PresenceGQLModel, PresenceTypeGQLModel, InvitationTypeGQLModel,
+TODO:
+update EventTypeGQLModel; PresenceTypeGQLModel; InvitationTypeGQLModel,

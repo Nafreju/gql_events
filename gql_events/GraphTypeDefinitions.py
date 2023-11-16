@@ -571,8 +571,8 @@ class Mutation:
         loader = getLoaders(info).events
         row = await loader.update(event)
         result = EventResultGQLModel()
-        result.msg = "ok"
         result.id = event.id
+        result.msg = "ok"  
         if row is None:
             result.msg = "fail"
             
