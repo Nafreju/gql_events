@@ -77,13 +77,14 @@ class EventTypeModel(BaseModel):
     id = UUIDColumn()
     name = Column(String)
     name_en = Column(String)
-
+    category_id = Column(ForeignKey("eventcategories.id"), index=True, nullable=True)
     created = Column(DateTime, server_default=sqlalchemy.sql.func.now())
     lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now())
     createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
 
     events = relationship("EventModel", back_populates="eventtype")
+    
 
 class EventGroupModel(BaseModel):
     __tablename__ = "events_groups"
@@ -100,6 +101,21 @@ class EventGroupModel(BaseModel):
 
     event = relationship("EventModel")
     #group = relationship("GroupModel")
+
+class EventCategoryModel(BaseModel):
+    __tablename__ = "eventcategories"
+    id = UUIDColumn()
+    name = Column(String)
+    name_en = Column(String)
+
+    created = Column(DateTime, server_default=sqlalchemy.sql.func.now())
+    lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now())
+    createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+    changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+
+    
+
+
 
 ##########################################################
 #

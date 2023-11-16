@@ -46,6 +46,15 @@ class UserGQLModel:
         async with withInfo(info) as session:
             result = await resolveEventsForUser(session, self.id, startdate, enddate)
             return result
+        
+    @strawberryA.field(description="""pass""")
+    async def presencies(
+        self, info
+    ) -> List["PresenceGQLModel"]:
+        loader = getLoaders(info).presences
+        result = await loader.filter_by(user_id=self.id)
+        return result
+        
 
 from gql_events.GraphResolvers import resolvePresenceTypeById, resolveInvitationTypeById
 @strawberryA.federation.type(keys=["id"], description="""Describes a relation of an user to the event by invitation (like invited) and participation (like absent)""")

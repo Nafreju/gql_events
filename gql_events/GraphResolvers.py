@@ -70,7 +70,7 @@ async def resolveEventsForGroup(session, id, startdate=None, enddate=None):
     result = response.scalars()
     return result
 
-
+#odstranit?
 async def resolveEventsForUser(session, id, startdate=None, enddate=None):
     statement = select(EventModel).join(PresenceModel)
     if startdate is not None:
