@@ -501,6 +501,25 @@ class EventResultGQLModel:
     async def event(self, info: strawberryA.types.Info) -> Union[EventGQLModel, None]:
         result = await EventGQLModel.resolve_reference(info, self.id)
         return result
+    
+@strawberryA.input
+class InvitationTypeUpdateGQLModel:
+    id: strawberryA.ID
+    lastchange: datetime.datetime
+    name: Optional[str] = None
+    name_en: Optional[str] = None
+    created_by: Optional[str] = None
+    #changed_by: Optional[str] = None
+    
+@strawberryA.type
+class InvitationTypeResultGQLModel:
+    id: strawberryA.ID = None
+    msg: str = None
+
+    @strawberryA.field(description="""Result of user operation""")
+    async def invitation_types(self, info: strawberryA.types.Info) -> Union[InvitationTypeGQLModel, None]:
+        result = await InvitationTypeGQLModel.resolve_reference(info, self.id)
+        return result
 
 
 @strawberryA.input
@@ -572,6 +591,18 @@ class Mutation:
         row = await loader.update(event)
         result = EventResultGQLModel()
         result.id = event.id
+        result.msg = "ok"  
+        if row is None:
+            result.msg = "fail"
+            
+        return result
+    
+    @strawberryA.mutation
+    async def invitation_type_update(self, info: strawberryA.types.Info, invitation_type: InvitationTypeUpdateGQLModel) -> InvitationTypeResultGQLModel: 
+        loader = getLoaders(info).invitationtypes
+        row = await loader.update(invitation_type)
+        result = InvitationTypeResultGQLModel()
+        result.id = invitation_type.id
         result.msg = "ok"  
         if row is None:
             result.msg = "fail"
