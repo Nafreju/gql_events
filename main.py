@@ -46,6 +46,7 @@ async def RunOnceAndReturnSessionMaker():
 
     import os
     makeDrop = os.environ.get("DEMO", "") == "true"
+    makeDrop = True
     if makeDrop:
         print("drop data")
     else:
