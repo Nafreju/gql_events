@@ -267,6 +267,37 @@ class EventGQLModel:
         result = await loader.filter_by(masterevent_id=self.id)
         return result
 
+
+@strawberryA.federation.type(keys=["id"], description="""Entity representing an state exam""")
+class StateExamGQLModel:
+    @classmethod
+    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
+        state_exam_loader = getLoaders(info).stateexams
+        result = await state_exam_loader.load(id)
+        if result is not None:
+            result._type_definition = cls._type_definition  
+        return result
+
+    @strawberryA.field(description="""Primary key""")
+    def id(self) -> strawberryA.ID:
+        return self.id
+
+    @strawberryA.field(description="""Time stamp""")
+    def lastchange(self) -> datetime.datetime:
+        return self.lastchange
+
+    @strawberryA.field(description="""Event name""")
+    def name(self) -> Union[str, None]:
+        return self.name
+
+    @strawberryA.field(description="""Date&time of event begin""")
+    def startdate(self) -> Union[datetime.datetime, None]:
+        return self.startdate
+
+    @strawberryA.field(description="""Date&time of event end""")
+    def enddate(self) -> Union[datetime.datetime, None]:
+        return self.enddate
+
     
     # @strawberryA.field(description="""Editor for the event""")
     # async def editor(self, info: strawberryA.types.Info) -> "EventEditorGQLModel":
@@ -448,6 +479,22 @@ class Query:
         result = await loader.page(skip=skip, limit=limit)
         return result
 
+    @strawberryA.field(description="""Finds a particular state exam""")
+    async def state_exam_by_id(
+                self, info: strawberryA.types.Info, id: uuid.UUID
+        ) -> Union[StateExamGQLModel, None]:
+            result = await StateExamGQLModel.resolve_reference(info, id=id)
+            return result
+
+    @strawberryA.field(description="""Returns state exam""")
+    async def state_exam_page(
+            self, info: strawberryA.types.Info, skip: int = 0, limit: int = 20
+            
+        ) -> List[StateExamGQLModel]:
+            loader = getLoaders(info).stateexams
+            result = await loader.page(skip=skip, limit=limit)
+            return result
+
 
 
     # @strawberryA.field(description="""Finds all events for a group""")
@@ -582,6 +629,24 @@ class PresenceResultGQLModel:
     @strawberryA.field(description="""Result of presence operation""")
     async def presence(self, info: strawberryA.types.Info) -> Union[PresenceGQLModel, None]:
         result = await PresenceGQLModel.resolve_reference(info, self.id)
+        return result   
+    
+@strawberryA.input
+class StateExamUpdateGQLModel:
+    id: strawberryA.ID
+    lastchange: datetime.datetime
+    name: Optional[str] = None
+
+    #changed_by: Optional[str] = None
+    
+@strawberryA.type
+class StateExamResultGQLModel:
+    id: strawberryA.ID = None
+    msg: str = None
+
+    @strawberryA.field(description="""Result of user operation""")
+    async def state_exam(self, info: strawberryA.types.Info) -> Union[StateExamGQLModel, None]:
+        result = await StateExamGQLModel.resolve_reference(info, self.id)
         return result
 
     
@@ -664,6 +729,19 @@ class Mutation:
         row = await loader.update(presence_type)
         result = PresenceTypeResultGQLModel()
         result.id = presence_type.id
+        result.msg = "ok"  
+        if row is None:
+            result.msg = "fail"
+            
+        return result
+    
+
+    @strawberryA.mutation 
+    async def state_exam_update(self, info: strawberryA.types.Info, state_exam: StateExamUpdateGQLModel) -> StateExamResultGQLModel: 
+        loader = getLoaders(info).stateexams
+        row = await loader.update(state_exam)
+        result = StateExamResultGQLModel()
+        result.id = state_exam.id
         result.msg = "ok"  
         if row is None:
             result.msg = "fail"

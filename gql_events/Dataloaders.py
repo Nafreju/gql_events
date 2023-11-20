@@ -1,7 +1,11 @@
 from uoishelpers.dataloaders import createIdLoader, createFkeyLoader
 from functools import cache
 
-from gql_events.DBDefinitions import EventModel, EventTypeModel, EventGroupModel, PresenceModel, InvitationTypeModel, PresenceTypeModel
+from gql_events.DBDefinitions import  \
+        EventModel, EventTypeModel, EventGroupModel, PresenceModel,\
+        InvitationTypeModel, PresenceTypeModel, StateExamModel
+
+
 async def createLoaders_3(asyncSessionMaker):
 
 
@@ -65,6 +69,11 @@ async def createLoaders_3(asyncSessionMaker):
             return createFkeyLoader(
                 asyncSessionMaker, EventModel, foreignKeyName="eventtype_id"
             )
+        
+        @property
+        @cache
+        def stateexams(self):
+            return createIdLoader(asyncSessionMaker, StateExamModel)
 
 
 

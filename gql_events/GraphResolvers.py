@@ -30,7 +30,8 @@ from gql_events.DBDefinitions import (
     EventTypeModel,
     PresenceModel,
     PresenceTypeModel,
-    InvitationTypeModel
+    InvitationTypeModel,
+    StateExamModel
 )
 
 

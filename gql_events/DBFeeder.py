@@ -6,7 +6,8 @@ from gql_events.DBDefinitions import (
     EventGroupModel, 
     PresenceModel, 
     PresenceTypeModel, 
-    InvitationTypeModel
+    InvitationTypeModel,
+    StateExamModel
     )
 from sqlalchemy.future import select
 
@@ -186,6 +187,7 @@ async def initDB(asyncSessionMaker):
         EventModel, 
         EventGroupModel, 
         PresenceModel, 
+        StateExamModel
     ]
 
     jsonData = get_demodata()
