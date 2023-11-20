@@ -19,29 +19,14 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-BaseModel = declarative_base()
+from .DBDefinitions import UUIDColumn, UUIDFKey
+from .DBDefinitions import BaseModel
 
 def newUuidAsString():
     return f"{uuid.uuid1()}"
 
 
-def UUIDColumn(name=None):
-    if name is None:
-        return Column(Uuid, primary_key=True, unique=True, default=newUuidAsString)
-    else:
-        return Column(
-            name, Uuid, primary_key=True, unique=True, default=newUuidAsString
-        )
 
-def UUIDFKey(*, ForeignKey=None, nullable=False):
-    if ForeignKey is None:
-        return Column(
-            Uuid, index=True, nullable=nullable
-        )
-    else:
-        return Column(
-            ForeignKey, index=True, nullable=nullable
-        )
 # id = Column(UUID(as_uuid=True), primary_key=True, server_default=sqlalchemy.text("uuid_generate_v4()"),)
 
 ###########################################################################################################################
@@ -55,21 +40,7 @@ def UUIDFKey(*, ForeignKey=None, nullable=False):
 # je-li treba, muzete definovat modely obsahujici jen id polozku, na ktere se budete odkazovat
 #
 ###########################################################################################################################
-class EventModel(BaseModel):
-    __tablename__ = "events"
 
-    id = UUIDColumn()
-    name = Column(String)
-    startdate = Column(DateTime)
-    enddate = Column(DateTime)
-
-    created = Column(DateTime, server_default=sqlalchemy.sql.func.now())
-    lastchange = Column(DateTime, server_default=sqlalchemy.sql.func.now())
-    createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
-    changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
-    masterevent_id = Column(ForeignKey("events.id"), index=True, nullable=True)
-    eventtype_id = Column(ForeignKey("eventtypes.id"), index=True)
-    eventtype = relationship("EventTypeModel", back_populates="events")
 
 class EventTypeModel(BaseModel):
     __tablename__ = "eventtypes"
