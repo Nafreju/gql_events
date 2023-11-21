@@ -4,18 +4,7 @@ import strawberry as strawberryA
 import uuid
 from contextlib import asynccontextmanager
 
-@asynccontextmanager
-async def withInfo(info):
-    asyncSessionMaker = info.context["asyncSessionMaker"]
-    async with asyncSessionMaker() as session:
-        try:
-            yield session   
-        finally:
-            pass
-
-def getLoaders(info):
-    return info.context['all']
-
+from .GraphTypeDefinitions import withInfo, getLoaders, EventGQLModel, PresenceGQLModel
 ###########################################################################################################################
 #
 # zde definujte sve GQL modely
@@ -26,78 +15,10 @@ def getLoaders(info):
 import datetime
 from gql_events.GraphResolvers import resolveEventsForUser
 
-
-@strawberryA.federation.type(extend=True, keys=["id"])
-class UserGQLModel:
-
-    id: strawberryA.ID = strawberryA.federation.field(external=True)
-
-    @classmethod
-    async def resolve_reference(cls, id: strawberryA.ID):
-        return UserGQLModel(id=id)
-
-    @strawberryA.field(description="""Gets events related to the user in the specified interval""")
-    async def events(
-        self,
-        info: strawberryA.types.Info,
-        startdate: datetime.datetime = None,
-        enddate: datetime.datetime = None,
-    ) -> List["EventGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveEventsForUser(session, self.id, startdate, enddate)
-            return result
-        
-    @strawberryA.field(description="""pass""")
-    async def presencies(
-        self, info
-    ) -> List["PresenceGQLModel"]:
-        loader = getLoaders(info).presences
-        result = await loader.filter_by(user_id=self.id)
-        return result
+from .GraphTypeDefinitions import UserGQLModel, GroupGQLModel
         
 
-from gql_events.GraphResolvers import resolvePresenceTypeById, resolveInvitationTypeById
-@strawberryA.federation.type(keys=["id"], description="""Describes a relation of an user to the event by invitation (like invited) and participation (like absent)""")
-class PresenceGQLModel:
 
-    @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
-        print(id)
-        if id is None:
-            return None
-        loader = getLoaders(info).presences
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
-
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
-        return self.id
-
-    @strawberryA.field(description="""Time stamp""")
-    def lastchange(self) -> Union[datetime.datetime, None]:
-        return self.lastchange
-
-    @strawberryA.field(description="""Present, Vacation etc.""")
-    async def presence_type(self, info: strawberryA.types.Info) -> Union['PresenceTypeGQLModel', None]:
-        result = await PresenceTypeGQLModel.resolve_reference(info, self.presencetype_id)
-        return result
-
-    @strawberryA.field(description="""Invited, Accepted, etc.""")
-    async def invitation_type(self, info: strawberryA.types.Info) -> 'InvitationTypeGQLModel':
-        result = await InvitationTypeGQLModel.resolve_reference(info, self.invitation_id)
-        return result
-
-    @strawberryA.field(description="""The user / participant""")
-    def user(self) -> 'UserGQLModel':
-        result = UserGQLModel(id=self.user_id)
-        return result
-
-    @strawberryA.field(description="""The event""")
-    async def event(self, info: strawberryA.types.Info) -> 'EventGQLModel':
-        result = await EventGQLModel.resolve_reference(info, id=self.event_id)
-        return result
 
 from gql_events.GraphResolvers import resolveEventTypeById
 
@@ -178,28 +99,7 @@ class InvitationTypeGQLModel:
     def name_en(self) -> str:
         return self.name_en
 
-from gql_events.GraphResolvers import resolveEventsForGroup
 
-@strawberryA.federation.type(extend=True, keys=["id"])
-class GroupGQLModel:
-
-    id: strawberryA.ID = strawberryA.federation.field(external=True)
-
-    @classmethod
-    async def resolve_reference(cls, id: strawberryA.ID):
-        return GroupGQLModel(id=id)
-
-    @strawberryA.field(description="""Events related to a group""")
-    async def events(
-        self,
-        info: strawberryA.types.Info,
-        startdate: datetime.datetime = None,
-        enddate: datetime.datetime = None,
-        # eventtype_id: strawberryA.ID = None
-    ) -> List["EventGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveEventsForGroup(session, self.id, startdate, enddate)
-            return result
 
 
 import datetime
@@ -208,74 +108,6 @@ from gql_events.GraphResolvers import (
     resolveGroupsForEvent,
     resolvePresencesForEvent
 )
-
-
-@strawberryA.federation.type(keys=["id"], description="""Entity representing an event (calendar item)""")
-class EventGQLModel:
-    @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
-        eventsloader = getLoaders(info).events
-        result = await eventsloader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
-
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
-        return self.id
-
-    @strawberryA.field(description="""Time stamp""")
-    def lastchange(self) -> datetime.datetime:
-        return self.lastchange
-
-    @strawberryA.field(description="""Event name""")
-    def name(self) -> Union[str, None]:
-        return self.name
-
-    @strawberryA.field(description="""Date&time of event begin""")
-    def startdate(self) -> Union[datetime.datetime, None]:
-        return self.startdate
-
-    @strawberryA.field(description="""Date&time of event end""")
-    def enddate(self) -> Union[datetime.datetime, None]:
-        return self.enddate
-
-    @strawberryA.field(description="""Groups of users linked to the event""")
-    async def groups(self, info: strawberryA.types.Info) -> List["GroupGQLModel"]:
-        async with withInfo(info) as session:
-            links = await resolveGroupsForEvent(session, self.id)
-            # result = list(map(lambda item: GroupGQLModel(id=item.group_id), links))
-            # return result
-            return map(lambda item: GroupGQLModel(id=item.group_id), links)
-            
-
-
-    @strawberryA.field(description="""Participants of the event and if they were absent or so...""")
-    async def presences(self, info: strawberryA.types.Info, invitation_types: List[strawberryA.ID] = []) -> List["PresenceGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolvePresencesForEvent(session, self.id, invitation_types)
-            return result
-
-    @strawberryA.field(description="""Type of the event""")
-    async def event_type(self, info: strawberryA.types.Info) -> "EventTypeGQLModel":
-        result = await EventTypeGQLModel.resolve_reference(info=info, id=self.eventtype_id)
-        return result
-
-    @strawberryA.field(description="""event which contains this event (aka semester of this lesson)""")
-    async def master_event(self, info: strawberryA.types.Info) -> Union["EventGQLModel", None]:
-        if (self.masterevent_id is None):
-            result = None
-        else:
-            result = await EventGQLModel.resolve_reference(info=info, id=self.masterevent_id)
-        return result
-
-    @strawberryA.field(description="""events which are contained by this event (aka all lessons for the semester)""")
-    async def sub_events(self, info: strawberryA.types.Info, startdate: datetime.datetime, enddate: datetime.datetime) -> List["EventGQLModel"]:
-        loader = getLoaders(info).events
-        #TODO
-        result = await loader.filter_by(masterevent_id=self.id)
-        return result
-
     
     # @strawberryA.field(description="""Editor for the event""")
     # async def editor(self, info: strawberryA.types.Info) -> "EventEditorGQLModel":
