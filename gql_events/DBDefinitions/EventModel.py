@@ -8,8 +8,10 @@ from .base import BaseModel
 class EventModel(BaseModel):
     __tablename__ = "events"
 
+    #Atributes
     id = UUIDColumn()
     name = Column(String)
+    name_en = Column(String)
     startdate = Column(DateTime)
     enddate = Column(DateTime)
 
@@ -19,4 +21,6 @@ class EventModel(BaseModel):
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     masterevent_id = Column(ForeignKey("events.id"), index=True, nullable=True)
     eventtype_id = Column(ForeignKey("eventtypes.id"), index=True)
+
+    #sqlalchemy requirements
     eventtype = relationship("EventTypeModel", back_populates="events")

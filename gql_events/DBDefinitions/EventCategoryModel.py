@@ -16,3 +16,5 @@ class EventCategoryModel(BaseModel):
     lastchange = Column(DateTime, server_default=now())
     createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+
+    eventtype = relationship("EventTypeModel", back_populates="category")

@@ -27,8 +27,12 @@ class EventGQLModel:
     def lastchange(self) -> datetime.datetime:
         return self.lastchange
 
-    @strawberryA.field(description="""Event name""")
+    @strawberryA.field(description="""Event name in Czech""")
     def name(self) -> Union[str, None]:
+        return self.name
+    
+    @strawberryA.field(description="""Event name in English""")
+    def name_en(self) -> Union[str, None]:
         return self.name
 
     @strawberryA.field(description="""Date&time of event begin""")
