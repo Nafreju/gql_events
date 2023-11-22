@@ -23,4 +23,4 @@ class EventModel(BaseModel):
     eventtype_id = Column(ForeignKey("eventtypes.id"), index=True)
 
     #sqlalchemy requirements
-    eventtype = relationship("EventTypeModel", back_populates="events")
+    eventtype = relationship("EventTypeModel", back_populates="events", uselist=False)

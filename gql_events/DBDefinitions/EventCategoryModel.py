@@ -8,6 +8,8 @@ from .base import BaseModel
 
 class EventCategoryModel(BaseModel):
     __tablename__ = "eventcategories"
+
+    #Atributes
     id = UUIDColumn()
     name = Column(String)
     name_en = Column(String)
@@ -17,4 +19,6 @@ class EventCategoryModel(BaseModel):
     createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
 
-    eventtype = relationship("EventTypeModel", back_populates="category")
+
+    #sqlalchemy requirements
+    types = relationship("EventTypeModel", back_populates="category", uselist=True)

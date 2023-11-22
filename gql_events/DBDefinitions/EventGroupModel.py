@@ -18,5 +18,5 @@ class EventGroupModel(BaseModel):
     createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
 
-    event = relationship("EventModel")
+    #event = relationship("EventModel")
     #group = relationship("GroupModel")

@@ -19,5 +19,5 @@ class EventTypeModel(BaseModel):
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
 
     #sqlalchemy requirements
-    events = relationship("EventModel", back_populates="eventtype")
-    category = relationship("EventCategoryModel", back_populates="eventtype")
+    events = relationship("EventModel", back_populates="eventtype", uselist=True)
+    category = relationship("EventCategoryModel", back_populates="types", uselist=False)

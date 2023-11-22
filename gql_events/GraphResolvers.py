@@ -45,12 +45,13 @@ resolveEventById = createEntityByIdGetter(EventModel)
 resolveEventPage = createEntityGetter(EventModel)
 resolveGroupsForEvent = create1NGetter(EventGroupModel, foreignKeyName="event_id")
 
+"""
 resolveEventsForGroup_ = create1NGetter(
     EventGroupModel,
     foreignKeyName="group_id",
     options=joinedload(EventGroupModel.event),
 )
-
+"""
 from sqlalchemy.future import select
 
 
