@@ -1,14 +1,10 @@
 from functools import cache
 
 
-from gql_events.DBDefinitions import EventModel
-from gql_events.DBDefinitionsOld import (
-    EventTypeModel, 
-    EventGroupModel, 
-    PresenceModel, 
-    PresenceTypeModel, 
-    InvitationTypeModel
-    )
+from gql_events.DBDefinitions import \
+    EventModel, EventTypeModel, EventCategoryModel, EventGroupModel, \
+        InvitationTypeModel, PresenceModel, PresenceTypeModel
+
 from sqlalchemy.future import select
 
 ###########################################################################################################################
