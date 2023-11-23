@@ -6,7 +6,8 @@ from contextlib import asynccontextmanager
 
 from .GraphTypeDefinitions import withInfo, getLoaders, \
     EventGQLModel, PresenceGQLModel, EventTypeGQLModel, \
-        PresenceTypeGQLModel, InvitationTypeGQLModel
+        PresenceTypeGQLModel, InvitationTypeGQLModel, \
+        StateExamGQLModel
 ###########################################################################################################################
 #
 # zde definujte sve GQL modely
@@ -187,6 +188,22 @@ class Query:
         loader = getLoaders(info).invitationtypes
         result = await loader.page(skip=skip, limit=limit)
         return result
+    
+    @strawberryA.field(description="""Finds a particular state exam""")
+    async def state_exam_by_id(
+                self, info: strawberryA.types.Info, id: uuid.UUID
+        ) -> Union[StateExamGQLModel, None]:
+            result = await StateExamGQLModel.resolve_reference(info, id=id)
+            return result
+
+    @strawberryA.field(description="""Returns state exam""")
+    async def state_exam_page(
+            self, info: strawberryA.types.Info, skip: int = 0, limit: int = 20
+
+        ) -> List[StateExamGQLModel]:
+            loader = getLoaders(info).stateexams
+            result = await loader.page(skip=skip, limit=limit)
+            return result
 
 
 
@@ -408,6 +425,36 @@ class Mutation:
         if row is None:
             result.msg = "fail"
             
+        return result
+
+    @strawberryA.mutation 
+    async def state_exam_update(self, info: strawberryA.types.Info, state_exam: StateExamUpdateGQLModel) -> StateExamResultGQLModel: 
+        loader = getLoaders(info).stateexams
+        row = await loader.update(state_exam)
+        result = StateExamResultGQLModel()
+        result.id = state_exam.id
+        result.msg = "ok"  
+        if row is None:
+            result.msg = "fail"
+
+        return result
+    
+@strawberryA.input
+class StateExamUpdateGQLModel:
+    id: strawberryA.ID
+    lastchange: datetime.datetime
+    name: Optional[str] = None
+
+    #changed_by: Optional[str] = None
+
+@strawberryA.type
+class StateExamResultGQLModel:
+    id: strawberryA.ID = None
+    msg: str = None
+
+    @strawberryA.field(description="""Result of user operation""")
+    async def state_exam(self, info: strawberryA.types.Info) -> Union[StateExamGQLModel, None]:
+        result = await StateExamGQLModel.resolve_reference(info, self.id)
         return result
     
 
