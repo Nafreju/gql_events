@@ -22,6 +22,11 @@ async def createLoaders_3(asyncSessionMaker):
 
         @property
         @cache
+        def eventcategories(self):
+            return createIdLoader(asyncSessionMaker, EventCategoryModel)
+
+        @property
+        @cache
         def presences(self):
             return createIdLoader(asyncSessionMaker, PresenceModel)
 
@@ -37,38 +42,9 @@ async def createLoaders_3(asyncSessionMaker):
 
         @property
         @cache
-        def eventgroups_group_id(self):
-            return createFkeyLoader(
-                asyncSessionMaker, EventGroupModel, foreignKeyName="group_id"
-            )
-
-        @property
-        @cache
-        def eventgroups_event_id(self):
-            return createFkeyLoader(
-                asyncSessionMaker, EventGroupModel, foreignKeyName="event_id"
-            )
-
-        @property
-        @cache
         def eventgroups(self):
-            return createIdLoader(
-                asyncSessionMaker, EventGroupModel
-            )
+            return createIdLoader(asyncSessionMaker, EventGroupModel)
 
-        @property
-        @cache
-        def eventusers_user_id(self):
-            return createFkeyLoader(
-                asyncSessionMaker, PresenceModel, foreignKeyName="user_id"
-            )
-
-        @property
-        @cache
-        def event_eventtype_id(self):
-            return createFkeyLoader(
-                asyncSessionMaker, EventModel, foreignKeyName="eventtype_id"
-            )
 
 
 

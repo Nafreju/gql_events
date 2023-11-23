@@ -457,4 +457,4 @@ class Mutation:
 #
 ###########################################################################################################################
 
-schema = strawberryA.federation.Schema(Query, types=(UserGQLModel,), mutation=Mutation)
+
