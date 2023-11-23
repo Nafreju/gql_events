@@ -4,7 +4,9 @@ import strawberry as strawberryA
 import uuid
 from contextlib import asynccontextmanager
 
-from .GraphTypeDefinitions import withInfo, getLoaders, EventGQLModel, PresenceGQLModel
+from .GraphTypeDefinitions import withInfo, getLoaders, \
+    EventGQLModel, PresenceGQLModel, EventTypeGQLModel, \
+        PresenceTypeGQLModel, InvitationTypeGQLModel
 ###########################################################################################################################
 #
 # zde definujte sve GQL modely
@@ -22,82 +24,8 @@ from .GraphTypeDefinitions import UserGQLModel, GroupGQLModel
 
 from gql_events.GraphResolvers import resolveEventTypeById
 
-@strawberryA.federation.type(keys=["id"], description="""Represents an event type""")
-class EventTypeGQLModel:
-    @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
-        loader = getLoaders(info).eventtypes
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
-
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
-        return self.id
-
-    @strawberryA.field(description="""Name of type (cze)""")
-    def name(self) -> str:
-        return self.name
-
-    @strawberryA.field(description="""Name of type (en)""")
-    def name_en(self) -> str:
-        return self.name_en
-
-    @strawberryA.field(description="""Related events""")
-    async def events(self, info: strawberryA.types.Info) -> List['EventGQLModel']:
-        loader = getLoaders(info).event_eventtype_id
-        result = await loader.load(self.id)
-        return result
 
 
-@strawberryA.federation.type(keys=["id"], description="""Represents a type of presence (like Present)""")
-class PresenceTypeGQLModel:
-
-    @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
-        loader = getLoaders(info).presencetypes
-        if id is None:
-            return None
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
-
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
-        return self.id
-
-    @strawberryA.field(description="""Name of type (cze)""")
-    def name(self) -> str:
-        return self.name
-
-    @strawberryA.field(description="""Name of type (en)""")
-    def name_en(self) -> str:
-        return self.name_en
-
-@strawberryA.federation.type(keys=["id"], description="""Represents if an user has been invited to the event ot whatever""")
-class InvitationTypeGQLModel:
-
-    @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
-        loader = getLoaders(info).invitationtypes
-        result = await loader.load(id)
-        if result is not None:
-            result._type_definition = cls._type_definition  # little hack :)
-        return result
-
-    @strawberryA.field(description="""Primary key""")
-    def id(self) -> strawberryA.ID:
-        return self.id
-
-    @strawberryA.field(description="""Name of type (cze)""")
-    def name(self) -> str:
-        return self.name
-
-    @strawberryA.field(description="""Name of type (en)""")
-    def name_en(self) -> str:
-        return self.name_en
 
 
 
@@ -114,35 +42,6 @@ from gql_events.GraphResolvers import (
     #     result = await EventEditorGQLModel.resolve_reference(info=info, id=self.id)
     #     return result
 
-@strawberryA.federation.type(keys=["id"], description="""Entity representing events""")
-class EventEditorGQLModel:
-    ##
-    ## Mutace, obejiti problemu s federativnim API
-    ##
-
-    # vysledky opearace update
-    id: strawberryA.ID = None
-    result: str = None
-
-    @classmethod
-    async def resolve_reference(cls, info: strawberryA.types.Info, id: strawberryA.ID):
-        result = EventEditorGQLModel()
-        result.id=id
-        result.result="Ok"
-        return result
-
-    @strawberryA.field(description="""Entity primary key""")
-    def id(self) -> strawberryA.ID:
-        return self.id
-
-    @strawberryA.field(description="""Result of update operation""")
-    def result(self) -> str:
-        return self.result
-
-    @strawberryA.field(description="""Event encapsulated by this editor""")
-    async def event(self, info: strawberryA.types.Info) -> EventGQLModel:
-        result = await EventGQLModel.resolve_reference(info=info, id=self.id)
-        return result
 
 ###########################################################################################################################
 #
