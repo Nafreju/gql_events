@@ -107,17 +107,7 @@ class Query:
             result = await resolveEventsForUser(session, id, startdate, enddate)
             return result
 
-    @strawberryA.field(description="""Finds all events for a group""")
-    async def event_by_group(
-        self,
-        info: strawberryA.types.Info,
-        id: strawberryA.ID,
-        startdate: Optional[datetime.datetime] = None,
-        enddate: Optional[datetime.datetime] = None,
-    ) -> List[EventGQLModel]:
-        async with withInfo(info) as session:
-            result = await resolveEventsForGroup(session, id, startdate, enddate)
-            return result
+
 
     @strawberryA.field(description="""Finds a particular event""")
     async def presence_by_id(
@@ -340,7 +330,25 @@ class PresenceResultGQLModel:
     async def presence(self, info: strawberryA.types.Info) -> Union[PresenceGQLModel, None]:
         result = await PresenceGQLModel.resolve_reference(info, self.id)
         return result
+   
+@strawberryA.input
+class StateExamUpdateGQLModel:
+    id: strawberryA.ID
+    lastchange: datetime.datetime
+    name: Optional[str] = None
 
+    #changed_by: Optional[str] = None
+
+@strawberryA.type
+class StateExamResultGQLModel:
+    id: strawberryA.ID = None
+    msg: str = None
+
+    @strawberryA.field(description="""Result of user operation""")
+    async def state_exam(self, info: strawberryA.types.Info) -> Union[StateExamGQLModel, None]:
+        result = await StateExamGQLModel.resolve_reference(info, self.id)
+        return result
+    
     
 @strawberryA.federation.type(extend=True)
 class Mutation:
@@ -438,25 +446,7 @@ class Mutation:
             result.msg = "fail"
 
         return result
-    
-@strawberryA.input
-class StateExamUpdateGQLModel:
-    id: strawberryA.ID
-    lastchange: datetime.datetime
-    name: Optional[str] = None
-
-    #changed_by: Optional[str] = None
-
-@strawberryA.type
-class StateExamResultGQLModel:
-    id: strawberryA.ID = None
-    msg: str = None
-
-    @strawberryA.field(description="""Result of user operation""")
-    async def state_exam(self, info: strawberryA.types.Info) -> Union[StateExamGQLModel, None]:
-        result = await StateExamGQLModel.resolve_reference(info, self.id)
-        return result
-    
+ 
 
 ###########################################################################################################################
 #
