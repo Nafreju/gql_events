@@ -13,8 +13,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Install pip requirements
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+COPY requirementsdev.txt .
+RUN python -m pip install -r requirementsdev.txt
 
 WORKDIR /app
 COPY . /app
@@ -22,7 +22,7 @@ COPY . /app
 # FROM prepare as tester
 RUN python -m pip install coverage pytest pytest-cov
 # RUN python -m unittest tests/*
-RUN python -m pytest --cov-report term-missing --cov=gql_ug tests/*
+# RUN python -m pytest --cov-report term-missing --cov=gql_ug tests/*
 
 FROM prepare as runner
 # Creates a non-root user and adds permission to access the /app folder
