@@ -83,7 +83,7 @@ class EventGQLModel:
 
 #Queries
 @strawberry.field(description="""Finds a particular event""")
-async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[str]:
+async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGQLModel]:
     result = await EventGQLModel.resolve_reference(info, id=id)
     return result
 
