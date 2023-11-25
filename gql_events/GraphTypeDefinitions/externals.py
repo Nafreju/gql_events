@@ -1,4 +1,4 @@
-import strawberry as strawberryA
+import strawberry
 import datetime
 from typing import List
 from .utils import withInfo, getLoaders
@@ -9,19 +9,19 @@ from gql_events.GraphResolvers import resolveEventsForGroup, resolveEventsForUse
 
 
 
-@strawberryA.federation.type(extend=True, keys=["id"])
+@strawberry.federation.type(extend=True, keys=["id"])
 class UserGQLModel:
 
-    id: strawberryA.ID = strawberryA.federation.field(external=True)
+    id: strawberry.ID = strawberry.federation.field(external=True)
 
     @classmethod
-    async def resolve_reference(cls, id: strawberryA.ID):
+    async def resolve_reference(cls, id: strawberry.ID):
         return UserGQLModel(id=id)
 
-    @strawberryA.field(description="""Gets events related to the user in the specified interval""")
+    @strawberry.field(description="""Gets events related to the user in the specified interval""")
     async def events(
         self,
-        info: strawberryA.types.Info,
+        info: strawberry.types.Info,
         startdate: datetime.datetime = None,
         enddate: datetime.datetime = None,
     ) -> List["EventGQLModel"]:
@@ -29,7 +29,7 @@ class UserGQLModel:
             result = await resolveEventsForUser(session, self.id, startdate, enddate)
             return result
         
-    @strawberryA.field(description="""pass""")
+    @strawberry.field(description="""pass""")
     async def presencies(
         self, info
     ) -> List["PresenceGQLModel"]:
@@ -37,22 +37,22 @@ class UserGQLModel:
         result = await loader.filter_by(user_id=self.id)
         return result
 
-@strawberryA.federation.type(extend=True, keys=["id"])
+@strawberry.federation.type(extend=True, keys=["id"])
 class GroupGQLModel:
 
-    id: strawberryA.ID = strawberryA.federation.field(external=True)
+    id: strawberry.ID = strawberry.federation.field(external=True)
 
     @classmethod
-    async def resolve_reference(cls, id: strawberryA.ID):
+    async def resolve_reference(cls, id: strawberry.ID):
         return GroupGQLModel(id=id)
 
-    @strawberryA.field(description="""Events related to a group""")
+    @strawberry.field(description="""Events related to a group""")
     async def events(
         self,
-        info: strawberryA.types.Info,
+        info: strawberry.types.Info,
         startdate: datetime.datetime = None,
         enddate: datetime.datetime = None,
-        # eventtype_id: strawberryA.ID = None
+        # eventtype_id: strawberry.ID = None
     ) -> List["EventGQLModel"]:
         async with withInfo(info) as session:
             result = await resolveEventsForGroup(session, self.id, startdate, enddate)
