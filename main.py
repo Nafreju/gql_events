@@ -34,7 +34,7 @@ def singleCall(asyncFunc):
 
     return result
 
-from gql_events.DBFeeder import initDB
+from gql_events.utils import initDB
 
 @singleCall
 async def RunOnceAndReturnSessionMaker():
@@ -75,7 +75,7 @@ async def RunOnceAndReturnSessionMaker():
 
 from strawberry.asgi import GraphQL
 
-from gql_events.Dataloaders import createLoaders_3
+from gql_events.utils import createLoaders
 class MyGraphQL(GraphQL):
     """Rozsirena trida zabezpecujici praci se session"""
 
@@ -94,7 +94,7 @@ class MyGraphQL(GraphQL):
             "session": self._session,
             "asyncSessionMaker": asyncSessionMaker,
             "user": self._user,
-            "all": await createLoaders_3(asyncSessionMaker)
+            "all": await createLoaders(asyncSessionMaker)
         }
 
 

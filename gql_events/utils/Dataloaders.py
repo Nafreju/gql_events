@@ -6,7 +6,7 @@ from gql_events.DBDefinitions import \
         InvitationTypeModel, PresenceModel, PresenceTypeModel
 
 
-async def createLoaders_3(asyncSessionMaker):
+async def createLoaders(asyncSessionMaker):
 
 
     class Loaders:
