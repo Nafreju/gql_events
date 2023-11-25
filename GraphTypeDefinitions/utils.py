@@ -11,7 +11,7 @@ async def withInfo(info):
             pass
 
 def getLoaders(info):
-    return info.context['all']
+    return info.context["loaders"]
 
 
 demouser = {

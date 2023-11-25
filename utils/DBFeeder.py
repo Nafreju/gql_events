@@ -1,7 +1,7 @@
 from functools import cache
 
 
-from gql_events.DBDefinitions import \
+from DBDefinitions import \
     EventModel, EventTypeModel, EventCategoryModel, EventGroupModel, \
         InvitationTypeModel, PresenceModel, PresenceTypeModel
 
@@ -40,7 +40,8 @@ def get_demodata():
                 elif value not in ["", None]:
                     json_dict[key] = uuid.UUID(value)
                 else:
-                    print(key, value)
+                    pass
+                    #print(key, value)
 
         return json_dict
 

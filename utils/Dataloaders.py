@@ -1,7 +1,7 @@
 from uoishelpers.dataloaders import createIdLoader, createFkeyLoader
 from functools import cache
 
-from gql_events.DBDefinitions import \
+from DBDefinitions import \
     EventModel, EventTypeModel, EventCategoryModel, EventGroupModel, \
         InvitationTypeModel, PresenceModel, PresenceTypeModel
 
@@ -46,6 +46,9 @@ async def createLoaders(asyncSessionMaker):
             return createIdLoader(asyncSessionMaker, EventGroupModel)
 
 
-
-
     return Loaders()
+
+async def createLoadersContext(asyncSessionMaker):
+    return {
+        "loaders": await createLoaders(asyncSessionMaker)
+    }

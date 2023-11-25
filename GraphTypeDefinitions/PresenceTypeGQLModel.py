@@ -2,7 +2,6 @@ import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
 from .utils import withInfo, getLoaders
-from ..GraphResolvers import resolveGroupsForEvent, resolvePresencesForEvent
 
 
 @strawberry.federation.type(keys=["id"], description="""Represents a type of presence (like Present)""")

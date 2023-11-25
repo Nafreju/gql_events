@@ -5,8 +5,7 @@ from .utils import withInfo, getLoaders
 from .EventGQLModel import EventGQLModel
 from .PresenceGQLModel import PresenceGQLModel
 
-from gql_events.GraphResolvers import resolveEventsForGroup, resolveEventsForUser
-
+from GraphResolvers import resolveEventsForGroup, resolveEventsForUser
 
 
 @strawberry.federation.type(extend=True, keys=["id"])

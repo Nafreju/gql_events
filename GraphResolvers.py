@@ -24,7 +24,7 @@ from uoishelpers.resolvers import putSingleEntityToDb
 #
 ###########################################################################################################################
 
-from gql_events.DBDefinitions import \
+from DBDefinitions import \
     EventModel, EventTypeModel, EventCategoryModel, EventGroupModel, \
         InvitationTypeModel, PresenceModel, PresenceTypeModel
 
