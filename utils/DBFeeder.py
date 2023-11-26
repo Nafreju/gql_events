@@ -67,12 +67,13 @@ async def initDB(asyncSessionMaker):
     """
     print("Demo mode")
     dbModels = [
+        EventCategoryModel,
         EventTypeModel, 
         PresenceTypeModel, 
         InvitationTypeModel,
         EventModel, 
         EventGroupModel, 
-        PresenceModel, 
+        PresenceModel
     ]
 
     jsonData = get_demodata()

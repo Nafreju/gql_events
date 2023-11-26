@@ -720,7 +720,7 @@
     "eventtypes": [
         {"id": "c0a12392-ae0e-11ed-9bd8-0242ac110002", "name": "P", "name_en": ""},
         {"id": "b87d3ff0-8fd4-11ed-a6d4-0242ac110002", "name": "Ostatní", "name_en": ""},
-        {"id": "b87d7b28-8fd4-11ed-a6d4-0242ac110002", "name": "LAB", "name_en": ""},
+        {"id": "b87d7b28-8fd4-11ed-a6d4-0242ac110002", "name": "LAB", "name_en": "", "category_id": "5aaf820d-5acd-4406-b18d-47f161e75ebb"},
         {"id": "b87d7be6-8fd4-11ed-a6d4-0242ac110002", "name": "P", "name_en": ""},
         {"id": "b87d7c2c-8fd4-11ed-a6d4-0242ac110002", "name": "CV", "name_en": ""},
         {"id": "b87d7ce0-8fd4-11ed-a6d4-0242ac110002", "name": "SEM", "name_en": ""},
@@ -741,6 +741,10 @@
         
         {"id": "69ec2b0b-a39d-40df-9cea-e295b36749c9", "name": "Semestr", "name_en": "Semester"},
         {"id": "a517c2fd-8dc7-4a2e-a107-cbdb88ba2aa5", "name": "Školní rok", "name_en": "School year"}
+    ],
+    "eventcategories": [
+        {"id": "061470d7-3463-44ad-9d3f-c4275951edf6", "name": "Pluk"},
+        {"id": "5aaf820d-5acd-4406-b18d-47f161e75ebb", "name": "Univerzita"}
     ],
     "eventinvitationtypes": [
         {"id": "e8713b6e-a79c-11ed-b76e-0242ac110002", "name": "organizátor", "name_en": "organizer"},
