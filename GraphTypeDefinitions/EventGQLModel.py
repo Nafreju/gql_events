@@ -117,7 +117,7 @@ async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: in
     result = await loader.page(skip, limit)
     return result
 
-
+#Mutations
 @strawberry.input(description="Input structure - C operation")
 class EventInsertGQLModel:
     name: str = strawberry.field(description="name of event")
@@ -136,8 +136,7 @@ class EventInsertGQLModel:
     valid: Optional[bool] = True
     createdby: strawberry.Private[UUID] = None
     
-
-@strawberry.input
+@strawberry.input(description="Input structure - UD operation")
 class EventUpdateGQLModel:
     id: UUID = strawberry.field(description="primary key (UUID), could be client generated")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
@@ -167,10 +166,8 @@ class EventResultGQLModel:
     async def event(self, info: strawberry.types.Info) -> Union[EventGQLModel, None]:
         result = await EventGQLModel.resolve_reference(info, self.id)
         return result
-    
 
-#Mutations
-@strawberry.mutation
+@strawberry.mutation(description="C operation")
 async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLModel) -> EventResultGQLModel:
     user = getUser(info) #TODO
     #event.changedby = UUID(user["id"])
@@ -181,7 +178,7 @@ async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLM
     return result
 
 
-@strawberry.mutation
+@strawberry.mutation(description="U operation")
 async def event_update(self, info: strawberry.types.Info, event: EventUpdateGQLModel) -> EventResultGQLModel:
     user = getUser(info) #TODO
     #event.changedby = UUID(user["id"])

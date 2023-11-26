@@ -17,3 +17,8 @@ class PresenceTypeModel(BaseModel):
     lastchange = Column(DateTime, server_default=now())
     createdby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
     changedby = UUIDFKey(nullable=True)#Column(ForeignKey("users.id"), index=True, nullable=True)
+
+    rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
+
+    #sqlalchemy requirements
+    presences = relationship("PresenceModel", back_populates="presencetype", uselist=True)

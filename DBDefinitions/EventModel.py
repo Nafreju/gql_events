@@ -13,19 +13,22 @@ class EventModel(BaseModel):
     name = Column(String, comment="name of event")
     name_en = Column(String, comment="name of event in English")
 
-    valid = Column(Boolean, default=True)
+    valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
     created = Column(DateTime, server_default=now(), comment="when this entity has been created")
     lastchange = Column(DateTime, server_default=now(), comment="timestamp / token")
-    createdby = UUIDFKey(nullable=True, comment="who has created the entity")#Column(ForeignKey("users.id"), index=True, nullable=True)
-    changedby = UUIDFKey(nullable=True, comment="who has changed this entity")#Column(ForeignKey("users.id"), index=True, nullable=True)
+    createdby = UUIDFKey(nullable=True, comment="who has created the entity")
+                #Column(ForeignKey("users.id"), index=True, nullable=True, comment="who has created the entity")
+    changedby = UUIDFKey(nullable=True, comment="who has changed this entity")
+                #Column(ForeignKey("users.id"), index=True, nullable=True, comment="who has changed this entity")
     
     startdate = Column(DateTime, comment="start date of event")
     enddate = Column(DateTime, comment="end date of event")
     
-    masterevent_id = Column(ForeignKey("events.id"), index=True, nullable=True)
-    eventtype_id = Column(ForeignKey("eventtypes.id"), index=True, nullable=True)
+    masterevent_id = Column(ForeignKey("events.id"), index=True, nullable=True, comment="master event which other events are part of including this")
+    eventtype_id = Column(ForeignKey("eventtypes.id"), index=True, nullable=True, comment="event type of this event")
 
     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
 
     #sqlalchemy requirements
     eventtype = relationship("EventTypeModel", back_populates="events", uselist=False)
+    presences = relationship("PresenceModel", back_populates="event", uselist=True)
