@@ -163,7 +163,7 @@ class EventResultGQLModel:
         """Should be `ok` if descired state has been reached, otherwise `fail`. For update operation fail should be also stated when bad lastchange has been entered.""")
 
     @strawberry.field(description="""Result of event operation""")
-    async def event(self, info: strawberry.types.Info) -> Union[EventGQLModel, None]:
+    async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
         result = await EventGQLModel.resolve_reference(info, self.id)
         return result
 

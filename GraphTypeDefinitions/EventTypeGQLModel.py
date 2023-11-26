@@ -1,7 +1,7 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders
+from .utils import withInfo, getLoaders, getUser
 from uuid import UUID
 
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
@@ -114,5 +114,33 @@ class EventTypeUpdateGQLModel:
 
 @strawberry.field(description="Result of CUD operation")
 class EventTypeResultGQLModel:
-    pass
+    id: UUID = strawberry.field(description="primary key of CUD operation object")
+    msg: str = strawberry.field(description=\
+        """Should be `ok` if descired state has been reached, otherwise `fail`. For update operation fail should be also stated when bad lastchange has been entered.""")
 
+    @strawberry.field(description="""Result of event type operation""")
+    async def type(self, info: strawberry.types.Info) -> Optional[EventTypeGQLModel]:
+        result = await EventTypeGQLModel.resolve_reference(info=info, id=self.id)
+        return result
+    
+@strawberry.mutation(description="C operation")
+async def event_type_insert(self, info: strawberry.types.Info, event_type: EventTypeInsertGQLModel) -> EventTypeResultGQLModel:
+    user = getUser(info) #TODO
+    #event.changedby = UUID(user["id"])
+
+    loader = getLoaders(info).eventtypes
+    row = await loader.insert(event_type)
+    result = EventTypeResultGQLModel(id=row.id, msg="ok")
+    return result
+
+
+@strawberry.mutation(description="U operation")
+async def event_update(self, info: strawberry.types.Info, event_type: EventTypeUpdateGQLModel) -> EventTypeResultGQLModel:
+    user = getUser(info) #TODO
+    #event.changedby = UUID(user["id"])
+
+    loader = getLoaders(info).eventtypes
+    row = await loader.update(event_type)
+    result = EventTypeResultGQLModel(id=row.id, msg="ok")
+    result.msg = "fail" if row is None else "ok"
+    return result

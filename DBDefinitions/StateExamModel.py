@@ -16,7 +16,7 @@ class StateExamModel(BaseModel):
     name = Column(String)
     name_en = Column(String)
 
-    group_id = Column(ForeignKey("group.id"), index=True, comment="group which is assigned to event")
+    group_id = UUIDFKey(nullable=True, comment="group which is assigned to event")
     event_id = Column(ForeignKey("events.id"), index=True, comment="event which is assigned to user")
     user_id = UUIDFKey(comment="user which is assigned to event")#Column(ForeignKey("users.id"), index=True, comment="user which is assigned to event")
     #eventtype_id
