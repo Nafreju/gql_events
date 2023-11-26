@@ -29,7 +29,7 @@ class EventGQLModel:
     
     @strawberry.field(description="""Event name in English""")
     def name_en(self) -> Optional[str]:
-        return self.name
+        return self.name_en
 
     @strawberry.field(description="""Validity of event""")
     def valid(self) -> Optional[bool]:
@@ -152,7 +152,7 @@ class EventUpdateGQLModel:
     masterevent_id: Optional[UUID] = strawberry.field(description="master event", default=None)
     eventtype_id: Optional[strawberry.ID] = strawberry.field(description="type of event", default=None)
     
-    valid: Optional[bool] = strawberry.field(description="validity of event")
+    valid: Optional[bool] = None
     changedby: strawberry.Private[UUID] = None
  
     
@@ -174,7 +174,7 @@ async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLM
 
     loader = getLoaders(info).events
     row = await loader.insert(event)
-    result = EventResultGQLModel(id=row.id, msg="ok")
+    result = EventResultGQLModel(id=event.id, msg="ok")
     return result
 
 
@@ -182,9 +182,9 @@ async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLM
 async def event_update(self, info: strawberry.types.Info, event: EventUpdateGQLModel) -> EventResultGQLModel:
     user = getUser(info) #TODO
     #event.changedby = UUID(user["id"])
-
+    
     loader = getLoaders(info).events
     row = await loader.update(event)
-    result = EventResultGQLModel(id=row.id, msg="ok")
+    result = EventResultGQLModel(id=event.id, msg="ok")
     result.msg = "fail" if row is None else "ok"
     return result

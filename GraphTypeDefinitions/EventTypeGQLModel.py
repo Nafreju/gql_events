@@ -58,7 +58,7 @@ class EventTypeGQLModel:
 
 
     @strawberry.field(description="""Related events""")
-    async def events(self, info: strawberry.types.Info) -> Optional[List["EventGQLModel"]]:
+    async def events(self, info: strawberry.types.Info) -> Optional[List[EventGQLModel]]:
         loader = getLoaders(info).events
         result = await loader.filter_by(eventtype_id=self.id)
         return result
@@ -86,7 +86,7 @@ async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limi
 
 
 #Mutations
-@strawberry.field(description="Input structure - C operation")
+@strawberry.input(description="Input structure - C operation")
 class EventTypeInsertGQLModel:
     name: str = strawberry.field(description="name of event type")
 
@@ -98,7 +98,7 @@ class EventTypeInsertGQLModel:
     createdby: strawberry.Private[UUID] = None
 
 
-@strawberry.field(description="Input structure - UD operation")
+@strawberry.input(description="Input structure - UD operation")
 class EventTypeUpdateGQLModel:
     id: UUID = strawberry.field(description="primary key (UUID), could be client generated")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
@@ -106,13 +106,13 @@ class EventTypeUpdateGQLModel:
     name: Optional[str] = strawberry.field(description="name of event type", default=None)
     name_en: Optional[str] = strawberry.field(description="name of event type in English", default=None)
 
-    valid: Optional[bool] = strawberry.field(description="validity of event type")
+    valid: Optional[bool] = None
     changedby: strawberry.Private[UUID] = None
 
     category_id: Optional[UUID] = strawberry.field(description="category of event type", default=None)
 
 
-@strawberry.field(description="Result of CUD operation")
+@strawberry.type(description="Result of CUD operation")
 class EventTypeResultGQLModel:
     id: UUID = strawberry.field(description="primary key of CUD operation object")
     msg: str = strawberry.field(description=\
@@ -130,17 +130,17 @@ async def event_type_insert(self, info: strawberry.types.Info, event_type: Event
 
     loader = getLoaders(info).eventtypes
     row = await loader.insert(event_type)
-    result = EventTypeResultGQLModel(id=row.id, msg="ok")
+    result = EventTypeResultGQLModel(id=event_type.id, msg="ok")
     return result
 
 
 @strawberry.mutation(description="U operation")
-async def event_update(self, info: strawberry.types.Info, event_type: EventTypeUpdateGQLModel) -> EventTypeResultGQLModel:
+async def event_type_update(self, info: strawberry.types.Info, event_type: EventTypeUpdateGQLModel) -> EventTypeResultGQLModel:
     user = getUser(info) #TODO
     #event.changedby = UUID(user["id"])
 
     loader = getLoaders(info).eventtypes
     row = await loader.update(event_type)
-    result = EventTypeResultGQLModel(id=row.id, msg="ok")
+    result = EventTypeResultGQLModel(id=event_type.id, msg="ok")
     result.msg = "fail" if row is None else "ok"
     return result

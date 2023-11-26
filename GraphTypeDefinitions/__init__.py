@@ -42,6 +42,9 @@ class Mutation:
     event_insert = event_insert
     event_update = event_update
 
+    from .EventTypeGQLModel import event_type_insert, event_type_update
+    event_type_insert = event_type_insert
+    event_type_update = event_type_update
 
 
 
