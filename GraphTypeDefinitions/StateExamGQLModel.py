@@ -17,7 +17,7 @@ InvitationTypeGQLModel = Annotated["InvitationTypeGQLModel", strawberry.lazy(".I
 @strawberry.federation.type(keys=["id"], description="""Entity representing an state exam""")
 class StateExamGQLModel:
     @classmethod
-    async def resolve_reference(cls, info: strawberry.types.Info, id: strawberry.ID):
+    async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
         state_exam_loader = getLoaders(info).stateexams
         result = await state_exam_loader.load(id)
         if result is not None:
@@ -25,7 +25,7 @@ class StateExamGQLModel:
         return result
 
     @strawberry.field(description="""Primary key""")
-    def id(self) -> strawberry.ID:
+    def id(self) -> UUID:
         return self.id
 
     @strawberry.field(description="""Time stamp""")

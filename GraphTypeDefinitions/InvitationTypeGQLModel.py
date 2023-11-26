@@ -16,7 +16,7 @@ class InvitationTypeGQLModel:
         return result
 
     @strawberry.field(description="""Primary key""")
-    def id(self) -> strawberry.ID:
+    def id(self) -> UUID:
         return self.id
 
     @strawberry.field(description="""Name of invitation type""")

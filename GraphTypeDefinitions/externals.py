@@ -4,6 +4,7 @@ from typing import List
 from .utils import withInfo, getLoaders
 from .EventGQLModel import EventGQLModel
 from .PresenceGQLModel import PresenceGQLModel
+from uuid import UUID
 
 from GraphResolvers import resolveEventsForGroup, resolveEventsForUser, create_statement_for_user_events
 
@@ -11,10 +12,10 @@ from GraphResolvers import resolveEventsForGroup, resolveEventsForUser, create_s
 @strawberry.federation.type(extend=True, keys=["id"])
 class UserGQLModel:
 
-    id: strawberry.ID = strawberry.federation.field(external=True)
+    id: UUID = strawberry.federation.field(external=True)
 
     @classmethod
-    async def resolve_reference(cls, id: strawberry.ID):
+    async def resolve_reference(cls, id: UUID):
         return UserGQLModel(id=id)
 
     @strawberry.field(description="""Gets events related to the user in the specified interval""")
@@ -42,10 +43,10 @@ class UserGQLModel:
 @strawberry.federation.type(extend=True, keys=["id"])
 class GroupGQLModel:
 
-    id: strawberry.ID = strawberry.federation.field(external=True)
+    id: UUID = strawberry.federation.field(external=True)
 
     @classmethod
-    async def resolve_reference(cls, id: strawberry.ID):
+    async def resolve_reference(cls, id: UUID):
         return GroupGQLModel(id=id)
 
     @strawberry.field(description="""Events related to a group""")

@@ -46,6 +46,10 @@ class Query:
     event_group_by_id = event_group_by_id
     event_group_page = event_group_page
 
+    from .EventCategoryGQLModel import event_category_by_id, event_category_paged
+    event_category_by_id = event_category_by_id
+    event_category_paged = event_category_paged
+
 
 
 @strawberry.type(description="""Type of mutation root""")
@@ -74,6 +78,9 @@ class Mutation:
     from .EventGroupGQLModel import event_group_insert
     event_group_insert = event_group_insert
 
+    from .EventCategoryGQLModel import event_category_insert, event_category_update
+    event_category_insert = event_category_insert
+    event_category_update = event_category_update
 
 
     
