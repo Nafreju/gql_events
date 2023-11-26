@@ -26,4 +26,4 @@ class InvitationTypeModel(BaseModel):
     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
     
     #sqlalchemy requirements
-    presences = relationship("PresenceModel", back_populates="invitation", uselist=True)
+    presences = relationship("PresenceModel", back_populates="invitationtype", uselist=True)

@@ -32,16 +32,16 @@ class PresenceGQLModel:
         return self.user_id
     
     @strawberry.field(description="""ID of invitation which is presence related to""")
-    def invitation_id(self) -> Optional[UUID]:
-        return self.invitation_id
+    def invitationtype_id(self) -> Optional[UUID]:
+        return self.invitationtype_id
     
     @strawberry.field(description="""ID of presence type which is presence related to""")
     def presencetype_id(self) -> Optional[UUID]:
         return self.presencetype_id
 
-    @strawberry.field(description="""Validity of presence""")
-    def valid(self) -> Optional[bool]:
-        return self.valid
+    # @strawberry.field(description="""Validity of presence""")
+    # def valid(self) -> Optional[bool]:
+    #     return self.valid
     
     @strawberry.field(description="""When presence was created""")
     def created(self) -> Optional[datetime.datetime]:
@@ -70,7 +70,7 @@ class PresenceGQLModel:
     @strawberry.field(description="""Invited, Accepted, etc.""")
     async def invitation_type(self, info: strawberry.types.Info) -> Optional[InvitationTypeGQLModel]:
         from .InvitationTypeGQLModel import InvitationTypeGQLModel
-        result = await InvitationTypeGQLModel.resolve_reference(info, self.invitation_id)
+        result = await InvitationTypeGQLModel.resolve_reference(info, self.invitationtype_id)
         return result
 
     @strawberry.field(description="""The user / participant""")
@@ -122,12 +122,12 @@ async def presences_by_user(self, info: strawberry.types.Info, user_id: UUID,) -
 class PresenceInsertGQLModel:
     user_id: UUID = strawberry.field(description="ID of user who is related to event")
     event_id: UUID = strawberry.field(description="ID of event which is related to user")
-    invitation_id: UUID = strawberry.field(description="ID of invitation related to event/user")
-    presencetype_id: UUID = strawberry.field(description="type of presence related to event/user")
+    invitationtype_id: UUID = strawberry.field(description="ID of invitation type related to event/user")#default value
+    presencetype_id: Optional[UUID] = strawberry.field(description="type of presence related to event/user")#default to n
     
     id: Optional[UUID] = strawberry.field(description="primary key (UUID), could be client generated", default=None)
 
-    valid: Optional[bool] = True
+    #valid: Optional[bool] = True
     createdby: strawberry.Private[UUID] = None
 
 
@@ -136,12 +136,13 @@ class PresenceUpdateGQLModel:
     id: UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
-    event_id: Optional[UUID] = strawberry.field(description="event which is assigned to user", default=None)
-    user_id: Optional[UUID] = strawberry.field(description="user which is assigned to event", default=None)
-    invitation_id: Optional[UUID] = strawberry.field(description="invitation which is assigned to presence", default=None)
+    #event_id: Optional[UUID] = strawberry.field(description="event which is assigned to user", default=None)
+    #user_id: Optional[UUID] = strawberry.field(description="user which is assigned to event", default=None)
+    
+    invitationtype_id: Optional[UUID] = strawberry.field(description="invitation type which is assigned to presence", default=None)
     presencetype_id: Optional[UUID] = strawberry.field(description="presence type which is assigned to presence", default=None)
 
-    valid: Optional[bool] = None
+    #valid: Optional[bool] = None
     changedby: strawberry.Private[UUID] = None
 
     

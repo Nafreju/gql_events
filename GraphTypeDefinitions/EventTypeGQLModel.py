@@ -17,7 +17,7 @@ class EventTypeGQLModel:
         if result is not None:
             result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
         return result
-
+    
     @strawberry.field(description="""Primary key""")
     def id(self) -> UUID:
         return self.id

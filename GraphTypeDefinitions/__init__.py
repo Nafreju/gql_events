@@ -12,12 +12,6 @@ from typing import Optional
 
 
 
-
-
-
-
-
-
 @strawberry.type(description="""Type for query root""")
 class Query:
 
@@ -48,6 +42,12 @@ class Query:
     presence_type_by_id = presence_type_by_id
     presence_type_page = presence_type_page
 
+    from .EventGroupGQLModel import event_group_by_id, event_group_page
+    event_group_by_id = event_group_by_id
+    event_group_page = event_group_page
+
+
+
 @strawberry.type(description="""Type of mutation root""")
 class Mutation:
     
@@ -71,15 +71,12 @@ class Mutation:
     presence_type_insert = presence_type_insert
     presence_type_update = presence_type_update
 
+    from .EventGroupGQLModel import event_group_insert
+    event_group_insert = event_group_insert
+
+
+
     
-
-
-
-
-
-
-
-
 
 
 

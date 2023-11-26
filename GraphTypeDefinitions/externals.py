@@ -5,7 +5,7 @@ from .utils import withInfo, getLoaders
 from .EventGQLModel import EventGQLModel
 from .PresenceGQLModel import PresenceGQLModel
 
-from GraphResolvers import resolveEventsForGroup, resolveEventsForUser
+from GraphResolvers import resolveEventsForGroup, resolveEventsForUser, create_statement_for_user_events
 
 
 @strawberry.federation.type(extend=True, keys=["id"])
@@ -24,9 +24,10 @@ class UserGQLModel:
         startdate: datetime.datetime = None,
         enddate: datetime.datetime = None,
     ) -> List["EventGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveEventsForUser(session, self.id, startdate, enddate)
-            return result
+        statement = create_statement_for_user_events(self.id, startdate=startdate, enddate=enddate)
+        loader = getLoaders(info).events
+        result = await loader.execute_select(statement)
+        return result
         
     @strawberry.field(description="""pass""")
     async def presencies(
@@ -36,6 +37,8 @@ class UserGQLModel:
         result = await loader.filter_by(user_id=self.id)
         return result
 
+
+#TODO events function
 @strawberry.federation.type(extend=True, keys=["id"])
 class GroupGQLModel:
 

@@ -61,7 +61,7 @@ async def get_context():
             pass
         
     from utils.Dataloaders import createLoadersContext
-    context = await createLoadersContext(appcontext["asyncSessionMaker"])
+    context = createLoadersContext(appcontext["asyncSessionMaker"])
     return context
 
 graphql_app = GraphQLRouter(

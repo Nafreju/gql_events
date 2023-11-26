@@ -25,7 +25,7 @@ class EventModel(BaseModel):
     enddate = Column(DateTime, comment="end date of event")
     
     masterevent_id = Column(ForeignKey("events.id"), index=True, nullable=True, comment="master event which other events are part of including this")
-    eventtype_id = Column(ForeignKey("eventtypes.id"), index=True, nullable=True, comment="event type of this event")
+    eventtype_id = Column(ForeignKey("eventtypes.id"), index=True, comment="event type of this event")
 
     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
 

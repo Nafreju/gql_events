@@ -836,70 +836,70 @@
             "id": "89d1e684-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1e724-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f2d2-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f34a-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f3ae-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f3cc-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f412-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f430-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f46c-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f48a-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f4c6-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f4e4-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f520-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f534-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f570-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f58e-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f5ca-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f5de-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         },
         {
             "id": "89d1f624-ae0f-11ed-9bd8-0242ac110002", 
             "user_id": "89d1f638-ae0f-11ed-9bd8-0242ac110002", 
             "event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", 
-            "invitation_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
+            "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002", 
             "presencetype_id": "466398c6-a79c-11ed-b76e-0242ac110002"
         }
     ],

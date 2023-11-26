@@ -14,7 +14,7 @@ class EventGroupModel(BaseModel):
     group_id = UUIDFKey(comment="group which is assigned to event")
                 #Column(ForeignKey("groups.id"), index=True, comment="group which is assigned to event")
 
-    valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
+    #valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
     created = Column(DateTime, server_default=now(), comment="when this entity has been created")
     lastchange = Column(DateTime, server_default=now(), comment="timestamp / token")
     createdby = UUIDFKey(nullable=True, comment="who has created the entity")

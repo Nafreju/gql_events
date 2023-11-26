@@ -68,6 +68,15 @@ async def resolveEventsForGroup(session, id, startdate=None, enddate=None):
     return result
 
 #odstranit?
+def create_statement_for_user_events(id, startdate=None, enddate=None):
+    statement = select(EventModel).join(PresenceModel)
+    if startdate is not None:
+        statement = statement.filter(EventModel.startdate >= startdate)
+    if enddate is not None:
+        statement = statement.filter(EventModel.enddate <= enddate)
+    statement = statement.filter(PresenceModel.user_id == id)
+    return statement
+
 async def resolveEventsForUser(session, id, startdate=None, enddate=None):
     statement = select(EventModel).join(PresenceModel)
     if startdate is not None:

@@ -88,6 +88,7 @@ class EventGQLModel:
 
     @strawberry.field(description="""Type of the event""")
     async def event_type(self, info: strawberry.types.Info) -> Optional["EventTypeGQLModel"]:
+        from .EventTypeGQLModel import EventTypeGQLModel
         result = await EventTypeGQLModel.resolve_reference(info=info, id=self.eventtype_id)
         return result
 

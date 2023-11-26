@@ -6,7 +6,7 @@ from DBDefinitions import \
         InvitationTypeModel, PresenceModel, PresenceTypeModel
 
 
-async def createLoaders(asyncSessionMaker):
+def createLoaders(asyncSessionMaker):
 
 
     class Loaders:
@@ -44,11 +44,13 @@ async def createLoaders(asyncSessionMaker):
         @cache
         def eventgroups(self):
             return createIdLoader(asyncSessionMaker, EventGroupModel)
+        
+
 
 
     return Loaders()
 
-async def createLoadersContext(asyncSessionMaker):
+def createLoadersContext(asyncSessionMaker):
     return {
-        "loaders": await createLoaders(asyncSessionMaker)
+        "loaders": createLoaders(asyncSessionMaker)
     }

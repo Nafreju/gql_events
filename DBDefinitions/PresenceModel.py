@@ -13,10 +13,10 @@ class PresenceModel(BaseModel):
     event_id = Column(ForeignKey("events.id"), index=True, comment="event which is assigned to user")
     user_id = UUIDFKey(comment="user which is assigned to event")#Column(ForeignKey("users.id"), index=True, comment="user which is assigned to event")
     
-    invitation_id = Column(ForeignKey("eventinvitationtypes.id"), index=True, comment="invitation assigned to event/user")
+    invitationtype_id = Column(ForeignKey("eventinvitationtypes.id"), index=True, comment="invitation assigned to event/user")
     presencetype_id = Column(ForeignKey("eventpresencetypes.id"), index=True, nullable=True, comment="type of presence assigned to user/event")
 
-    valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
+    #valid = Column(Boolean, default=True, comment="if this entity is valid or invalid")
     created = Column(DateTime, server_default=now(), comment="when this entity has been created")
     lastchange = Column(DateTime, server_default=now(), comment="timestamp / token")
     createdby = UUIDFKey(nullable=True, comment="who has created the entity")
@@ -28,5 +28,5 @@ class PresenceModel(BaseModel):
     
     #sql alchemy requirements
     event = relationship("EventModel", back_populates="presences", uselist=False)
-    invitation = relationship("InvitationTypeModel", back_populates="presences", uselist=False)
+    invitationtype = relationship("InvitationTypeModel", back_populates="presences", uselist=False)
     presencetype = relationship("PresenceTypeModel", back_populates="presences", uselist=False)
