@@ -34,6 +34,10 @@ class Query:
     event_type_by_id = event_type_by_id
     event_type_page = event_type_page
 
+    from .InvitationTypeGQLModel import invitation_type_by_id, invitation_type_page
+    invitation_type_by_id = invitation_type_by_id
+    invitation_type_page = invitation_type_page
+
 
 @strawberry.type(description="""Type of mutation root""")
 class Mutation:
@@ -45,6 +49,10 @@ class Mutation:
     from .EventTypeGQLModel import event_type_insert, event_type_update
     event_type_insert = event_type_insert
     event_type_update = event_type_update
+
+    from .InvitationTypeGQLModel import invitation_type_insert, invitation_type_update
+    invitation_type_insert = invitation_type_insert
+    invitation_type_update = invitation_type_update
 
 
 

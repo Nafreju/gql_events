@@ -72,6 +72,7 @@ class EventGQLModel:
     @strawberry.field(description="""Groups of users linked to the event""")
     async def groups(self, info: strawberry.types.Info) -> List["GroupGQLModel"]:
         pass
+        #TODO
         """
         loader = getLoaders(info).eventgroups
         result = await loader.filter_by(event_id=self.id)
@@ -124,7 +125,7 @@ class EventInsertGQLModel:
     eventtype_id: UUID = strawberry.field(description="type of event")
 
     id: Optional[UUID] = strawberry.field(description="primary key (UUID), could be client generated", default=None)
-    name_en: Optional[str] = strawberry.field(description="name of event in English", default=None)
+    name_en: Optional[str] = strawberry.field(description="name of event in English", default="")
 
     startdate: Optional[datetime.datetime] = \
         strawberry.field(description="start date of event", default=datetime.datetime.now())
@@ -158,7 +159,7 @@ class EventUpdateGQLModel:
     
 @strawberry.type(description="Result of CUD operations")
 class EventResultGQLModel:
-    id: UUID = strawberry.field(description="primary key of CU operation object")
+    id: UUID = strawberry.field(description="primary key of CUD operation object")
     msg: str = strawberry.field(description=\
         """Should be `ok` if descired state has been reached, otherwise `fail`. For update operation fail should be also stated when bad lastchange has been entered.""")
 
@@ -174,7 +175,7 @@ async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLM
 
     loader = getLoaders(info).events
     row = await loader.insert(event)
-    result = EventResultGQLModel(id=event.id, msg="ok")
+    result = EventResultGQLModel(id=row.id, msg="ok")
     return result
 
 

@@ -14,7 +14,6 @@ class PresenceGQLModel:
 
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: strawberry.ID):
-        print(id)
         if id is None:
             return None
         loader = getLoaders(info).presences
