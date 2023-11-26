@@ -40,7 +40,7 @@ class EventGQLModel:
         return self.created
 
     @strawberry.field(description="""Time stamp""")
-    def lastchange(self) -> datetime.datetime:
+    def lastchange(self) -> Optional[datetime.datetime]:
         return self.lastchange
     
     @strawberry.field(description="""By whom event was created""")
@@ -156,7 +156,7 @@ class EventUpdateGQLModel:
     changedby: strawberry.Private[UUID] = None
  
     
-@strawberry.type(description="Result of CU operations")
+@strawberry.type(description="Result of CUD operations")
 class EventResultGQLModel:
     id: UUID = strawberry.field(description="primary key of CU operation object")
     msg: str = strawberry.field(description=\

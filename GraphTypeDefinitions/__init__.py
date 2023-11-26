@@ -30,7 +30,9 @@ class Query:
     event_by_id = event_by_id
     event_page = event_page
 
-
+    from .EventTypeGQLModel import event_type_by_id, event_type_page
+    event_type_by_id = event_type_by_id
+    event_type_page = event_type_page
 
 
 @strawberry.type(description="""Type of mutation root""")
