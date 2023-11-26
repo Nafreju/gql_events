@@ -82,7 +82,7 @@ class InvitationTypeInsertGQLModel:
 
 @strawberry.input(description="Input structure UD operation")
 class InvitationTypeUpdateGQLModel:
-    id: UUID = strawberry.field(description="primary key (UUID), could be client generated")
+    id: UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
     name: Optional[str] = strawberry.field(description="name of invitation type", default=None)
