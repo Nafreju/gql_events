@@ -69,14 +69,15 @@ https://docs.docker.com/compose/
 
 
 
-Read operace:
-xxxxById; xxxxPage
-EventGQLModel, EventTypeGQLModel, PresenceGQLModel, PresenceTypeGQLModel, InvitationTypeGQLModel,
+TODO:
+otestovat všechny dotazy a podoby, zdali vracejí dobré věci! - N
 
 u PresenceGQLModel nedává příliš smysl Page - je tam PresenceByEventId, PresenceByUserId
+buď povinně foreign key id nebo default hodnotu z system data
+u ostatních modelů to stejný, co EventGQLModel a EventModel
 
-
-Update operace:
-EventGQLModel, EventTypeGQLModel, PresenceGQLModel, PresenceTypeGQLModel, InvitationTypeGQLModel,
-TODO:
-update EventTypeGQLModel; PresenceTypeGQLModel; InvitationTypeGQLModel,
+SZ ZAMYSLET
+permission classes všude
+where všude, jak to udělat?
+smazal jsem EventEditorGQLModel
+testovat, jak se insertuje do více tabulek (sdílených tabulek)
