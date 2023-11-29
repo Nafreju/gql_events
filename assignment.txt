@@ -70,14 +70,19 @@ https://docs.docker.com/compose/
 
 
 TODO:
-otestovat všechny dotazy a podoby, zdali vracejí dobré věci! - N
+otestovat všechny dotazy a podoby, zdali vracejí dobré věci!(manuálně nebo testama) - N
 
 u PresenceGQLModel nedává příliš smysl Page - je tam PresenceByEventId, PresenceByUserId
-buď povinně foreign key id nebo default hodnotu z system data
-u ostatních modelů to stejný, co EventGQLModel a EventModel
+buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
+
 
 SZ ZAMYSLET
 permission classes všude
 where všude, jak to udělat?
-smazal jsem EventEditorGQLModel
 testovat, jak se insertuje do více tabulek (sdílených tabulek)
+
+
+Pozn.
+smazal jsem EventEditorGQLModel
+
+
