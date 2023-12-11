@@ -9,9 +9,9 @@ import pytest
 
 # from ..uoishelpers.uuid import UUIDColumn
 
-from gql_events.DBDefinitions import BaseModel
-from gql_events.DBDefinitions import EventModel, EventTypeModel, EventGroupModel
-from gql_events.DBDefinitions import PresenceModel, PresenceTypeModel, InvitationTypeModel
+from DBDefinitions import BaseModel
+from DBDefinitions import EventModel, EventTypeModel, EventGroupModel
+from DBDefinitions import PresenceModel, PresenceTypeModel, InvitationTypeModel
 
 async def prepare_in_memory_sqllite():
     from sqlalchemy.ext.asyncio import create_async_engine
@@ -30,7 +30,7 @@ async def prepare_in_memory_sqllite():
     return async_session_maker
 
 
-from gql_events.DBFeeder import get_demodata
+from utils.DBFeeder import get_demodata
 
 
 async def prepare_demodata(async_session_maker):
@@ -48,11 +48,36 @@ async def prepare_demodata(async_session_maker):
     )
 
 
-from gql_events.Dataloaders import createLoaders_3
+from utils.Dataloaders import createLoaders
 
 
 async def createContext(asyncSessionMaker):
     return {
         "asyncSessionMaker": asyncSessionMaker,
-        "all": await createLoaders_3(asyncSessionMaker),
+        "all": createLoaders(asyncSessionMaker),
     }
+
+from GraphTypeDefinitions import schema
+import logging
+def CreateSchemaFunction():
+    async def result(query, variables={}):
+
+        async_session_maker = await prepare_in_memory_sqllite()
+        await prepare_demodata(async_session_maker)
+        context_value = createContext(async_session_maker)
+        logging.debug(f"query for {query} with {variables}")
+        print(f"query for {query} with {variables}")
+        resp = await schema.execute(
+            query=query, 
+            variable_values=variables, 
+            context_value=context_value
+        )
+
+        assert resp.errors is None
+        respdata = resp.data
+        logging.debug(f"response: {respdata}")
+
+        result = {"data": respdata, "errors": resp.errors}
+        return result
+
+    return result

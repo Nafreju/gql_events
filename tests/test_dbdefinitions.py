@@ -9,9 +9,9 @@ import pytest
 
 # from ..uoishelpers.uuid import UUIDColumn
 
-from gql_events.DBDefinitions import BaseModel
-from gql_events.DBDefinitions import EventModel, EventTypeModel, EventGroupModel
-from gql_events.DBDefinitions import PresenceModel, PresenceTypeModel, InvitationTypeModel
+from DBDefinitions import BaseModel
+from DBDefinitions import EventModel, EventTypeModel, EventGroupModel
+from DBDefinitions import PresenceModel, PresenceTypeModel, InvitationTypeModel
 
 from sqlalchemy.future import select
 
@@ -28,7 +28,7 @@ async def test_load_demo_data():
     
 
 
-from gql_events.DBDefinitions import ComposeConnectionString
+from DBDefinitions import ComposeConnectionString
 
 
 def test_connection_string():
@@ -38,16 +38,16 @@ def test_connection_string():
     assert "@" in connectionString
 
 
-from gql_events.DBDefinitions import UUIDColumn
+from DBDefinitions import UUIDColumn
 
 
 def test_connection_uuidcolumn():
-    col = UUIDColumn(name="name")
+    col = UUIDColumn()
 
     assert col is not None
 
 
-from gql_events.DBDefinitions import startEngine
+from DBDefinitions import startEngine
 
 
 @pytest.mark.asyncio

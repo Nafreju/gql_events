@@ -1,6 +1,8 @@
 import sqlalchemy
 import sys
 import asyncio
+import re
+import json
 
 # setting path
 sys.path.append("../gql_events")
@@ -9,39 +11,78 @@ import pytest
 
 # from ..uoishelpers.uuid import UUIDColumn
 
-from gql_events.GraphTypeDefinitions import schema
+from GraphTypeDefinitions import schema
 
 from shared import (
     prepare_demodata,
     prepare_in_memory_sqllite,
     get_demodata,
     createContext,
+    CreateSchemaFunction,
 )
 
+def append(
+        queryname="queryname",
+        query=None, mutation=None, variables={}):
+    with open("./queries.txt", "a", encoding="utf-8") as file:
+        if (query is not None) and ("mutation" in query):
+            jsonData = {
+                "query": None,
+                "mutation": query,
+                "variables": variables
+            }
+        else:
+            jsonData = {
+                "query": query,
+                "mutation": mutation,
+                "variables": variables
+            }
+        rpattern = r"((?:[a-zA-Z]+Insert)|(?:[a-zA-Z]+Update)|(?:[a-zA-Z]+ById)|(?:[a-zA-Z]+Page))"
+        qstring = query if query else mutation
+        querynames = re.findall(rpattern, qstring)
+        print(querynames)
+        queryname = queryname if len(querynames) < 1 else "query_" + querynames[0]
+        if jsonData.get("query", None) is None:
+            queryname = queryname.replace("query", "mutation")
+        queryname = queryname + f"_{query.__hash__()}"
+        queryname = queryname.replace("-", "")
+        line = f'"{queryname}": {json.dumps(jsonData)}, \n'
+        file.write(line)
 
 def createByIdTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
     @pytest.mark.asyncio
     async def result_test():
-        async_session_maker = await prepare_in_memory_sqllite()
-        await prepare_demodata(async_session_maker)
+        def testResult(resp):
+                    print("response", resp)
+                    errors = resp.get("errors", None)
+                    assert errors is None
+                    
+                    respdata = resp.get("data", None)
+                    assert respdata is not None
+                    
+                    respdata = respdata[queryEndpoint]
+                    assert respdata is not None
+
+                    for att in attributeNames:
+                        assert respdata[att] == f'{datarow[att]}'
+
+        schemaExecutor = CreateSchemaFunction()
+        clientExecutor = CreateClientFunction()
 
         data = get_demodata()
         datarow = data[tableName][0]
+        content = "{" + ", ".join(attributeNames) + "}"
+        query = "query($id: UUID!){" f"{queryEndpoint}(id: $id)" f"{content}" "}"
 
-        query = "query($id: ID!){" f"{queryEndpoint}(id: $id)" "{ id, name }}"
+        variable_values = {"id": f'{datarow["id"]}'}
+        
+        append(queryname=f"{queryEndpoint}_{tableName}", query=query, variables=variable_values)        
+        logging.debug(f"query for {query} with {variable_values}")
 
-        context_value = await createContext(async_session_maker)
-        variable_values = {"id": datarow["id"]}
-        resp = await schema.execute(
-            query, context_value=context_value, variable_values=variable_values
-        )  # , variable_values={"title": "The Great Gatsby"})
-
-        respdata = resp.data[queryEndpoint]
-
-        assert resp.errors is None
-
-        for att in attributeNames:
-            assert respdata[att] == datarow[att]
+        resp = await schemaExecutor(query, variable_values)
+        testResult(resp)
+        resp = await clientExecutor(query, variable_values)
+        testResult(resp)
 
     return result_test
 
@@ -474,7 +515,7 @@ async def test_event_mutation():
     query = '''
             mutation(
                 $name: String!,
-                $eventtype_id: ID!
+                $eventtype_id: UUID!
                 ) {
                 operation: eventInsert(event: {
                     name: $name,
@@ -515,7 +556,7 @@ async def test_event_mutation():
     name = "NewName"
     query = '''
             mutation(
-                $id: ID!,
+                $id: UUID!,
                 $lastchange: DateTime!
                 $name: String!
                 ) {
