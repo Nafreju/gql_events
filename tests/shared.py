@@ -1,17 +1,26 @@
 import sqlalchemy
 import sys
 import asyncio
+import logging
 
 # setting path
-sys.path.append("../gql_events")
+#sys.path.append("../gql_forms")
 
 import pytest
 
 # from ..uoishelpers.uuid import UUIDColumn
 
-from DBDefinitions import BaseModel
-from DBDefinitions import EventModel, EventTypeModel, EventGroupModel
-from DBDefinitions import PresenceModel, PresenceTypeModel, InvitationTypeModel
+from DBDefinitions import (
+    BaseModel,
+    EventCategoryModel,
+    EventGroupModel,
+    EventModel,
+    EventTypeModel,
+    InvitationTypeModel,
+    PresenceModel,
+    PresenceTypeModel,
+)
+
 
 async def prepare_in_memory_sqllite():
     from sqlalchemy.ext.asyncio import create_async_engine
@@ -41,24 +50,51 @@ async def prepare_demodata(async_session_maker):
     await ImportModels(
         async_session_maker,
         [
-            EventModel, EventTypeModel, EventGroupModel,
-            PresenceModel, PresenceTypeModel, InvitationTypeModel        
+            EventCategoryModel,
+            EventGroupModel,
+            EventModel,
+            EventTypeModel,
+            InvitationTypeModel,
+            PresenceModel,
+            PresenceTypeModel,
         ],
         data,
     )
 
 
-from utils.Dataloaders import createLoaders
+from utils.Dataloaders import createLoadersContext
 
-
-async def createContext(asyncSessionMaker):
-    return {
-        "asyncSessionMaker": asyncSessionMaker,
-        "all": createLoaders(asyncSessionMaker),
+def createContext(asyncSessionMaker, withuser=True):
+    loadersContext = createLoadersContext(asyncSessionMaker)
+    user = {
+        "id": "2d9dc5ca-a4a2-11ed-b9df-0242ac120003",
+        "name": "John",
+        "surname": "Newbie",
+        "email": "john.newbie@world.com"
     }
+    if withuser:
+        loadersContext["user"] = user
+    
+    return loadersContext
+
+def createInfo(asyncSessionMaker, withuser=True):
+    class Request():
+        @property
+        def headers(self):
+            return {"Authorization": "Bearer 2d9dc5ca-a4a2-11ed-b9df-0242ac120003"}
+        
+    class Info():
+        @property
+        def context(self):
+            context = createContext(asyncSessionMaker, withuser=withuser)
+            context["request"] = Request()
+            return context
+        
+    return Info()
+
 
 from GraphTypeDefinitions import schema
-import logging
+
 def CreateSchemaFunction():
     async def result(query, variables={}):
 

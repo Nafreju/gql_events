@@ -5,7 +5,6 @@ from .PresenceGQLModel import PresenceGQLModel
 from .EventTypeGQLModel import EventTypeGQLModel
 from .PresenceTypeGQLModel import PresenceTypeGQLModel
 from .InvitationTypeGQLModel import InvitationTypeGQLModel
-from .StateExamGQLModel import StateExamGQLModel
 from .externals import UserGQLModel, GroupGQLModel
 from uuid import UUID
 from typing import Optional

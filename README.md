@@ -36,3 +36,6 @@ docker-compose up
 <br/><br/>
 
 pytest --cov-report term-missing --cov=gql_events tests
+
+or if in gql_events directory use:
+pytest --cov-report term-missing --cov=. tests
