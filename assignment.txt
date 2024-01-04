@@ -70,16 +70,25 @@ https://docs.docker.com/compose/
 
 
 TODO:
+KEEP
 otestovat všechny dotazy a podoby, zdali vracejí dobré věci!(manuálně nebo testama) - N
 
 u PresenceGQLModel nedává příliš smysl Page - je tam PresenceByEventId, PresenceByUserId
 buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
 
+logging
+SZ - projít tabulky, kde jsou body - způsoby ukončení zkoušek
 
-SZ ZAMYSLET
+
+main předělat na to, aby tam byl sentinel, jinak nejde řešit permissions
 permission classes všude
-where všude, jak to udělat?
+
+
+where všude - Smidas, Spanik
 testovat, jak se insertuje do více tabulek (sdílených tabulek)
+
+testy možná nefungují kvůli sql lite
+
 
 
 Pozn.

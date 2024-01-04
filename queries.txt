@@ -6,3 +6,5 @@
 "query_eventCategoryById_2618036368740701225": {"query": "query($id: UUID!){eventCategoryById(id: $id){id, name}}", "mutation": null, "variables": {"id": "061470d7-3463-44ad-9d3f-c4275951edf6"}}, 
 "EventCategoryGQLModel_representation_8857560626427594967": {"query": "query($id: UUID!) { _entities(representations: [{ __typename: \"EventCategoryGQLModel\", id: $id }]){...on EventCategoryGQLModel{id, name, lastchange}}}", "mutation": null, "variables": {}}, 
 "query_eventCategoryById_1035332620809111740": {"query": "query($id: UUID!){eventCategoryById(id: $id){id, name}}", "mutation": null, "variables": {"id": "061470d7-3463-44ad-9d3f-c4275951edf6"}}, 
+"EventCategoryGQLModel_representation_5030702397278456909": {"query": "query($id: UUID!) { _entities(representations: [{ __typename: \"EventCategoryGQLModel\", id: $id }]){...on EventCategoryGQLModel{id, name, lastchange}}}", "mutation": null, "variables": {}}, 
+"query_eventCategoryById_3100621680669073611": {"query": "query($id: UUID!){eventCategoryById(id: $id){id, name}}", "mutation": null, "variables": {"id": "061470d7-3463-44ad-9d3f-c4275951edf6"}}, 
