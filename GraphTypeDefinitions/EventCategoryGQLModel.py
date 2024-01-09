@@ -1,8 +1,11 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser
+from .utils import withInfo, getLoaders, getUser, asPage
 from uuid import UUID
+from dataclasses import dataclass
+from uoishelpers.resolvers import createInputs
+
 
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
 
@@ -56,7 +59,14 @@ class EventCategoryGQLModel:
         loader = getLoaders(info).eventtypes
         result = await loader.filter_by(category_id=self.id)
         return result
-    
+
+@createInputs
+@dataclass
+class EventCategoryWhereFilter:
+    name: str
+    name_en: str
+
+
 
 #Queries
 @strawberry.field(description="""Finds a particular event category""")
@@ -65,10 +75,10 @@ async def event_category_by_id(self, info: strawberry.types.Info, id: UUID) -> O
     return result
 
 @strawberry.field(description="""Finds all event categories paged""")
-async def event_category_paged(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10) -> List[EventCategoryGQLModel]:
-    loader = getLoaders(info).eventcategories
-    result = await loader.page(skip, limit)
-    return result
+@asPage
+async def event_category_page(self, info: strawberry.types.Info, where: Optional[EventCategoryWhereFilter] = None) -> List[EventCategoryGQLModel]:
+    return getLoaders(info).eventcategories
+
 
 
 #Mutations

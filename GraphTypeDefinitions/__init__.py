@@ -45,9 +45,9 @@ class Query:
     event_group_by_id = event_group_by_id
     event_group_page = event_group_page
 
-    from .EventCategoryGQLModel import event_category_by_id, event_category_paged
+    from .EventCategoryGQLModel import event_category_by_id, event_category_page
     event_category_by_id = event_category_by_id
-    event_category_paged = event_category_paged
+    event_category_page = event_category_page
 
 
 
