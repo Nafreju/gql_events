@@ -63,8 +63,10 @@ class EventCategoryGQLModel:
 @createInputs
 @dataclass
 class EventCategoryWhereFilter:
+    id: UUID
     name: str
     name_en: str
+
 
 
 
@@ -76,7 +78,8 @@ async def event_category_by_id(self, info: strawberry.types.Info, id: UUID) -> O
 
 @strawberry.field(description="""Finds all event categories paged""")
 @asPage
-async def event_category_page(self, info: strawberry.types.Info, where: Optional[EventCategoryWhereFilter] = None) -> List[EventCategoryGQLModel]:
+async def event_category_page(self, info: strawberry.types.Info, \
+            skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[EventCategoryGQLModel]:
     return getLoaders(info).eventcategories
 
 

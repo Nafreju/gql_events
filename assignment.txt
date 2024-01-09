@@ -70,7 +70,7 @@ https://docs.docker.com/compose/
 
 
 TODO:
-where všude jako EventCategoryGQLModel
+where všude jako EventCategoryGQLModel - vymyslet, které atributy všude budou
 
 KEEP
 
