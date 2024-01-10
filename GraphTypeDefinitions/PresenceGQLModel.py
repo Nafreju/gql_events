@@ -104,9 +104,8 @@ async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optiona
 @strawberry.field(description="""Finds all presences paged""")
 @asPage
 async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceWhereFilter] = None) -> Optional[List[PresenceGQLModel]]:
-    loader = getLoaders(info).presences
-    result = await loader.page(skip, limit)
-    return result
+    return getLoaders(info).presences
+    
 
 @strawberry.field(description="""Finds all presences for the event""")
 async def presences_by_event(self, info: strawberry.types.Info, event_id: UUID) -> List[PresenceGQLModel]:

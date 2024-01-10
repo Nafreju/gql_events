@@ -71,7 +71,8 @@ https://docs.docker.com/compose/
 
 TODO:
 where všude jako EventCategoryGQLModel - vymyslet, které atributy všude budou
-DBFeeder - demo mode - ve forms na to ma environment.txt
+ExamModel - event_id
+
 
 KEEP
 
