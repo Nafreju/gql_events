@@ -1,8 +1,10 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import getLoaders, getUser
+from .utils import getLoaders, getUser,asPage
 from uuid import UUID
+from dataclasses import dataclass
+from uoishelpers.resolvers import createInputs
 
 UserGQLModel = Annotated["UserGQLModel", strawberry.lazy(".externals")]
 PresenceTypeGQLModel = Annotated["PresenceTypeGQLModel", strawberry.lazy(".PresenceTypeGQLModel")]
@@ -58,6 +60,9 @@ class PresenceGQLModel:
     @strawberry.field(description="""Time stamp""")
     def lastchange(self) -> Union[datetime.datetime, None]:
         return self.lastchange
+    
+    
+   
 
     #TODO resolve RBACObject
 
@@ -84,7 +89,12 @@ class PresenceGQLModel:
         from .EventGQLModel import EventGQLModel
         result = await EventGQLModel.resolve_reference(info, id=self.event_id)
         return result
-    
+@createInputs
+@dataclass
+class PresenceWhereFilter:
+    id: UUID
+    event_id: int
+    user_id: int  
 #Queries
 @strawberry.field(description="""Finds a particular presence""")
 async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[PresenceGQLModel]:
@@ -92,7 +102,8 @@ async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optiona
     return result
 
 @strawberry.field(description="""Finds all presences paged""")
-async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10) -> Optional[List[PresenceGQLModel]]:
+@asPage
+async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceWhereFilter] = None) -> Optional[List[PresenceGQLModel]]:
     loader = getLoaders(info).presences
     result = await loader.page(skip, limit)
     return result

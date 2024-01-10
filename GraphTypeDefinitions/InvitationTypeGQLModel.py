@@ -52,16 +52,16 @@ class InvitationTypeGQLModel:
         return self.changedby
     
     #TODO resolve RBACobject
-    @createInputs
-    @dataclass
-    class EventCategoryWhereFilter:
-        id: UUID
-        name: str
-        name_en: str
-
+    
 
 
     #TODO def presences - need PresenceGQLModel which works
+@createInputs
+@dataclass
+class InvitationTypeWhereFilter:
+    id: UUID
+    name: str
+    name_en: str
 
 
 
@@ -73,7 +73,7 @@ async def invitation_type_by_id(self, info: strawberry.types.Info, id: UUID) -> 
 
 @strawberry.field(description="""Finds all invitation types paged""")
 @asPage
-async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[InvitationTypeGQLModel]:
+async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[InvitationTypeWhereFilter] = None) -> List[InvitationTypeGQLModel]:
     loader = getLoaders(info).invitationtypes
     result = await loader.page(skip, limit)
     return result

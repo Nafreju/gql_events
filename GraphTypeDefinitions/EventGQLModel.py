@@ -80,13 +80,7 @@ class EventGQLModel:
         result = await loader.filter_by(event_id=self.id)
         return result
         """
-    @createInputs
-    @dataclass
-    class EventCategoryWhereFilter: 
-        id: UUID
-        event_id: int
-        group_id: int 
-
+   
 
     @strawberry.field(description="""Participants of the event and if they were absent or so...""")
     async def presences(self, info: strawberry.types.Info, invitation_types: List[strawberry.ID] = []) -> List["PresenceGQLModel"]:
@@ -115,6 +109,12 @@ class EventGQLModel:
         #TODO
         result = await loader.filter_by(masterevent_id=self.id)
         return result
+@createInputs
+@dataclass
+class EventWhereFilter: 
+    id: UUID
+    event_id: int
+    group_id: int 
 
 #Queries
 @strawberry.field(description="""Finds a particular event""")
@@ -124,7 +124,7 @@ async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[E
 
 @strawberry.field(description="""Finds all events paged""")
 @asPage
-async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[EventGQLModel]:
+async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventWhereFilter] = None) -> List[EventGQLModel]:
     loader = getLoaders(info).events
     result = await loader.page(skip, limit)
     return result

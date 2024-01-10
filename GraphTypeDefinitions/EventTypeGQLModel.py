@@ -58,13 +58,7 @@ class EventTypeGQLModel:
         return self.category_id
     
     #TODO resolve RBACObject
-    @createInputs
-    @dataclass
-    class EventCategoryWhereFilter:
-        id: UUID
-        name: str
-        name_en: str
-
+    
 
 
     @strawberry.field(description="""Related events""")
@@ -81,6 +75,12 @@ class EventTypeGQLModel:
         result = await CategoryGQLModel.resolve_reference(info=info, id=self.category_id)
         return result
     """
+@createInputs
+@dataclass
+class EventTypeWhereFilter:
+    id: UUID
+    name: str
+    name_en: str
 
 #Queries
 @strawberry.field(description="Finds a particular event type")
@@ -90,7 +90,7 @@ async def event_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optio
 
 @strawberry.field(description="""Finds all event types paged""")
 @asPage
-async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> Optional[List[EventTypeGQLModel]]:
+async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventTypeWhereFilter] = None) -> Optional[List[EventTypeGQLModel]]:
     loader = getLoaders(info).eventtypes
     result = await loader.page(skip, limit)
     return result
