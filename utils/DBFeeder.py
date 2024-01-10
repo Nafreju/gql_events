@@ -53,28 +53,24 @@ def get_demodata():
 
 
 async def initDB(asyncSessionMaker):
-
-    defaultNoDemo = "_________"
-    
-    """
-    if defaultNoDemo == os.environ.get("DEMO", defaultNoDemo):
+    demoMode = os.environ.get("DEMO", "False")
+    if demoMode == "False":
         print("No Demo mode")
         dbModels = [
             EventTypeModel,           
             PresenceTypeModel, 
             InvitationTypeModel        ]
     else:
-    """
-    print("Demo mode")
-    dbModels = [
-        EventCategoryModel,
-        EventTypeModel, 
-        PresenceTypeModel, 
-        InvitationTypeModel,
-        EventModel, 
-        EventGroupModel, 
-        PresenceModel
-    ]
+        print("Demo mode")
+        dbModels = [
+            EventCategoryModel,
+            EventTypeModel, 
+            PresenceTypeModel, 
+            InvitationTypeModel,
+            EventModel, 
+            EventGroupModel, 
+            PresenceModel
+        ]
 
     jsonData = get_demodata()
     await ImportModels(asyncSessionMaker, dbModels, jsonData)
