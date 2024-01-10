@@ -1,7 +1,8 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser, asPage
+from ._GraphResolvers import asPage
+from utils import getLoadersFromInfo, getUserFromInfo
 
 from uuid import UUID
 from dataclasses import dataclass
@@ -17,7 +18,7 @@ EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
 class EventGroupGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoaders(info).eventgroups
+        loader = getLoadersFromInfo(info).eventgroups
         result = await loader.load(id)
         if result is not None:
             result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
@@ -57,6 +58,7 @@ class EventGroupGQLModel:
         from .EventGQLModel import EventGQLModel
         result = await EventGQLModel.resolve_reference(id=self.event_id)
         return result
+    
 @createInputs
 @dataclass
 class EventGroupWhereFilter:
@@ -68,13 +70,12 @@ class EventGroupWhereFilter:
 @strawberry.field(description="""Finds a particular event-group entity""")
 async def event_group_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGroupGQLModel]:
     result = await EventGroupGQLModel.resolve_reference(info=info, id=id)
-    return getLoaders(info).eventgroup
+    return getLoadersFromInfo(info).eventgroup
 
 @strawberry.field(description="""Finds all events-groups paged""")
 @asPage
 async def event_group_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventGroupWhereFilter] = None ) -> List[EventGroupGQLModel]:
-
-    return getLoaders(info).eventgroups
+    return getLoadersFromInfo(info).eventgroups
 
 #Mutations
 @strawberry.input(description="Input structure - C operation")
@@ -98,10 +99,10 @@ class EventGroupResultGQLModel:
     
 @strawberry.mutation(description="C operation")
 async def event_group_insert(self, info: strawberry.types.Info, event_group: EventGroupInsertGQLModel) -> EventGroupResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).eventgroups
+    loader = getLoadersFromInfo(info).eventgroups
     row = await loader.insert(event_group)
     result = EventGroupResultGQLModel(id=row.id, msg="ok")
     return result

@@ -1,10 +1,12 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import getLoaders, getUser,asPage
+from ._GraphResolvers import asPage
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
+from utils import getLoadersFromInfo, getUserFromInfo
+
 
 UserGQLModel = Annotated["UserGQLModel", strawberry.lazy(".externals")]
 PresenceTypeGQLModel = Annotated["PresenceTypeGQLModel", strawberry.lazy(".PresenceTypeGQLModel")]
@@ -15,7 +17,7 @@ EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
 class PresenceGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoaders(info).presences
+        loader = getLoadersFromInfo(info).presences
         result = await loader.load(id)
         if result is not None:
             result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
@@ -106,19 +108,19 @@ async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optiona
 @strawberry.field(description="""Finds all presences paged""")
 @asPage
 async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceWhereFilter] = None) -> List[PresenceGQLModel]:
-    return getLoaders(info).presences
+    return getLoadersFromInfo(info).presences
     
 
 @strawberry.field(description="""Finds all presences for the event""")
 async def presences_by_event(self, info: strawberry.types.Info, event_id: UUID) -> List[PresenceGQLModel]:
-    loader = getLoaders(info).presences
+    loader = getLoadersFromInfo(info).presences
     result = await loader.filter_by(event_id=event_id)
     return result
 
 @strawberry.field(description="""Finds all presences for the user in the period""")
 async def presences_by_user(self, info: strawberry.types.Info, user_id: UUID,) -> List[PresenceGQLModel]:
     #assert startdate < enddate, "startdate must be sooner than enddate"
-    loader = getLoaders(info).presences
+    loader = getLoadersFromInfo(info).presences
     # stmt = loader.getSelectStatement()
     # model = loader.getModel()
     # filterstmt = or_(
@@ -171,20 +173,20 @@ class PresenceResultGQLModel:
     
 @strawberry.mutation(description="C operation")
 async def presence_insert(self, info: strawberry.types.Info, presence: PresenceInsertGQLModel) -> PresenceResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).presences
+    loader = getLoadersFromInfo(info).presences
     row = await loader.insert(presence)
     result = PresenceResultGQLModel(id=row.id, msg="ok")
     return result
 
 @strawberry.mutation(description="U operation")
 async def presence_update(self, info: strawberry.types.Info, presence: PresenceUpdateGQLModel) -> PresenceResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).presences
+    loader = getLoadersFromInfo(info).presences
     row = await loader.update(presence)
     result = PresenceResultGQLModel(id=presence.id, msg="ok")
     result.msg = "fail" if row is None else "ok"

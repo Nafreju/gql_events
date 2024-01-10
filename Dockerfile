@@ -23,7 +23,7 @@ COPY . /app
 FROM prepare as tester
 RUN python -m pip install -r requirements-dev.txt
 RUN python -m pip install coverage pytest pytest-cov
-RUN python -m pytest --cov-report term-missing --cov=gql_ug tests/*
+RUN python -m pytest --cov-report term-missing --cov=. tests/*
 
 FROM prepare as runner
 # Creates a non-root user and adds permission to access the /app folder

@@ -1,21 +1,21 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser, asPage
+from ._GraphResolvers import asPage
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-
+from utils import getLoadersFromInfo, getUserFromInfo
 
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
-CategoryGQLModel = Annotated["CategoryGQLModel", strawberry.lazy(".CategoryGQLModel")]
+EventCategoryGQLModel = Annotated["EventCategoryGQLModel", strawberry.lazy(".EventCategoryGQLModel")]
 
 
 @strawberry.federation.type(keys=["id"], description="""Represents an event type""")
 class EventTypeGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoaders(info).eventtypes
+        loader = getLoadersFromInfo(info).eventtypes
         result = await loader.load(id)
         if result is not None:
             result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
@@ -63,24 +63,27 @@ class EventTypeGQLModel:
 
     @strawberry.field(description="""Related events""")
     async def events(self, info: strawberry.types.Info) -> Optional[List[EventGQLModel]]:
-        loader = getLoaders(info).events
+        loader = getLoadersFromInfo(info).events
         result = await loader.filter_by(eventtype_id=self.id)
-        return getLoaders(info).events
-
-    
-    """
-    TODO
-    @strawberry.field(description="Category of event type")
-    async def category(self, info: strawberry.types.Info) -> Optional["CategoryGQLModel"]:
-        result = await CategoryGQLModel.resolve_reference(info=info, id=self.category_id)
         return result
-    """
+
+
+    @strawberry.field(description="Category of event type")
+    async def category(self, info: strawberry.types.Info) -> Optional["EventCategoryGQLModel"]:
+        from .EventCategoryGQLModel import EventCategoryGQLModel
+        result = await EventCategoryGQLModel.resolve_reference(info=info, id=self.category_id)
+        return result
+
+
 @createInputs
 @dataclass
 class EventTypeWhereFilter:
     id: UUID
     name: str
     name_en: str
+
+    from .EventCategoryGQLModel import EventCategoryWhereFilter
+    category: EventCategoryWhereFilter
 
 #Queries
 @strawberry.field(description="Finds a particular event type")
@@ -91,7 +94,7 @@ async def event_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optio
 @strawberry.field(description="""Finds all event types paged""")
 @asPage
 async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventTypeWhereFilter] = None) -> List[EventTypeGQLModel]:
-    return getLoaders(info).eventtypes
+    return getLoadersFromInfo(info).eventtypes
 
 
 #Mutations
@@ -134,10 +137,10 @@ class EventTypeResultGQLModel:
     
 @strawberry.mutation(description="C operation")
 async def event_type_insert(self, info: strawberry.types.Info, event_type: EventTypeInsertGQLModel) -> EventTypeResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).eventtypes
+    loader = getLoadersFromInfo(info).eventtypes
     row = await loader.insert(event_type)
     result = EventTypeResultGQLModel(id=row.id, msg="ok")
     return result
@@ -145,10 +148,10 @@ async def event_type_insert(self, info: strawberry.types.Info, event_type: Event
 
 @strawberry.mutation(description="U operation")
 async def event_type_update(self, info: strawberry.types.Info, event_type: EventTypeUpdateGQLModel) -> EventTypeResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).eventtypes
+    loader = getLoadersFromInfo(info).eventtypes
     row = await loader.update(event_type)
     result = EventTypeResultGQLModel(id=event_type.id, msg="ok")
     result.msg = "fail" if row is None else "ok"

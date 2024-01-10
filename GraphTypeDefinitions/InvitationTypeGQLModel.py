@@ -1,11 +1,11 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser, asPage
+from ._GraphResolvers import asPage
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-
+from utils import getLoadersFromInfo, getUserFromInfo
 
 
 @strawberry.federation.type(keys=["id"], description="""Represents type of invitation user obtained to event""")
@@ -13,7 +13,7 @@ class InvitationTypeGQLModel:
 
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoaders(info).invitationtypes
+        loader = getLoadersFromInfo(info).invitationtypes
         result = await loader.load(id)
         if result is not None:
             result.__strawberry_definition__ = cls.__strawberry_definition__   # little hack :)
@@ -74,7 +74,7 @@ async def invitation_type_by_id(self, info: strawberry.types.Info, id: UUID) -> 
 @strawberry.field(description="""Finds all invitation types paged""")
 @asPage
 async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[InvitationTypeWhereFilter] = None) -> List[InvitationTypeGQLModel]:
-    return getLoaders(info).invitationtypes
+    return getLoadersFromInfo(info).invitationtypes
 
 
 
@@ -116,10 +116,10 @@ class InvitationTypeResultGQLModel:
 
 @strawberry.mutation(description="C operation")
 async def invitation_type_insert(self, info: strawberry.types.Info, invitation_type: InvitationTypeInsertGQLModel) -> InvitationTypeResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).invitationtypes
+    loader = getLoadersFromInfo(info).invitationtypes
     row = await loader.insert(invitation_type)
     result = InvitationTypeResultGQLModel(id=row.id, msg="ok")
     return result
@@ -127,10 +127,10 @@ async def invitation_type_insert(self, info: strawberry.types.Info, invitation_t
 
 @strawberry.mutation(description="U operation")
 async def invitation_type_update(self, info: strawberry.types.Info, invitation_type: InvitationTypeUpdateGQLModel) -> InvitationTypeResultGQLModel: 
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
         
-    loader = getLoaders(info).invitationtypes
+    loader = getLoadersFromInfo(info).invitationtypes
     row = await loader.update(invitation_type)
     result = InvitationTypeResultGQLModel(id=invitation_type.id, msg="ok")
     result.msg = "fail" if row is None else "ok"

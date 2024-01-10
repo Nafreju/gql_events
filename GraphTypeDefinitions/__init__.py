@@ -1,6 +1,6 @@
 import strawberry
 
-from .utils import withInfo, getLoaders
+
 from .PresenceGQLModel import PresenceGQLModel
 from .EventTypeGQLModel import EventTypeGQLModel
 from .PresenceTypeGQLModel import PresenceTypeGQLModel
@@ -82,15 +82,5 @@ class Mutation:
     event_category_update = event_category_update
 
 
-    
 
-
-
-
-
-
-
-
-
-
-schema = strawberry.federation.Schema(Query, types=(UserGQLModel, GroupGQLModel), mutation=Mutation)
+schema = strawberry.federation.Schema(Query, types=(UserGQLModel,), mutation=Mutation)

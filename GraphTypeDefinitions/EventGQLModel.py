@@ -1,11 +1,13 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser, asPage
+from ._GraphResolvers import asPage
 
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
+from utils import getLoadersFromInfo, getUserFromInfo
+
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
@@ -15,7 +17,7 @@ PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLMo
 class EventGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        eventsloader = getLoaders(info).events
+        eventsloader = getLoadersFromInfo(info).events
         result = await eventsloader.load(id)
         if result is not None:
             result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
@@ -105,7 +107,7 @@ class EventGQLModel:
 
     @strawberry.field(description="""events which are contained by this event (aka all lessons for the semester)""")
     async def sub_events(self, info: strawberry.types.Info, startdate: datetime.datetime, enddate: datetime.datetime) -> List["EventGQLModel"]:
-        loader = getLoaders(info).events
+        loader = getLoadersFromInfo(info).events
         #TODO
         result = await loader.filter_by(masterevent_id=self.id)
         return result
@@ -125,7 +127,7 @@ async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[E
 @strawberry.field(description="""Finds all events paged""")
 @asPage
 async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventWhereFilter] = None) -> List[EventGQLModel]:
-    return getLoaders(info).events
+    return getLoadersFromInfo(info).events
 
 
 #Mutations
@@ -180,10 +182,10 @@ class EventResultGQLModel:
 
 @strawberry.mutation(description="C operation")
 async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLModel) -> EventResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).events
+    loader = getLoadersFromInfo(info).events
     row = await loader.insert(event)
     result = EventResultGQLModel(id=row.id, msg="ok")
     return result
@@ -191,10 +193,10 @@ async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLM
 
 @strawberry.mutation(description="U operation")
 async def event_update(self, info: strawberry.types.Info, event: EventUpdateGQLModel) -> EventResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
     
-    loader = getLoaders(info).events
+    loader = getLoadersFromInfo(info).events
     row = await loader.update(event)
     result = EventResultGQLModel(id=event.id, msg="ok")
     result.msg = "fail" if row is None else "ok"

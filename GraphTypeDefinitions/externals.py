@@ -1,12 +1,12 @@
 import strawberry
 import datetime
 from typing import List
-from .utils import withInfo, getLoaders
 from .EventGQLModel import EventGQLModel
 from .PresenceGQLModel import PresenceGQLModel
 from uuid import UUID
+from utils import getLoadersFromInfo
 
-from GraphResolvers import resolveEventsForGroup, resolveEventsForUser, create_statement_for_user_events
+from ._GraphResolvers import create_statement_for_user_events, create_statement_for_group_events
 
 
 @strawberry.federation.type(extend=True, keys=["id"])
@@ -26,7 +26,7 @@ class UserGQLModel:
         enddate: datetime.datetime = None,
     ) -> List["EventGQLModel"]:
         statement = create_statement_for_user_events(self.id, startdate=startdate, enddate=enddate)
-        loader = getLoaders(info).events
+        loader = getLoadersFromInfo(info).events
         result = await loader.execute_select(statement)
         return result
         
@@ -34,7 +34,7 @@ class UserGQLModel:
     async def presencies(
         self, info
     ) -> List["PresenceGQLModel"]:
-        loader = getLoaders(info).presences
+        loader = getLoadersFromInfo(info).presences
         result = await loader.filter_by(user_id=self.id)
         return result
 
@@ -57,9 +57,10 @@ class GroupGQLModel:
         enddate: datetime.datetime = None,
         # eventtype_id: strawberry.ID = None
     ) -> List["EventGQLModel"]:
-        async with withInfo(info) as session:
-            result = await resolveEventsForGroup(session, self.id, startdate, enddate)
-            return result
+        statement = create_statement_for_group_events(self.id, startdate=startdate, enddate=enddate)
+        loader = getLoadersFromInfo(info).events
+        result = await loader.execute_select(statement)
+        return result
         
 
 
@@ -76,6 +77,6 @@ class RBACObjectGQLModel:
 
     @classmethod
     async def resolve_roles(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoaders(info).authorizations
+        loader = getLoadersFromInfo(info).authorizations
         authorizedroles = await loader.load(id)
         return authorizedroles

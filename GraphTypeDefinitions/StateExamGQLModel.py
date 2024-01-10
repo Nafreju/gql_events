@@ -1,7 +1,8 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders
+from .utils import withInfo
+from utils import getLoadersFromInfo
 
 from uuid import UUID
 
@@ -18,7 +19,7 @@ InvitationTypeGQLModel = Annotated["InvitationTypeGQLModel", strawberry.lazy(".I
 class StateExamGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        state_exam_loader = getLoaders(info).stateexams
+        state_exam_loader = getLoadersFromInfo(info).stateexams
         result = await state_exam_loader.load(id)
         if result is not None:
             result._type_definition = cls._type_definition  

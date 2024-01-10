@@ -124,6 +124,10 @@ def createLoaders(asyncSessionMaker):
         
     return Loaders()
 
+def getLoadersFromInfo(info):
+    context = info.context
+    loaders = context["loaders"]
+    return loaders
 
 
 demouser = {

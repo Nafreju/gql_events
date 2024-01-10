@@ -1,2 +1,2 @@
 from .DBFeeder import initDB
-from .Dataloaders import createLoaders
+from .Dataloaders import createLoaders, getLoadersFromInfo, getUserFromInfo

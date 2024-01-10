@@ -1,10 +1,11 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser, asPage
+from ._GraphResolvers import asPage
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
+from utils import getLoadersFromInfo, getUserFromInfo
 
 PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLModel")]
 
@@ -13,7 +14,7 @@ PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLMo
 class PresenceTypeGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoaders(info).presencetypes
+        loader = getLoadersFromInfo(info).presencetypes
 
         result = await loader.load(id)
         if result is not None:
@@ -57,7 +58,7 @@ class PresenceTypeGQLModel:
 
     @strawberry.field(description="Presences who have this presence type")
     async def presences(self, info: strawberry.types.Info) -> Optional[List[PresenceGQLModel]]:
-        return getLoaders(info).presences
+        return getLoadersFromInfo(info).presences
  
 @createInputs
 @dataclass
@@ -75,8 +76,7 @@ async def presence_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Op
 
 @strawberry.field(description="""Finds all presence types paged""")
 async def presence_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceTypeWhereFilter] = None) -> Optional[List[PresenceTypeGQLModel]]:
-    
-    return getLoaders(info).presencetypes
+    return getLoadersFromInfo(info).presencetypes
 
 
 #Mutations
@@ -119,20 +119,20 @@ class PresenceTypeResultGQLModel:
     
 @strawberry.mutation(description="C operation")
 async def presence_type_insert(self, info: strawberry.types.Info, presence_type: PresenceTypeInsertGQLModel) -> PresenceTypeResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).presencetypes
+    loader = getLoadersFromInfo(info).presencetypes
     row = await loader.insert(presence_type)
     result = PresenceTypeResultGQLModel(id=row.id, msg="ok")
     return result
 
 @strawberry.mutation(description="U operation")
 async def presence_type_update(self, info: strawberry.types.Info, presence_type: PresenceTypeUpdateGQLModel) -> PresenceTypeResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).presencetypes
+    loader = getLoadersFromInfo(info).presencetypes
     row = await loader.update(presence_type)
     result = PresenceTypeResultGQLModel(id=presence_type.id, msg="ok")
     result.msg = "fail" if row is None else "ok"

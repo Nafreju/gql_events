@@ -1,7 +1,8 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser, asPage
+from ._GraphResolvers import asPage
+from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
@@ -14,7 +15,7 @@ EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQ
 class EventCategoryGQLModel:
     @classmethod
     async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoaders(info).eventcategories
+        loader = getLoadersFromInfo(info).eventcategories
         result = await loader.load(id)
         if result is not None:
             result.__strawberry_definition__ = cls.__strawberry_definition__   # little hack :)
@@ -61,10 +62,13 @@ class EventCategoryGQLModel:
 
 
     @strawberry.field(description="""event types which has this category""")
-    async def types(self, info: strawberry.types.Info) -> Optional[List[EventTypeGQLModel]]:
-        loader = getLoaders(info).eventtypes
+    async def types(self, info: strawberry.types.Info) -> List[EventTypeGQLModel]:
+        loader = getLoadersFromInfo(info).eventtypes
         result = await loader.filter_by(category_id=self.id)
         return result
+
+
+EventTypeWhereFilter = Annotated["EventTypeWhereFilter", strawberry.lazy(".EventTypeGQLModel")]
 
 @createInputs
 @dataclass
@@ -72,6 +76,13 @@ class EventCategoryWhereFilter:
     id: UUID
     name: str
     name_en: str
+
+    valid: bool
+    created: datetime.datetime
+    createdby: UUID
+    changedby: UUID
+
+    #types: EventTypeWhereFilter
 
 
 
@@ -86,7 +97,7 @@ async def event_category_by_id(self, info: strawberry.types.Info, id: UUID) -> O
 @asPage
 async def event_category_page(self, info: strawberry.types.Info, \
             skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[EventCategoryGQLModel]:
-    return getLoaders(info).eventcategories
+    return getLoadersFromInfo(info).eventcategories
 
 
 
@@ -126,20 +137,20 @@ class EventCategoryResultGQLModel:
     
 @strawberry.mutation(description="C operation")
 async def event_category_insert(self, info: strawberry.types.Info, event_category: EventCategoryInsertGQLModel) -> EventCategoryResultGQLModel:
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
 
-    loader = getLoaders(info).eventcategories
+    loader = getLoadersFromInfo(info).eventcategories
     row = await loader.insert(event_category)
     result = EventCategoryResultGQLModel(id=row.id, msg="ok")
     return result
 
 @strawberry.mutation(description="U operation")
 async def event_category_update(self, info: strawberry.types.Info, event_category: EventCategoryUpdateGQLModel) -> EventCategoryResultGQLModel: 
-    user = getUser(info) #TODO
+    user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
         
-    loader = getLoaders(info).eventcategories
+    loader = getLoadersFromInfo(info).eventcategories
     row = await loader.update(event_category)
     result = EventCategoryResultGQLModel(id=event_category.id, msg="ok")
     result.msg = "fail" if row is None else "ok"

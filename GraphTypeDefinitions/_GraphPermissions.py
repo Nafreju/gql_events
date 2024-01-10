@@ -5,6 +5,8 @@ from typing import List, Any
 from uuid import UUID
 from functools import cached_property
 
+from utils import getUserFromInfo
+
 import os
 
 isDEMO = os.environ.get("DEMO", "True")
@@ -272,13 +274,13 @@ def RolesToList(roles: str = ""):
     roleIdsNeeded = list(map(lambda roleName: roleIndex[roleName], roleNames))
     return roleIdsNeeded
 
-from .utils import getLoaders
+
 # from ._RBACObjectGQLModel import RBACObjectGQLModel
 
 # async def resolveRoles(info, id):
 #     return []
 
-from .utils import getLoaders
+
 from utils.gql_ug_proxy import get_ug_connection
 
 
