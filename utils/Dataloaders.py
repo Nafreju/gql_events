@@ -6,7 +6,7 @@ from DBDefinitions import \
         InvitationTypeModel, PresenceModel, PresenceTypeModel
 import os, asyncio, aiohttp
 from aiodataloader import DataLoader
-
+import logging
 
 @cache
 def composeAuthUrl():
