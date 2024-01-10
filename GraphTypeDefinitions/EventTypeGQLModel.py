@@ -1,8 +1,11 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser
+from .utils import withInfo, getLoaders, getUser, asPage
 from uuid import UUID
+from dataclasses import dataclass
+from uoishelpers.resolvers import createInputs
+
 
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
 CategoryGQLModel = Annotated["CategoryGQLModel", strawberry.lazy(".CategoryGQLModel")]
@@ -55,6 +58,13 @@ class EventTypeGQLModel:
         return self.category_id
     
     #TODO resolve RBACObject
+    @createInputs
+    @dataclass
+    class EventCategoryWhereFilter:
+        id: UUID
+        name: str
+        name_en: str
+
 
 
     @strawberry.field(description="""Related events""")
@@ -79,7 +89,8 @@ async def event_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optio
     return result
 
 @strawberry.field(description="""Finds all event types paged""")
-async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10) -> Optional[List[EventTypeGQLModel]]:
+@asPage
+async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> Optional[List[EventTypeGQLModel]]:
     loader = getLoaders(info).eventtypes
     result = await loader.page(skip, limit)
     return result

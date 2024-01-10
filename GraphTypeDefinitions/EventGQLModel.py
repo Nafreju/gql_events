@@ -1,9 +1,11 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser
+from .utils import withInfo, getLoaders, getUser, asPage
 
 from uuid import UUID
+from dataclasses import dataclass
+from uoishelpers.resolvers import createInputs
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
@@ -78,6 +80,13 @@ class EventGQLModel:
         result = await loader.filter_by(event_id=self.id)
         return result
         """
+    @createInputs
+    @dataclass
+    class EventCategoryWhereFilter: 
+        id: UUID
+        event_id: int
+        group_id: int 
+
 
     @strawberry.field(description="""Participants of the event and if they were absent or so...""")
     async def presences(self, info: strawberry.types.Info, invitation_types: List[strawberry.ID] = []) -> List["PresenceGQLModel"]:
@@ -114,7 +123,8 @@ async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[E
     return result
 
 @strawberry.field(description="""Finds all events paged""")
-async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10) -> List[EventGQLModel]:
+@asPage
+async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[EventGQLModel]:
     loader = getLoaders(info).events
     result = await loader.page(skip, limit)
     return result

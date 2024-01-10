@@ -1,12 +1,22 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser
+from .utils import withInfo, getLoaders, getUser, asPage
 
 from uuid import UUID
+from dataclasses import dataclass
+from uoishelpers.resolvers import createInputs
+
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
+
+@createInputs
+@dataclass
+class EventCategoryWhereFilter:
+    id:UUID
+    event_id:int 
+    group_id:int 
 
 @strawberry.federation.type(keys=["id"], description="""Describes a relation of an group to the event.""")
 class EventGroupGQLModel:
@@ -61,7 +71,8 @@ async def event_group_by_id(self, info: strawberry.types.Info, id: UUID) -> Opti
     return result
 
 @strawberry.field(description="""Finds all events-groups paged""")
-async def event_group_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10) -> Optional[List[EventGroupGQLModel]]:
+@asPage
+async def event_group_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None ) -> Optional[List[EventGroupGQLModel]]:
     loader = getLoaders(info).eventgroups
     result = await loader.page(skip, limit)
     return result

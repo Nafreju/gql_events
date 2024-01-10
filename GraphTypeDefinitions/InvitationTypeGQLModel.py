@@ -1,8 +1,12 @@
 import strawberry
 import datetime
 from typing import Union, List, Annotated, Optional
-from .utils import withInfo, getLoaders, getUser
+from .utils import withInfo, getLoaders, getUser, asPage
 from uuid import UUID
+from dataclasses import dataclass
+from uoishelpers.resolvers import createInputs
+
+
 
 @strawberry.federation.type(keys=["id"], description="""Represents type of invitation user obtained to event""")
 class InvitationTypeGQLModel:
@@ -48,6 +52,13 @@ class InvitationTypeGQLModel:
         return self.changedby
     
     #TODO resolve RBACobject
+    @createInputs
+    @dataclass
+    class EventCategoryWhereFilter:
+        id: UUID
+        name: str
+        name_en: str
+
 
 
     #TODO def presences - need PresenceGQLModel which works
@@ -61,7 +72,8 @@ async def invitation_type_by_id(self, info: strawberry.types.Info, id: UUID) -> 
     return result
 
 @strawberry.field(description="""Finds all invitation types paged""")
-async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10) -> List[InvitationTypeGQLModel]:
+@asPage
+async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[InvitationTypeGQLModel]:
     loader = getLoaders(info).invitationtypes
     result = await loader.page(skip, limit)
     return result
