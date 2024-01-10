@@ -5,6 +5,7 @@ from .utils import withInfo, getLoaders, getUser, asPage
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
+from ._GraphPermissions import OnlyForAuthentized
 
 
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
@@ -51,7 +52,12 @@ class EventCategoryGQLModel:
     def changedby(self) -> Optional[UUID]:
         return self.changedby
     
-    #TODO resolve RBACobject
+    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
+    @strawberry.field(description="""Who made last change""")
+    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
+        from .externals import RBACObjectGQLModel
+        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
+        return result
 
 
     @strawberry.field(description="""event types which has this category""")

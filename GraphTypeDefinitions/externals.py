@@ -60,3 +60,22 @@ class GroupGQLModel:
         async with withInfo(info) as session:
             result = await resolveEventsForGroup(session, self.id, startdate, enddate)
             return result
+        
+
+
+
+
+
+@strawberry.federation.type(extend=True, keys=["id"])
+class RBACObjectGQLModel:
+    id: UUID = strawberry.federation.field(external=True)
+    
+    @classmethod
+    async def resolve_reference(cls, id: UUID):
+        return RBACObjectGQLModel(id=id)
+
+    @classmethod
+    async def resolve_roles(cls, info: strawberry.types.Info, id: UUID):
+        loader = getLoaders(info).authorizations
+        authorizedroles = await loader.load(id)
+        return authorizedroles
