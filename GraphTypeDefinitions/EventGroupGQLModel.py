@@ -72,7 +72,7 @@ async def event_group_by_id(self, info: strawberry.types.Info, id: UUID) -> Opti
 
 @strawberry.field(description="""Finds all events-groups paged""")
 @asPage
-async def event_group_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventGroupWhereFilter] = None ) -> Optional[List[EventGroupGQLModel]]:
+async def event_group_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventGroupWhereFilter] = None ) -> List[EventGroupGQLModel]:
 
     return getLoaders(info).eventgroups
 

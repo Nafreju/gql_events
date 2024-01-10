@@ -90,8 +90,7 @@ async def event_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optio
 
 @strawberry.field(description="""Finds all event types paged""")
 @asPage
-async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventTypeWhereFilter] = None) -> Optional[List[EventTypeGQLModel]]:
-    
+async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventTypeWhereFilter] = None) -> List[EventTypeGQLModel]:
     return getLoaders(info).eventtypes
 
 
