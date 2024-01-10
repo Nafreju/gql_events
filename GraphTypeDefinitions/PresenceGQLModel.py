@@ -94,8 +94,8 @@ class PresenceGQLModel:
 @dataclass
 class PresenceWhereFilter:
     id: UUID
-    event_id: int
-    user_id: int
+    event_id: UUID
+    user_id: UUID
       
 #Queries
 @strawberry.field(description="""Finds a particular presence""")
@@ -105,7 +105,7 @@ async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optiona
 
 @strawberry.field(description="""Finds all presences paged""")
 @asPage
-async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceWhereFilter] = None) -> Optional[List[PresenceGQLModel]]:
+async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceWhereFilter] = None) -> List[PresenceGQLModel]:
     return getLoaders(info).presences
     
 

@@ -71,7 +71,8 @@ https://docs.docker.com/compose/
 
 TODO:
 where všude jako EventCategoryGQLModel - vymyslet, které atributy všude budou
-ExamModel - event_id
+ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
+
 
 
 KEEP

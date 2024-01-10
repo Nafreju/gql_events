@@ -64,7 +64,7 @@ class PresenceTypeGQLModel:
 class PresenceTypeWhereFilter:
     id: UUID
     name: str
-    name_en:str
+    name_en: str
 
 
 #Queries
