@@ -125,9 +125,8 @@ async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[E
 @strawberry.field(description="""Finds all events paged""")
 @asPage
 async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventWhereFilter] = None) -> List[EventGQLModel]:
-    loader = getLoaders(info).events
-    result = await loader.page(skip, limit)
-    return result
+    return getLoaders(info).events
+
 
 #Mutations
 @strawberry.input(description="Input structure - C operation")

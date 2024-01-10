@@ -74,9 +74,7 @@ async def invitation_type_by_id(self, info: strawberry.types.Info, id: UUID) -> 
 @strawberry.field(description="""Finds all invitation types paged""")
 @asPage
 async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[InvitationTypeWhereFilter] = None) -> List[InvitationTypeGQLModel]:
-    loader = getLoaders(info).invitationtypes
-    result = await loader.page(skip, limit)
-    return result
+    return getLoaders(info).invitationtypes
 
 
 

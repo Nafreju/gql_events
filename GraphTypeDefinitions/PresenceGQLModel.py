@@ -89,12 +89,14 @@ class PresenceGQLModel:
         from .EventGQLModel import EventGQLModel
         result = await EventGQLModel.resolve_reference(info, id=self.event_id)
         return result
+
 @createInputs
 @dataclass
 class PresenceWhereFilter:
     id: UUID
     event_id: int
-    user_id: int  
+    user_id: int
+      
 #Queries
 @strawberry.field(description="""Finds a particular presence""")
 async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[PresenceGQLModel]:

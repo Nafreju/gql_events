@@ -59,7 +59,7 @@ class EventGroupGQLModel:
         return result
 @createInputs
 @dataclass
-class EventCategoryWhereFilter:
+class EventGroupWhereFilter:
     id:UUID
     event_id:int 
     group_id:int
@@ -68,14 +68,13 @@ class EventCategoryWhereFilter:
 @strawberry.field(description="""Finds a particular event-group entity""")
 async def event_group_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGroupGQLModel]:
     result = await EventGroupGQLModel.resolve_reference(info=info, id=id)
-    return result
+    return getLoaders(info).eventgroup
 
 @strawberry.field(description="""Finds all events-groups paged""")
 @asPage
 async def event_group_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventGroupWhereFilter] = None ) -> Optional[List[EventGroupGQLModel]]:
-    loader = getLoaders(info).eventgroups
-    result = await loader.page(skip, limit)
-    return result
+
+    return getLoaders(info).eventgroups
 
 #Mutations
 @strawberry.input(description="Input structure - C operation")

@@ -57,9 +57,7 @@ class PresenceTypeGQLModel:
 
     @strawberry.field(description="Presences who have this presence type")
     async def presences(self, info: strawberry.types.Info) -> Optional[List[PresenceGQLModel]]:
-        loader = getLoaders(info).presences
-        result = await loader.filter_by(presencetype_id=self.id)
-        return result
+        return getLoaders(info).presences
  
 @createInputs
 @dataclass
@@ -77,9 +75,8 @@ async def presence_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Op
 
 @strawberry.field(description="""Finds all presence types paged""")
 async def presence_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceTypeWhereFilter] = None) -> Optional[List[PresenceTypeGQLModel]]:
-    loader = getLoaders(info).presencetypes
-    result = await loader.page(skip, limit)
-    return result
+    
+    return getLoaders(info).presencetypes
 
 
 #Mutations
