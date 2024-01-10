@@ -13,15 +13,16 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Install pip requirements
-COPY requirementsdev.txt .
-RUN python -m pip install -r requirementsdev.txt
+COPY requirements-dev.txt .
+RUN python -m pip install -r requirements-dev.txt
 
 WORKDIR /app
 COPY . /app
 
 # FROM prepare as tester
+FROM prepare as tester
+RUN python -m pip install -r requirements-dev.txt
 RUN python -m pip install coverage pytest pytest-cov
-RUN python -m unittest tests/*
 RUN python -m pytest --cov-report term-missing --cov=gql_ug tests/*
 
 FROM prepare as runner
