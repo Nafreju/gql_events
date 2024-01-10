@@ -71,24 +71,20 @@ https://docs.docker.com/compose/
 
 TODO:
 where všude jako EventCategoryGQLModel - vymyslet, které atributy všude budou
-ExamModel - má alternovat eventtype!? -
+
 ExamModel bude 1:1 s EventModel - sdílíme presence (uživatel/skupina), eventtype, eventgroups
 ExamModel bude mít atributy "SubjectModel" z jiné federace?
-
 relationship - jak dělat dědičnost
-KEEP
-
-buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
 
 
 
-main předělat na to, aby tam byl sentinel, jinak nejde řešit permissions
-permission classes všude
+
+
 
 
 testovat, jak se insertuje do více tabulek (sdílených tabulek)
 
-testy možná nefungují kvůli sql lite
+
 
 
 

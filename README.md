@@ -45,6 +45,6 @@ pytest --cov-report term-missing --cov=gql_events tests
 or if in gql_events directory use:
 pytest --cov-report term-missing --cov=. tests
 
-docker build -t gql_core .
+docker build -t gql_events .
 
 uvicorn main:app --env-file environment.txt --port 8001 --reload
