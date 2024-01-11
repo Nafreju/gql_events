@@ -92,9 +92,7 @@ async def presence_type_page(self, info: strawberry.types.Info, skip: int = 0, l
 
 
 #Mutations
-@strawberry.input(description="Input structure - C operation")(
-        description="",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+@strawberry.input(description="Input structure - C operation")       
 class PresenceTypeInsertGQLModel:
     name: str = strawberry.field(description="name of presence type")
 
@@ -105,9 +103,7 @@ class PresenceTypeInsertGQLModel:
     createdby: strawberry.Private[UUID] = None
 
 
-@strawberry.input(description="Input structure - UD operation")(
-        description="",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+@strawberry.input(description="Input structure - UD operation")
 class PresenceTypeUpdateGQLModel:
     id: UUID = strawberry.field(description="primary key (UUID), identifies object of operation")
     lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
