@@ -70,7 +70,8 @@ https://docs.docker.com/compose/
 
 
 TODO:
-
+neumím spustit forms ---- port 8125
+where filter na vektorovou strukturu nefunguje ... ?
 apollo je potřeba jako autorizační server - jak to funguje?
 
 
