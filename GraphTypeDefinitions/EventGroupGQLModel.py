@@ -3,6 +3,7 @@ import datetime
 from typing import Union, List, Annotated, Optional
 from ._GraphResolvers import asPage
 from utils import getLoadersFromInfo, getUserFromInfo
+from ._GraphPermissions import OnlyForAuthentized
 
 from uuid import UUID
 from dataclasses import dataclass
@@ -61,7 +62,9 @@ class EventGroupGQLModel:
         return result
 
 
-    @strawberry.field(description="""Event assigned to group""")
+    @strawberry.field(
+        description="""Event assigned to group""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
     async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
         from .EventGQLModel import EventGQLModel
         result = await EventGQLModel.resolve_reference(id=self.event_id)
@@ -111,7 +114,9 @@ class EventGroupResultGQLModel:
         result = await EventGroupGQLModel.resolve_reference(info=info, id=self.id)
         return result
     
-@strawberry.mutation(description="C operation")
+@strawberry.mutation(
+    description="C operation",
+    permission_classes=[OnlyForAuthentized(isList=True)])
 async def event_group_insert(self, info: strawberry.types.Info, event_group: EventGroupInsertGQLModel) -> EventGroupResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
