@@ -64,9 +64,13 @@ class PresenceGQLModel:
         return self.lastchange
     
     
-   
+    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
+    @strawberry.field(description="""Who made last change""")
+    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
+        from .externals import RBACObjectGQLModel
+        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
+        return result  
 
-    #TODO resolve RBACObject
 
     @strawberry.field(description="""Present, Vacation etc.""")
     async def presence_type(self, info: strawberry.types.Info) -> Optional[PresenceTypeGQLModel]:

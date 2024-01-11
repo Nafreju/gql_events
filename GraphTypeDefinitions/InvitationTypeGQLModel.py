@@ -51,11 +51,15 @@ class InvitationTypeGQLModel:
     def changedby(self) -> Optional[UUID]:
         return self.changedby
     
-    #TODO resolve RBACobject
-    
-
+    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
+    @strawberry.field(description="""Who made last change""")
+    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
+        from .externals import RBACObjectGQLModel
+        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
+        return result  
 
     #TODO def presences - need PresenceGQLModel which works
+
 @createInputs
 @dataclass
 class InvitationTypeWhereFilter:
