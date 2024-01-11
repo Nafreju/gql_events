@@ -53,6 +53,14 @@ class EventGroupGQLModel:
     def changedby(self) -> Optional[UUID]:
         return self.changedby
 
+    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
+    @strawberry.field(description="""Who made last change""")
+    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
+        from .externals import RBACObjectGQLModel
+        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
+        return result
+
+
     @strawberry.field(description="""Event assigned to group""")
     async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
         from .EventGQLModel import EventGQLModel
@@ -62,15 +70,21 @@ class EventGroupGQLModel:
 @createInputs
 @dataclass
 class EventGroupWhereFilter:
-    id:UUID
-    event_id:int 
-    group_id:int
+    id: UUID
+    event_id: UUID 
+    group_id: UUID
+
+    created: datetime.datetime
+    createdby: UUID
+    changedby: UUID
+
+    #TODO event
 
 #Queries
 @strawberry.field(description="""Finds a particular event-group entity""")
 async def event_group_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGroupGQLModel]:
     result = await EventGroupGQLModel.resolve_reference(info=info, id=id)
-    return getLoadersFromInfo(info).eventgroup
+    return result
 
 @strawberry.field(description="""Finds all events-groups paged""")
 @asPage

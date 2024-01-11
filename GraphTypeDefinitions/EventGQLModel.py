@@ -71,7 +71,12 @@ class EventGQLModel:
     def eventtype_id(self) -> Optional[UUID]:
         return self.eventtype_id
     
-    #TODO resolve RBACObject
+    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
+    @strawberry.field(description="""Who made last change""")
+    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
+        from .externals import RBACObjectGQLModel
+        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
+        return result  
 
     @strawberry.field(description="""Groups of users linked to the event""")
     async def groups(self, info: strawberry.types.Info) -> List["GroupGQLModel"]:
@@ -85,6 +90,7 @@ class EventGQLModel:
    
 
     @strawberry.field(description="""Participants of the event and if they were absent or so...""")
+    #TODO
     async def presences(self, info: strawberry.types.Info, invitation_types: List[strawberry.ID] = []) -> List["PresenceGQLModel"]:
         async with withInfo(info) as session:
             #result = await resolvePresencesForEvent(session, self.id, invitation_types)
@@ -99,6 +105,7 @@ class EventGQLModel:
 
     @strawberry.field(description="""event which contains this event (aka semester of this lesson)""")
     async def master_event(self, info: strawberry.types.Info) -> Optional["EventGQLModel"]:
+        #TODO tests maybe need one line
         if self.masterevent_id is None:
             result = None
         else:
@@ -111,12 +118,25 @@ class EventGQLModel:
         #TODO
         result = await loader.filter_by(masterevent_id=self.id)
         return result
+    
 @createInputs
 @dataclass
 class EventWhereFilter: 
     id: UUID
-    event_id: int
-    group_id: int 
+    name: str
+    name_en: str
+
+    valid: bool
+    createdby: UUID
+    changedby: UUID
+    startdate: datetime.datetime
+    enddate: datetime.datetime
+    masterevent_id: UUID
+    eventtype_id: UUID
+
+    #TODO eventtype, presences
+
+
 
 #Queries
 @strawberry.field(description="""Finds a particular event""")

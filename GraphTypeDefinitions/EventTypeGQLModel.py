@@ -57,9 +57,12 @@ class EventTypeGQLModel:
     def category_id(self) -> Optional[UUID]:
         return self.category_id
     
-    #TODO resolve RBACObject
-    
-
+    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
+    @strawberry.field(description="""Who made last change""")
+    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
+        from .externals import RBACObjectGQLModel
+        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
+        return result  
 
     @strawberry.field(description="""Related events""")
     async def events(self, info: strawberry.types.Info) -> Optional[List[EventGQLModel]]:
@@ -82,8 +85,15 @@ class EventTypeWhereFilter:
     name: str
     name_en: str
 
-    from .EventCategoryGQLModel import EventCategoryWhereFilter
-    category: EventCategoryWhereFilter
+    valid: bool
+    created: datetime.datetime
+    createdby: UUID
+    changedby: UUID
+
+    category_id: UUID
+    #TODO category, events
+    #from .EventCategoryGQLModel import EventCategoryWhereFilter
+    #category: EventCategoryWhereFilter
 
 #Queries
 @strawberry.field(description="Finds a particular event type")
