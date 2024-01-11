@@ -67,6 +67,11 @@ class InvitationTypeWhereFilter:
     name: str
     name_en: str
 
+    valid: bool
+    created: datetime.datetime
+    createdby: UUID 
+    changedby: UUID 
+
 
 
 #Queries

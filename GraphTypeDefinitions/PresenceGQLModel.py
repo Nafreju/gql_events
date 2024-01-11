@@ -102,7 +102,12 @@ class PresenceWhereFilter:
     id: UUID
     event_id: UUID
     user_id: UUID
-      
+
+    created:bool
+    invitationtype_id: UUID
+    presencetype_id: UUID
+    createdby: UUID
+    changedby: UUID
 #Queries
 @strawberry.field(description="""Finds a particular presence""")
 async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[PresenceGQLModel]:

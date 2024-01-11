@@ -72,6 +72,11 @@ class PresenceTypeWhereFilter:
     id: UUID
     name: str
     name_en: str
+    created: datetime.datetime
+    valid: bool 
+    createdby: UUID 
+    changedby: UUID 
+
 
 
 #Queries
