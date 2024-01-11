@@ -1,9 +1,11 @@
 import sqlalchemy
 import sys
 import asyncio
+import os
 
 # setting path
 #sys.path.append("../gql_forms")
+
 
 import pytest
 
@@ -11,6 +13,9 @@ import pytest
 
 from DBDefinitions import (
     BaseModel,
+    EventModel, EventTypeModel, EventCategoryModel,
+    EventGroupModel, InvitationTypeModel, PresenceModel,
+    PresenceTypeModel
 )
 
 from .shared import prepare_demodata, prepare_in_memory_sqllite, get_demodata

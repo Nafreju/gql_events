@@ -150,26 +150,26 @@ def createResolveReferenceTest(tableName, gqltype, attributeNames=["id", "name"]
         for row in table:
             rowid = f"{row['id']}"
 
-            query = (
-                'query($id: UUID!) { _entities(representations: [{ __typename: '+ f'"{gqltype}", id: $id' + 
-                ' }])' +
-                '{' +
-                f'...on {gqltype}' + content +
-                '}' + 
-                '}')
+            # query = (
+            #     'query($id: UUID!) { _entities(representations: [{ __typename: '+ f'"{gqltype}", id: $id' + 
+            #     ' }])' +
+            #     '{' +
+            #     f'...on {gqltype}' + content +
+            #     '}' + 
+            #     '}')
 
-            variable_values = {"id": rowid}
+            # variable_values = {"id": rowid}
 
-            # query = ("query($rep: [_Any!]!)" + 
-            #     "{" +
-            #     "_entities(representations: $rep)" +
-            #     "{"+
-            #     f"    ...on {gqltype} {content}"+
-            #     "}"+
-            #     "}"
-            # )
+            query = ("query($rep: [_Any!]!)" + 
+                "{" +
+                "_entities(representations: $rep)" +
+                "{"+
+                f"    ...on {gqltype} {content}"+
+                "}"+
+                "}"
+            )
             
-            # variable_values = {"rep": [{"__typename": f"{gqltype}", "id": f"{rowid}"}]}
+            variable_values = {"rep": [{"__typename": f"{gqltype}", "id": f"{rowid}"}]}
 
             logging.info(f"query representations {query} with {variable_values}")
             resp = await clientExecutor(query, {**variable_values})
@@ -199,7 +199,7 @@ def createFrontendQuery(query="{}", variables={}, asserts=[]):
             context_value=context_value
         )
 
-        assert resp.errors is None
+        assert resp.errors is None, resp.errors[0]
         respdata = resp.data
         logging.debug(f"response: {respdata}")
         for a in asserts:
