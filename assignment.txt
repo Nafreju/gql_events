@@ -70,8 +70,6 @@ https://docs.docker.com/compose/
 
 
 TODO:
-where všude jako EventCategoryGQLModel - vymyslet, které atributy všude budou
-lastchane nebude - dát atributy, které nejsou systémové - ID nechat
 
 apollo je potřeba jako autorizační server - jak to funguje?
 

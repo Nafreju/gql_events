@@ -4,7 +4,6 @@ from .EventCategoryModel import EventCategoryModel
 from .EventGroupModel import EventGroupModel
 from .EventModel import EventModel
 from .EventTypeModel import EventTypeModel
-from .StateExamModel import StateExamModel
 from .InvitationTypeModel import InvitationTypeModel
 
 from .PresenceModel import PresenceModel
