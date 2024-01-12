@@ -70,6 +70,10 @@ https://docs.docker.com/compose/
 
 
 TODO:
+Permissions na pondělí neřešit
+udělat na pondělí delete
+udělat na pondělí 70 % coverage
+
 neumím spustit forms ---- port 8125
 where filter na vektorovou strukturu nefunguje ... ?
 apollo je potřeba jako autorizační server - jak to funguje?
