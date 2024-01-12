@@ -6,7 +6,7 @@ from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
 from utils import getLoadersFromInfo, getUserFromInfo
-from ._GraphPermissions import OnlyForAuthentized
+
 
 
 @strawberry.federation.type(keys=["id"], description="""Represents type of invitation user obtained to event""")
@@ -77,15 +77,13 @@ class InvitationTypeWhereFilter:
 
 #Queries
 @strawberry.field(
-    description="""Finds a particular invitation type""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds a particular invitation type""")
 async def invitation_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[InvitationTypeGQLModel]:
     result = await InvitationTypeGQLModel.resolve_reference(info=info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all invitation types paged""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds all invitation types paged""")
 @asPage
 async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[InvitationTypeWhereFilter] = None) -> List[InvitationTypeGQLModel]:
     return getLoadersFromInfo(info).invitationtypes
@@ -129,8 +127,7 @@ class InvitationTypeResultGQLModel:
 
 
 @strawberry.mutation(
-    description="C operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="C operation")
 async def invitation_type_insert(self, info: strawberry.types.Info, invitation_type: InvitationTypeInsertGQLModel) -> InvitationTypeResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
@@ -142,8 +139,7 @@ async def invitation_type_insert(self, info: strawberry.types.Info, invitation_t
 
 
 @strawberry.mutation(
-    description="U operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="U operation")
 async def invitation_type_update(self, info: strawberry.types.Info, invitation_type: InvitationTypeUpdateGQLModel) -> InvitationTypeResultGQLModel: 
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])

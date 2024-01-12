@@ -6,7 +6,7 @@ from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
 from utils import getLoadersFromInfo, getUserFromInfo
-from ._GraphPermissions import OnlyForAuthentized
+
 
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
 EventCategoryGQLModel = Annotated["EventCategoryGQLModel", strawberry.lazy(".EventCategoryGQLModel")]
@@ -66,8 +66,7 @@ class EventTypeGQLModel:
         return result  
 
     @strawberry.field(
-        description="""Related events""",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+        description="""Related events""")
     async def events(self, info: strawberry.types.Info) -> Optional[List[EventGQLModel]]:
         loader = getLoadersFromInfo(info).events
         result = await loader.filter_by(eventtype_id=self.id)
@@ -75,8 +74,7 @@ class EventTypeGQLModel:
 
 
     @strawberry.field(
-        description="Category of event type",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+        description="Category of event type")
     async def category(self, info: strawberry.types.Info) -> Optional["EventCategoryGQLModel"]:
         from .EventCategoryGQLModel import EventCategoryGQLModel
         result = await EventCategoryGQLModel.resolve_reference(info=info, id=self.category_id)
@@ -102,15 +100,13 @@ class EventTypeWhereFilter:
 
 #Queries
 @strawberry.field(
-    description="Finds a particular event type",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="Finds a particular event type")
 async def event_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventTypeGQLModel]:
     result = await EventTypeGQLModel.resolve_reference(info=info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all event types paged""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds all event types paged""")
 @asPage
 async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventTypeWhereFilter] = None) -> List[EventTypeGQLModel]:
     return getLoadersFromInfo(info).eventtypes
@@ -155,8 +151,7 @@ class EventTypeResultGQLModel:
         return result
     
 @strawberry.mutation(
-    description="C operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="C operation")
 async def event_type_insert(self, info: strawberry.types.Info, event_type: EventTypeInsertGQLModel) -> EventTypeResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
@@ -168,8 +163,7 @@ async def event_type_insert(self, info: strawberry.types.Info, event_type: Event
 
 
 @strawberry.mutation(
-    description="U operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="U operation")
 async def event_type_update(self, info: strawberry.types.Info, event_type: EventTypeUpdateGQLModel) -> EventTypeResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])

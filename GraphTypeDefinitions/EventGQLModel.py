@@ -7,7 +7,7 @@ from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
 from utils import getLoadersFromInfo, getUserFromInfo
-from ._GraphPermissions import OnlyForAuthentized
+
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
@@ -90,8 +90,7 @@ class EventGQLModel:
    
 
     @strawberry.field(
-        description="""Participants of the event and if they were absent or so...""",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+        description="""Participants of the event and if they were absent or so...""")
     #TODO
     async def presences(self, info: strawberry.types.Info, invitation_types: List[strawberry.ID] = []) -> List["PresenceGQLModel"]:
         async with withInfo(info) as session:
@@ -100,16 +99,14 @@ class EventGQLModel:
             pass
 
     @strawberry.field(
-        description="""Type of the event""",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+        description="""Type of the event""")
     async def event_type(self, info: strawberry.types.Info) -> Optional["EventTypeGQLModel"]:
         from .EventTypeGQLModel import EventTypeGQLModel
         result = await EventTypeGQLModel.resolve_reference(info=info, id=self.eventtype_id)
         return result
 
     @strawberry.field(
-        description="""event which contains this event (aka semester of this lesson)""",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+        description="""event which contains this event (aka semester of this lesson)""")
     async def master_event(self, info: strawberry.types.Info) -> Optional["EventGQLModel"]:
         #TODO tests maybe need one line
         if self.masterevent_id is None:
@@ -119,8 +116,7 @@ class EventGQLModel:
         return result
 
     @strawberry.field(
-        description="""events which are contained by this event (aka all lessons for the semester)""",
-        permission_classes=[OnlyForAuthentized(isList=True)])
+        description="""events which are contained by this event (aka all lessons for the semester)""")
     async def sub_events(self, info: strawberry.types.Info, startdate: datetime.datetime, enddate: datetime.datetime) -> List["EventGQLModel"]:
         loader = getLoadersFromInfo(info).events
         #TODO
@@ -148,15 +144,13 @@ class EventWhereFilter:
 
 #Queries
 @strawberry.field(
-    description="""Finds a particular event""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds a particular event""")
 async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGQLModel]:
     result = await EventGQLModel.resolve_reference(info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all events paged""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds all events paged""")
 @asPage
 async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventWhereFilter] = None) -> List[EventGQLModel]:
     return getLoadersFromInfo(info).events
@@ -213,8 +207,7 @@ class EventResultGQLModel:
         return result
 
 @strawberry.mutation(
-    description="C operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="C operation")
 async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLModel) -> EventResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
@@ -226,8 +219,7 @@ async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLM
 
 
 @strawberry.mutation(
-    description="U operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="U operation")
 async def event_update(self, info: strawberry.types.Info, event: EventUpdateGQLModel) -> EventResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])

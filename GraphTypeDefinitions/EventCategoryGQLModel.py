@@ -6,7 +6,7 @@ from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-from ._GraphPermissions import OnlyForAuthentized
+
 
 
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
@@ -62,9 +62,8 @@ class EventCategoryGQLModel:
 
 
     @strawberry.field(
-        description="""event types which has this category""",
-        permission_classes=[OnlyForAuthentized(isList=True)])
-    async def types(self, info: strawberry.types.Info) -> List[EventTypeGQLModel]:
+        description="""event types which has this category""")
+    async def eventTypes(self, info: strawberry.types.Info) -> List[EventTypeGQLModel]:
         loader = getLoadersFromInfo(info).eventtypes
         result = await loader.filter_by(category_id=self.id)
         return result
@@ -92,15 +91,13 @@ class EventCategoryWhereFilter:
 
 #Queries
 @strawberry.field(
-    description="""Finds a particular event category""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds a particular event category""")
 async def event_category_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventCategoryGQLModel]:
     result = await EventCategoryGQLModel.resolve_reference(info=info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all event categories paged""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds all event categories paged""")
 @asPage
 async def event_category_page(self, info: strawberry.types.Info, \
             skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[EventCategoryGQLModel]:
@@ -143,8 +140,7 @@ class EventCategoryResultGQLModel:
         return result
     
 @strawberry.mutation(
-    description="C operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="C operation")
 async def event_category_insert(self, info: strawberry.types.Info, event_category: EventCategoryInsertGQLModel) -> EventCategoryResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
@@ -155,8 +151,7 @@ async def event_category_insert(self, info: strawberry.types.Info, event_categor
     return result
 
 @strawberry.mutation(
-    description="U operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="U operation")
 async def event_category_update(self, info: strawberry.types.Info, event_category: EventCategoryUpdateGQLModel) -> EventCategoryResultGQLModel: 
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])

@@ -6,7 +6,7 @@ from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
 from utils import getLoadersFromInfo, getUserFromInfo
-from ._GraphPermissions import OnlyForAuthentized, RoleBasedPermission
+
 
 
 UserGQLModel = Annotated["UserGQLModel", strawberry.lazy(".externals")]
@@ -111,15 +111,13 @@ class PresenceWhereFilter:
     changedby: UUID
 #Queries
 @strawberry.field(
-    description="""Finds a particular presence""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds a particular presence""")
 async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[PresenceGQLModel]:
     result = await PresenceGQLModel.resolve_reference(info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all presences paged""",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="""Finds all presences paged""")
 @asPage
 async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceWhereFilter] = None) -> List[PresenceGQLModel]:
     return getLoadersFromInfo(info).presences
@@ -186,8 +184,7 @@ class PresenceResultGQLModel:
         return result
     
 @strawberry.mutation(
-    description="C operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="C operation")
 async def presence_insert(self, info: strawberry.types.Info, presence: PresenceInsertGQLModel) -> PresenceResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
@@ -198,8 +195,7 @@ async def presence_insert(self, info: strawberry.types.Info, presence: PresenceI
     return result
 
 @strawberry.mutation(
-    description="U operation",
-    permission_classes=[OnlyForAuthentized(isList=True)])
+    description="U operation")
 async def presence_update(self, info: strawberry.types.Info, presence: PresenceUpdateGQLModel) -> PresenceResultGQLModel:
     user = getUserFromInfo(info) #TODO
     #event.changedby = UUID(user["id"])
