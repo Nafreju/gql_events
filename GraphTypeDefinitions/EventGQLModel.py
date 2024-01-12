@@ -80,19 +80,15 @@ class EventGQLModel:
 
     @strawberry.field(description="""Groups of users linked to the event""")
     async def groups(self, info: strawberry.types.Info) -> List["GroupGQLModel"]:
-        pass
-        #TODO
-        """
-        loader = getLoaders(info).eventgroups
+        loader = getLoadersFromInfo(info).eventgroups
         result = await loader.filter_by(event_id=self.id)
         return result
-        """
    
 
     @strawberry.field(
         description="""Participants of the event and if they were absent or so...""")
     #TODO
-    async def presences(self, info: strawberry.types.Info, invitation_types: List[strawberry.ID] = []) -> List["PresenceGQLModel"]:
+    async def presences(self, info: strawberry.types.Info, invitation_types: List[UUID] = []) -> List["PresenceGQLModel"]:
         async with withInfo(info) as session:
             #result = await resolvePresencesForEvent(session, self.id, invitation_types)
             #return result
@@ -189,7 +185,7 @@ class EventUpdateGQLModel:
         strawberry.field(description="end date of event", default=datetime.datetime.now() + datetime.timedelta(minutes = 30))
     
     masterevent_id: Optional[UUID] = strawberry.field(description="master event", default=None)
-    eventtype_id: Optional[strawberry.ID] = strawberry.field(description="type of event", default=None)
+    eventtype_id: Optional[UUID] = strawberry.field(description="type of event", default=None)
     
     valid: Optional[bool] = None
     changedby: strawberry.Private[UUID] = None

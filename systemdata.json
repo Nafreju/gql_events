@@ -743,8 +743,8 @@
         {"id": "a517c2fd-8dc7-4a2e-a107-cbdb88ba2aa5", "name": "Školní rok", "name_en": "School year"}
     ],
     "eventcategories": [
-        {"id": "061470d7-3463-44ad-9d3f-c4275951edf6", "name": "Pluk"},
-        {"id": "5aaf820d-5acd-4406-b18d-47f161e75ebb", "name": "Univerzita"}
+        {"id": "061470d7-3463-44ad-9d3f-c4275951edf6", "name": "Pluk", "name_en": "regiment"},
+        {"id": "5aaf820d-5acd-4406-b18d-47f161e75ebb", "name": "Univerzita", "name_en": "university"}
     ],
     "eventinvitationtypes": [
         {"id": "e8713b6e-a79c-11ed-b76e-0242ac110002", "name": "organizátor", "name_en": "organizer"},
@@ -762,16 +762,6 @@
         {"id": "466397d6-a79c-11ed-b76e-0242ac110002", "name": "", "name_en": ""}
     ],
     "events": [
-        {
-            "id": "45b2df80-ae0f-11ed-9bd8-0242ac110002" , 
-            "name": "Zkouška", 
-            "name_en": "Exam", 
-            "eventtype_id": "b87d3ff0-8fd4-11ed-a6d4-0242ac110002",
-            
-            "startdate": "2023-04-19T08:00:00", 
-            "enddate": "2023-04-19T09:00:00",
-            "_chunk": 2
-        },
         {
             "id": "4dccf52f-4117-403c-932a-5691c0d020b1" , 
             "name": "2021/22", 
@@ -833,6 +823,16 @@
             "startdate": "2023-03-01T00:00:00", 
             "enddate": "2023-09-01T00:00:00",
             "_chunk": 1
+        },
+        {
+            "id": "45b2df80-ae0f-11ed-9bd8-0242ac110002" , 
+            "name": "Zkouška", 
+            "name_en": "Exam", 
+            "eventtype_id": "b87d3ff0-8fd4-11ed-a6d4-0242ac110002",
+            
+            "startdate": "2023-04-19T08:00:00", 
+            "enddate": "2023-04-19T09:00:00",
+            "_chunk": 2
         }
     ],
     "events_users": [

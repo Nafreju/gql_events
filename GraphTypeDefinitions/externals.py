@@ -55,7 +55,7 @@ class GroupGQLModel:
         info: strawberry.types.Info,
         startdate: datetime.datetime = None,
         enddate: datetime.datetime = None,
-        # eventtype_id: strawberry.ID = None
+        # eventtype_id: UUID = None
     ) -> List["EventGQLModel"]:
         statement = create_statement_for_group_events(self.id, startdate=startdate, enddate=enddate)
         loader = getLoadersFromInfo(info).events

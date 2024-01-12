@@ -15,7 +15,7 @@ from typing import Optional
 class Query:
 
     @strawberry.field(description="""Say hello world events""")
-    async def say_hello_events(self, info: strawberry.types.Info, id: strawberry.ID) -> Optional[str]:
+    async def say_hello_events(self, info: strawberry.types.Info, id: UUID) -> Optional[str]:
         result = f"Hello {id}"
         return result
 

@@ -66,7 +66,7 @@ class EventGroupGQLModel:
         description="""Event assigned to group""")
     async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
         from .EventGQLModel import EventGQLModel
-        result = await EventGQLModel.resolve_reference(id=self.event_id)
+        result = await EventGQLModel.resolve_reference(info=info, id=self.event_id)
         return result
     
 @createInputs

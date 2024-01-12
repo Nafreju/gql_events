@@ -21,7 +21,8 @@ from tests.gqlshared import (
 )
 
 
-test_reference_eventcategories = createResolveReferenceTest(tableName='eventcategories', gqltype='EventCategoryGQLModel', attributeNames=["id", "name", "lastchange"])
+test_reference_eventcategories = createResolveReferenceTest(tableName='eventcategories', \
+        gqltype='EventCategoryGQLModel', attributeNames=["id", "name", "lastchange", "nameEn", "valid", "created", "createdby", "changedby"])
 
 test_query_event_category_by_id = createByIdTest(tableName="eventcategories", queryEndpoint="eventCategoryById")
 test_query_event_category_page = createPageTest(tableName="eventcategories", queryEndpoint="eventCategoryPage")
@@ -34,11 +35,12 @@ test_insert_event_category = createFrontendQuery(
             category {
                 id
                 name
+                resolveRbacobject { id }
                 eventTypes { id }
             }
         }
     }""",
-    variables={"id": "5aaf820d-5acd-4406-b18d-47f161e75eba", "name": "new name inserted"}
+    variables={"id": "5aaf820d-5acd-4406-b18d-47f161e75eba", "name": "new name"}
 )
 
 test_update_event_category = createUpdateQuery(
@@ -52,6 +54,6 @@ test_update_event_category = createUpdateQuery(
             }
         }
     }""",
-    variables={"id": "5aaf820d-5acd-4406-b18d-47f161e75ebb", "name": "new name updated"},
+    variables={"id": "5aaf820d-5acd-4406-b18d-47f161e75ebb", "name": "new name"},
     tableName="eventcategories"
 )

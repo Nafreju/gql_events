@@ -46,7 +46,7 @@ def append(
         line = f'"{queryname}": {json.dumps(jsonData)}, \n'
         file.write(line)
 
-def createByIdTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
+def createByIdTest(tableName, queryEndpoint, attributeNames=["id"]):
     @pytest.mark.asyncio
     async def result_test():
         
@@ -85,7 +85,7 @@ def createByIdTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
     return result_test
 
 
-def createPageTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
+def createPageTest(tableName, queryEndpoint, attributeNames=["id"]):
     @pytest.mark.asyncio
     async def result_test():
 
@@ -99,8 +99,14 @@ def createPageTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
             assert respdata is not None
             datarows = data[tableName]           
 
+            for row in respdata: logging.info(row["id"])
+            logging.info(f"xxxxx")
+            for row in datarows: logging.info(f'{row["id"]}' )
+
             for rowa, rowb in zip(respdata, datarows):
                 for att in attributeNames:
+                    print("have ", rowa[att])
+                    print("but got ", f'{rowb[att]}')
                     assert rowa[att] == f'{rowb[att]}'            
 
         schemaExecutor = CreateSchemaFunction()

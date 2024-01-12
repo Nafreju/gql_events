@@ -70,6 +70,7 @@ https://docs.docker.com/compose/
 
 
 TODO:
+EventGroup nemá update - takhle mi to dává smysl
 Permissions na pondělí neřešit
 udělat na pondělí delete
 udělat na pondělí 70 % coverage
@@ -77,6 +78,12 @@ udělat na pondělí 70 % coverage
 neumím spustit forms ---- port 8125
 where filter na vektorovou strukturu nefunguje ... ?
 apollo je potřeba jako autorizační server - jak to funguje?
+
+categorie a typ invalid
+presence delete do TODO, zdali delete zdává smysl "lidsky"
+eventgroup delete
+zbytek invalid
+
 
 
 ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
