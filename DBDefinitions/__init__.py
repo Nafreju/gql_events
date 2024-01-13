@@ -20,6 +20,7 @@ from sqlalchemy.exc import NoReferencedTableError
 
 async def startEngine(connectionstring, makeDrop=False, makeUp=True):
     """Provede nezbytne ukony a vrati asynchronni SessionMaker"""
+
     asyncEngine = create_async_engine(connectionstring)
 
     async with asyncEngine.begin() as conn:
@@ -57,3 +58,4 @@ def ComposeConnectionString():
     connectionstring = f"{driver}://{user}:{password}@{hostWithPort}/{database}"
 
     return connectionstring
+
