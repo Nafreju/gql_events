@@ -1,7 +1,7 @@
 import strawberry
 import datetime
 from typing import List, Annotated, Optional
-from ._GraphResolvers import asPage, resolve_result_msg
+from ._GraphResolvers import asPage
 from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
@@ -16,7 +16,6 @@ from GraphTypeDefinitions._GraphResolvers import (
     resolve_lastchange,
     resolve_createdby,
     resolve_rbacobject,
-    createRootResolver_by_id,
     asPage
 )
 from ._GraphPermissions import OnlyForAuthentized

@@ -1,7 +1,7 @@
 import strawberry
 import datetime
 from typing import List, Annotated, Optional
-from ._GraphResolvers import asPage, resolve_result_msg
+from ._GraphResolvers import asPage
 from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
@@ -9,8 +9,7 @@ from uoishelpers.resolvers import createInputs
 from .BaseGQLModel import BaseGQLModel
 from GraphTypeDefinitions._GraphResolvers import (
     resolve_id,
-    resolve_name,
-    resolve_name_en,
+
     resolve_changedby,
     resolve_created,
     resolve_lastchange,

@@ -1,4 +1,4 @@
-from uuid import uuid4, UUID
+from uuid import uuid4
 from sqlalchemy import Column, Uuid
 uuid = uuid4
 
