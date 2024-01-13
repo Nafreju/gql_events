@@ -70,16 +70,15 @@ https://docs.docker.com/compose/
 
 
 TODO:
-EventGroup nemá update - takhle mi to dává smysl
-Permissions na pondělí neřešit
-udělat na pondělí delete
-udělat na pondělí 70 % coverage
+1. Permissions
+2. Udělat na pondělí delete
+3. Udělat na pondělí 70 % coverage
 
 neumím spustit forms ---- port 8125
 where filter na vektorovou strukturu nefunguje ... ?
 apollo je potřeba jako autorizační server - jak to funguje?
 
-categorie a typ invalid
+
 
 delete u:
 PresenceModel
@@ -92,6 +91,9 @@ EventTypeModel
 InvitationTypeModel
 PresenceTypeModel
 
+KEEP
+buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
+
 
 
 ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
@@ -99,19 +101,11 @@ ExamModel bude 1:1 s EventModel - sdílíme presence (uživatel/skupina), eventt
 ExamModel bude mít atributy "SubjectModel" z jiné federace?
 
 
-KEEP
-buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
-
-
-
-
-testovat, jak se insertuje do více tabulek (sdílených tabulek)
-
-testy možná nefungují kvůli sql lite
 
 
 
 Pozn.
+EventGroup nemá update - takhle mi to dává smysl
 smazal jsem EventEditorGQLModel
 
 
