@@ -18,6 +18,7 @@ from GraphTypeDefinitions._GraphResolvers import (
     resolve_rbacobject,
     asPage
 )
+from ._GraphPermissions import OnlyForAuthentized
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
@@ -35,7 +36,8 @@ class EventGQLModel(BaseGQLModel):
     name_en = resolve_name_en
     name = resolve_name
 
-    @strawberry.field(description="""Validity of event""")
+    @strawberry.field(description="""Validity of event""",
+        permission_classes=[OnlyForAuthentized()])
     def valid(self) -> Optional[bool]:
         return self.valid
 
@@ -44,52 +46,61 @@ class EventGQLModel(BaseGQLModel):
     createdby = resolve_createdby
     changedby = resolve_changedby
 
-    @strawberry.field(description="""Date&time of event begin""")
+    @strawberry.field(description="""Date&time of event begin""",
+        permission_classes=[OnlyForAuthentized()])
     def startdate(self) -> Optional[datetime.datetime]:
         return self.startdate
 
-    @strawberry.field(description="""Date&time of event end""")
+    @strawberry.field(description="""Date&time of event end""",
+        permission_classes=[OnlyForAuthentized()])
     def enddate(self) -> Optional[datetime.datetime]:
         return self.enddate
     
     rbacobject = resolve_rbacobject
     
-    @strawberry.field(description="""Master event of event""")
+    @strawberry.field(description="""Master event of event""",
+        permission_classes=[OnlyForAuthentized()])
     def masterevent_id(self) -> Optional[UUID]:
         return self.masterevent_id
 
-    @strawberry.field(description="""Type of event""")
+    @strawberry.field(description="""Type of event""",
+        permission_classes=[OnlyForAuthentized()])
     def eventtype_id(self) -> Optional[UUID]:
         return self.eventtype_id
 
-    @strawberry.field(description="""Groups of users linked to the event""")
+    @strawberry.field(description="""Groups of users linked to the event""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
     async def groups(self, info: strawberry.types.Info) -> List["GroupGQLModel"]:
         loader = getLoadersFromInfo(info).eventgroups
         result = await loader.filter_by(event_id=self.id)
         return result
    
     @strawberry.field(
-        description="""Type of the event""")
+        description="""Type of the event""",
+        permission_classes=[OnlyForAuthentized()])
     async def event_type(self, info: strawberry.types.Info) -> Optional["EventTypeGQLModel"]:
         from .EventTypeGQLModel import EventTypeGQLModel
         result = await EventTypeGQLModel.resolve_reference(info=info, id=self.eventtype_id)
         return result
 
     @strawberry.field(
-        description="""Participants of the event and if they were absent or so...""")
+        description="""Participants of the event and if they were absent or so...""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
     async def presences(self, info: strawberry.types.Info) -> List["PresenceGQLModel"]:
         loader = getLoadersFromInfo(info).presences
         result = await loader.filter_by(event_id=self.id)
         return result 
 
     @strawberry.field(
-        description="""event which contains this event (aka semester of this lesson)""")
+        description="""event which contains this event (aka semester of this lesson)""",
+        permission_classes=[OnlyForAuthentized()])
     async def master_event(self, info: strawberry.types.Info) -> Optional["EventGQLModel"]:
         return None if self.masterevent_id is None \
                     else await EventGQLModel.resolve_reference(info=info, id=self.masterevent_id)
 
     @strawberry.field(
-        description="""events which are contained by this event (aka all lessons for the semester)""")
+        description="""events which are contained by this event (aka all lessons for the semester)""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
     async def sub_events(self, info: strawberry.types.Info) -> List["EventGQLModel"]:
         loader = getLoadersFromInfo(info).events
         result = await loader.filter_by(masterevent_id=self.id)
@@ -118,7 +129,8 @@ class EventWhereFilter:
 #Queries
 
 @strawberry.field(
-    description="""Finds a particular event""")
+    description="""Finds a particular event""",
+        permission_classes=[OnlyForAuthentized()])
 async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGQLModel]:
     result = await EventGQLModel.resolve_reference(info=info, id=id)
     return result
@@ -126,7 +138,8 @@ async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[E
 
 
 @strawberry.field(
-    description="""Finds all events paged""")
+    description="""Finds all events paged""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 @asPage
 async def event_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventWhereFilter] = None) -> List[EventGQLModel]:
     return getLoadersFromInfo(info).events
@@ -183,10 +196,11 @@ class EventResultGQLModel:
         return result
 
 @strawberry.mutation(
-    description="C operation")
+    description="C operation",
+        permission_classes=[OnlyForAuthentized()])
 async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLModel) -> EventResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    event.createdby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).events
     row = await loader.insert(event)
@@ -195,10 +209,11 @@ async def event_insert(self, info: strawberry.types.Info, event: EventInsertGQLM
 
 
 @strawberry.mutation(
-    description="U operation")
+    description="U operation",
+        permission_classes=[OnlyForAuthentized()])
 async def event_update(self, info: strawberry.types.Info, event: EventUpdateGQLModel) -> EventResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    event.changedby = UUID(user["id"])
     
     loader = getLoadersFromInfo(info).events
     row = await loader.update(event)

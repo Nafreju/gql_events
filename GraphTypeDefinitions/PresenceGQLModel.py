@@ -19,6 +19,8 @@ from GraphTypeDefinitions._GraphResolvers import (
     asPage
 )
 
+from ._GraphPermissions import OnlyForAuthentized
+
 UserGQLModel = Annotated["UserGQLModel", strawberry.lazy(".externals")]
 PresenceTypeGQLModel = Annotated["PresenceTypeGQLModel", strawberry.lazy(".PresenceTypeGQLModel")]
 InvitationTypeGQLModel = Annotated["InvitationTypeGQLModel", strawberry.lazy(".InvitationTypeGQLModel")]
@@ -34,19 +36,23 @@ class PresenceGQLModel(BaseGQLModel):
 
     id = resolve_id
     
-    @strawberry.field(description="""ID of event which is presence related to""")
+    @strawberry.field(description="""ID of event which is presence related to""",
+        permission_classes=[OnlyForAuthentized()])
     def event_id(self) -> Optional[UUID]:
         return self.event_id
     
-    @strawberry.field(description="""ID of user which is presence related to""")
+    @strawberry.field(description="""ID of user which is presence related to""",
+        permission_classes=[OnlyForAuthentized()])
     def user_id(self) -> Optional[UUID]:
         return self.user_id
     
-    @strawberry.field(description="""ID of invitation which is presence related to""")
+    @strawberry.field(description="""ID of invitation which is presence related to""",
+        permission_classes=[OnlyForAuthentized()])
     def invitationtype_id(self) -> Optional[UUID]:
         return self.invitationtype_id
     
-    @strawberry.field(description="""ID of presence type which is presence related to""")
+    @strawberry.field(description="""ID of presence type which is presence related to""",
+        permission_classes=[OnlyForAuthentized()])
     def presencetype_id(self) -> Optional[UUID]:
         return self.presencetype_id
 
@@ -58,25 +64,29 @@ class PresenceGQLModel(BaseGQLModel):
     rbacobject = resolve_rbacobject
 
 
-    @strawberry.field(description="""The event""")
+    @strawberry.field(description="""The event""",
+        permission_classes=[OnlyForAuthentized()])
     async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
         from .EventGQLModel import EventGQLModel
         result = await EventGQLModel.resolve_reference(info, id=self.event_id)
         return result
 
-    @strawberry.field(description="""Present, Vacation etc.""")
+    @strawberry.field(description="""Present, Vacation etc.""",
+        permission_classes=[OnlyForAuthentized()])
     async def presence_type(self, info: strawberry.types.Info) -> Optional[PresenceTypeGQLModel]:
         from .PresenceTypeGQLModel import PresenceTypeGQLModel
         result = await PresenceTypeGQLModel.resolve_reference(info, self.presencetype_id)
         return result
 
-    @strawberry.field(description="""Invited, Accepted, etc.""")
+    @strawberry.field(description="""Invited, Accepted, etc.""",
+        permission_classes=[OnlyForAuthentized()])
     async def invitation_type(self, info: strawberry.types.Info) -> Optional[InvitationTypeGQLModel]:
         from .InvitationTypeGQLModel import InvitationTypeGQLModel
         result = await InvitationTypeGQLModel.resolve_reference(info, self.invitationtype_id)
         return result
 
-    @strawberry.field(description="""The user / participant""")
+    @strawberry.field(description="""The user / participant""",
+        permission_classes=[OnlyForAuthentized()])
     def user(self) -> Optional["UserGQLModel"]:
         from .externals import UserGQLModel
         result = UserGQLModel(id=self.user_id)
@@ -99,26 +109,30 @@ class PresenceWhereFilter:
 
 #Queries
 @strawberry.field(
-    description="""Finds a particular presence""")
+    description="""Finds a particular presence""",
+        permission_classes=[OnlyForAuthentized()])
 async def presence_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[PresenceGQLModel]:
     result = await PresenceGQLModel.resolve_reference(info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all presences paged""")
+    description="""Finds all presences paged""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 @asPage
 async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceWhereFilter] = None) -> List[PresenceGQLModel]:
     return getLoadersFromInfo(info).presences
     
 
-@strawberry.field(description="""Finds all presences for the event""")
+@strawberry.field(description="""Finds all presences for the event""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 async def presences_by_event(self, info: strawberry.types.Info, event_id: UUID) -> List[PresenceGQLModel]:
     loader = getLoadersFromInfo(info).presences
     result = await loader.filter_by(event_id=event_id)
     #TODO
     return result
 
-@strawberry.field(description="""Finds all presences for the user in the period""")
+@strawberry.field(description="""Finds all presences for the user in the period""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 async def presences_by_user(self, info: strawberry.types.Info, user_id: UUID,) -> List[PresenceGQLModel]:
     loader = getLoadersFromInfo(info).presences
     # TODO
@@ -166,10 +180,11 @@ class PresenceResultGQLModel:
         return result
     
 @strawberry.mutation(
-    description="C operation")
+    description="C operation",
+        permission_classes=[OnlyForAuthentized()])
 async def presence_insert(self, info: strawberry.types.Info, presence: PresenceInsertGQLModel) -> PresenceResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    presence.createdby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).presences
     row = await loader.insert(presence)
@@ -177,10 +192,11 @@ async def presence_insert(self, info: strawberry.types.Info, presence: PresenceI
     return result
 
 @strawberry.mutation(
-    description="U operation")
+    description="U operation",
+        permission_classes=[OnlyForAuthentized()])
 async def presence_update(self, info: strawberry.types.Info, presence: PresenceUpdateGQLModel) -> PresenceResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    presence.changedby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).presences
     row = await loader.update(presence)

@@ -19,6 +19,8 @@ from GraphTypeDefinitions._GraphResolvers import (
     asPage
 )
 
+from ._GraphPermissions import OnlyForAuthentized
+
 PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLModel")]
 
 
@@ -34,7 +36,8 @@ class PresenceTypeGQLModel(BaseGQLModel):
     name = resolve_name
     name_en = resolve_name_en
 
-    @strawberry.field(description="""Validity of presence type""")
+    @strawberry.field(description="""Validity of presence type""",
+        permission_classes=[OnlyForAuthentized()])
     def valid(self) -> Optional[bool]:
         return self.valid
 
@@ -46,7 +49,8 @@ class PresenceTypeGQLModel(BaseGQLModel):
     rbacobject = resolve_rbacobject
 
     @strawberry.field(
-        description="Presences who have this presence type")
+        description="Presences who have this presence type",
+        permission_classes=[OnlyForAuthentized(isList=True)])
     async def presences(self, info: strawberry.types.Info) -> List[PresenceGQLModel]:
         loader = getLoadersFromInfo(info).presences
         result = await loader.filter_by(presencetype_id = self.id)
@@ -70,13 +74,15 @@ class PresenceTypeWhereFilter:
 
 #Queries
 @strawberry.field(
-    description="""Finds a particular presence type""")
+    description="""Finds a particular presence type""",
+        permission_classes=[OnlyForAuthentized()])
 async def presence_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[PresenceTypeGQLModel]:
     result = await PresenceTypeGQLModel.resolve_reference(info=info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all presence types paged""")
+    description="""Finds all presence types paged""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 @asPage
 async def presence_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceTypeWhereFilter] = None) -> List[PresenceTypeGQLModel]:
     return getLoadersFromInfo(info).presencetypes
@@ -121,10 +127,11 @@ class PresenceTypeResultGQLModel:
 
     
 @strawberry.mutation(
-    description="C operation")
+    description="C operation",
+        permission_classes=[OnlyForAuthentized()])
 async def presence_type_insert(self, info: strawberry.types.Info, presence_type: PresenceTypeInsertGQLModel) -> PresenceTypeResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    presence_type.createdby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).presencetypes
     row = await loader.insert(presence_type)
@@ -132,10 +139,11 @@ async def presence_type_insert(self, info: strawberry.types.Info, presence_type:
     return result
 
 @strawberry.mutation(
-    description="U operation")
+    description="U operation",
+        permission_classes=[OnlyForAuthentized()])
 async def presence_type_update(self, info: strawberry.types.Info, presence_type: PresenceTypeUpdateGQLModel) -> PresenceTypeResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    presence_type.changedby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).presencetypes
     row = await loader.update(presence_type)

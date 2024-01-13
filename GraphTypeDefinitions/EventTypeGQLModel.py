@@ -18,7 +18,7 @@ from GraphTypeDefinitions._GraphResolvers import (
     resolve_rbacobject,
     asPage
 )
-
+from ._GraphPermissions import OnlyForAuthentized
 
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
 EventCategoryGQLModel = Annotated["EventCategoryGQLModel", strawberry.lazy(".EventCategoryGQLModel")]
@@ -36,7 +36,8 @@ class EventTypeGQLModel(BaseGQLModel):
     name = resolve_name
     name_en = resolve_name_en
     
-    @strawberry.field(description="""Validity of event type""")
+    @strawberry.field(description="""Validity of event type""",
+        permission_classes=[OnlyForAuthentized()])
     def valid(self) -> Optional[bool]:
         return self.valid
     
@@ -45,21 +46,24 @@ class EventTypeGQLModel(BaseGQLModel):
     createdby = resolve_createdby
     changedby = resolve_changedby
     
-    @strawberry.field(description="""Category id of event type""")
+    @strawberry.field(description="""Category id of event type""",
+        permission_classes=[OnlyForAuthentized()])
     def category_id(self) -> Optional[UUID]:
         return self.category_id
     
     rbacobject = resolve_rbacobject
     
     @strawberry.field(
-        description="""Related events""")
+        description="""Related events""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
     async def events(self, info: strawberry.types.Info) -> List[EventGQLModel]:
         loader = getLoadersFromInfo(info).events
         result = await loader.filter_by(eventtype_id=self.id)
         return result
 
     @strawberry.field(
-        description="Category of event type")
+        description="Category of event type",
+        permission_classes=[OnlyForAuthentized()])
     async def category(self, info: strawberry.types.Info) -> Optional["EventCategoryGQLModel"]:
         from .EventCategoryGQLModel import EventCategoryGQLModel
         result = await EventCategoryGQLModel.resolve_reference(info=info, id=self.category_id)
@@ -85,13 +89,15 @@ class EventTypeWhereFilter:
 
 #Queries
 @strawberry.field(
-    description="Finds a particular event type")
+    description="Finds a particular event type",
+        permission_classes=[OnlyForAuthentized()])
 async def event_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventTypeGQLModel]:
     result = await EventTypeGQLModel.resolve_reference(info=info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all event types paged""")
+    description="""Finds all event types paged""",
+        permission_classes=[OnlyForAuthentized()])
 @asPage
 async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventTypeWhereFilter] = None) -> List[EventTypeGQLModel]:
     return getLoadersFromInfo(info).eventtypes
@@ -136,10 +142,11 @@ class EventTypeResultGQLModel:
         return result
     
 @strawberry.mutation(
-    description="C operation")
+    description="C operation",
+        permission_classes=[OnlyForAuthentized()])
 async def event_type_insert(self, info: strawberry.types.Info, event_type: EventTypeInsertGQLModel) -> EventTypeResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    event_type.createdby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).eventtypes
     row = await loader.insert(event_type)
@@ -148,10 +155,11 @@ async def event_type_insert(self, info: strawberry.types.Info, event_type: Event
 
 
 @strawberry.mutation(
-    description="U operation")
+    description="U operation",
+        permission_classes=[OnlyForAuthentized()])
 async def event_type_update(self, info: strawberry.types.Info, event_type: EventTypeUpdateGQLModel) -> EventTypeResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    event_type.changedby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).eventtypes
     row = await loader.update(event_type)

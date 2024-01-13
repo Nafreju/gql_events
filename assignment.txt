@@ -75,9 +75,10 @@ TODO:
 3. Udělat na pondělí delete
 4. Udělat na pondělí 70 % coverage
 
-neumím spustit forms ---- port 8125
+
+kde je Autentizace u id,name,nameEn atd... kdyz je importovano
 where filter na vektorovou strukturu nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
-apollo je potřeba jako autorizační server - jak to funguje?
+
 
 
 
