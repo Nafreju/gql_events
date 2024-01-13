@@ -71,7 +71,8 @@ https://docs.docker.com/compose/
 
 TODO:
 1. Udělat na pondělí delete
-2. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
+2. where nefunguje na další struktury
+3. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
 
 otazky na konzultaci:
 where filter na vektorovou strukturu nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
