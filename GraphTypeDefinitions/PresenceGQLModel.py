@@ -33,12 +33,6 @@ class PresenceGQLModel(BaseGQLModel):
         return getLoadersFromInfo(info).presences
 
     id = resolve_id
-    changedby = resolve_changedby
-    lastchange = resolve_lastchange
-    created = resolve_created
-    createdby = resolve_createdby
-    rbacobject = resolve_rbacobject
-
     
     @strawberry.field(description="""ID of event which is presence related to""")
     def event_id(self) -> Optional[UUID]:
@@ -56,6 +50,19 @@ class PresenceGQLModel(BaseGQLModel):
     def presencetype_id(self) -> Optional[UUID]:
         return self.presencetype_id
 
+    created = resolve_created
+    lastchange = resolve_lastchange
+    createdby = resolve_createdby
+    changedby = resolve_changedby
+    
+    rbacobject = resolve_rbacobject
+
+
+    @strawberry.field(description="""The event""")
+    async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
+        from .EventGQLModel import EventGQLModel
+        result = await EventGQLModel.resolve_reference(info, id=self.event_id)
+        return result
 
     @strawberry.field(description="""Present, Vacation etc.""")
     async def presence_type(self, info: strawberry.types.Info) -> Optional[PresenceTypeGQLModel]:
@@ -75,24 +82,20 @@ class PresenceGQLModel(BaseGQLModel):
         result = UserGQLModel(id=self.user_id)
         return result
 
-    @strawberry.field(description="""The event""")
-    async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
-        from .EventGQLModel import EventGQLModel
-        result = await EventGQLModel.resolve_reference(info, id=self.event_id)
-        return result
-
 @createInputs
 @dataclass
 class PresenceWhereFilter:
     id: UUID
     event_id: UUID
     user_id: UUID
-
-    created:bool
     invitationtype_id: UUID
     presencetype_id: UUID
+
+    created:bool
     createdby: UUID
     changedby: UUID
+
+    #TODO event, presence_type, invitation_type, user
 
 #Queries
 @strawberry.field(

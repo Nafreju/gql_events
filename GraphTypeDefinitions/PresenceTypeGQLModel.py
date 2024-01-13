@@ -30,21 +30,20 @@ class PresenceTypeGQLModel(BaseGQLModel):
     def getLoader(cls, info):
         return getLoadersFromInfo(info).presencetypes
 
-
     id = resolve_id
     name = resolve_name
-    changedby = resolve_changedby
-    lastchange = resolve_lastchange
-    created = resolve_created
-    createdby = resolve_createdby
     name_en = resolve_name_en
-    rbacobject = resolve_rbacobject
-
 
     @strawberry.field(description="""Validity of presence type""")
     def valid(self) -> Optional[bool]:
         return self.valid
 
+    created = resolve_created
+    lastchange = resolve_lastchange
+    createdby = resolve_createdby
+    changedby = resolve_changedby
+    
+    rbacobject = resolve_rbacobject
 
     @strawberry.field(
         description="Presences who have this presence type")
@@ -59,10 +58,13 @@ class PresenceTypeWhereFilter:
     id: UUID
     name: str
     name_en: str
+
     created: datetime.datetime
     valid: bool 
     createdby: UUID 
     changedby: UUID 
+
+    #TODO presences
 
 
 

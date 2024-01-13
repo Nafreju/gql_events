@@ -33,12 +33,19 @@ class EventGroupGQLModel(BaseGQLModel):
         return getLoadersFromInfo(info).eventgroups
 
     id = resolve_id
-    name = resolve_name
-    changedby = resolve_changedby
-    lastchange = resolve_lastchange
+
+    @strawberry.field(description="""Event id""")
+    def event_id(self) -> UUID:
+        return self.event_id
+    
+    @strawberry.field(description="""Group id""")
+    def group_id(self) -> UUID:
+        return self.group_id
+
     created = resolve_created
+    lastchange = resolve_lastchange
+    changedby = resolve_changedby
     createdby = resolve_createdby
-    name_en = resolve_name_en
     rbacobject = resolve_rbacobject
 
 
@@ -67,7 +74,7 @@ class EventGroupWhereFilter:
     createdby: UUID
     changedby: UUID
 
-    #TODO event
+    #TODO event/group
 
 #Queries
 @strawberry.field(

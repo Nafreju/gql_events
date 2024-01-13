@@ -37,16 +37,18 @@ class EventCategoryGQLModel(BaseGQLModel):
 
     id = resolve_id
     name = resolve_name
-    changedby = resolve_changedby
-    lastchange = resolve_lastchange
-    created = resolve_created
-    createdby = resolve_createdby
     name_en = resolve_name_en
-    rbacobject = resolve_rbacobject
-
+    
     @strawberry.field(description="""Validity of event category""")
     def valid(self) -> Optional[bool]:
         return self.valid
+    
+    created = resolve_created
+    lastchange = resolve_lastchange
+    createdby = resolve_createdby
+    changedby = resolve_changedby
+    rbacobject = resolve_rbacobject
+
 
     @strawberry.field(
         description="""event types which has this category""")

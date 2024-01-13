@@ -36,6 +36,8 @@ test_insert_event_group = createFrontendQuery(
                 id
                 changedby { id }
                 created
+                eventId
+                groupId
                 createdby { id }
                 rbacobject { id }
                 event { id }

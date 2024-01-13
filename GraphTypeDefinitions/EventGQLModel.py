@@ -31,20 +31,19 @@ class EventGQLModel(BaseGQLModel):
     def getLoader(cls, info):
         return getLoadersFromInfo(info).events
 
-
     id = resolve_id
-    name = resolve_name
-    changedby = resolve_changedby
-    lastchange = resolve_lastchange
-    created = resolve_created
-    createdby = resolve_createdby
     name_en = resolve_name_en
-    rbacobject = resolve_rbacobject
+    name = resolve_name
 
     @strawberry.field(description="""Validity of event""")
     def valid(self) -> Optional[bool]:
         return self.valid
-    
+
+    created = resolve_created
+    lastchange = resolve_lastchange
+    createdby = resolve_createdby
+    changedby = resolve_changedby
+
     @strawberry.field(description="""Date&time of event begin""")
     def startdate(self) -> Optional[datetime.datetime]:
         return self.startdate
@@ -52,6 +51,8 @@ class EventGQLModel(BaseGQLModel):
     @strawberry.field(description="""Date&time of event end""")
     def enddate(self) -> Optional[datetime.datetime]:
         return self.enddate
+    
+    rbacobject = resolve_rbacobject
     
     @strawberry.field(description="""Master event of event""")
     def masterevent_id(self) -> Optional[UUID]:
@@ -67,6 +68,12 @@ class EventGQLModel(BaseGQLModel):
         result = await loader.filter_by(event_id=self.id)
         return result
    
+    @strawberry.field(
+        description="""Type of the event""")
+    async def event_type(self, info: strawberry.types.Info) -> Optional["EventTypeGQLModel"]:
+        from .EventTypeGQLModel import EventTypeGQLModel
+        result = await EventTypeGQLModel.resolve_reference(info=info, id=self.eventtype_id)
+        return result
 
     @strawberry.field(
         description="""Participants of the event and if they were absent or so...""")
@@ -74,13 +81,6 @@ class EventGQLModel(BaseGQLModel):
         loader = getLoadersFromInfo(info).presences
         result = await loader.filter_by(event_id=self.id)
         return result 
-
-    @strawberry.field(
-        description="""Type of the event""")
-    async def event_type(self, info: strawberry.types.Info) -> Optional["EventTypeGQLModel"]:
-        from .EventTypeGQLModel import EventTypeGQLModel
-        result = await EventTypeGQLModel.resolve_reference(info=info, id=self.eventtype_id)
-        return result
 
     @strawberry.field(
         description="""event which contains this event (aka semester of this lesson)""")
@@ -103,6 +103,7 @@ class EventWhereFilter:
     name_en: str
 
     valid: bool
+    created: datetime.datetime
     createdby: UUID
     changedby: UUID
     startdate: datetime.datetime
@@ -110,7 +111,7 @@ class EventWhereFilter:
     masterevent_id: UUID
     eventtype_id: UUID
 
-    #TODO eventtype, presences
+    #TODO eventtype, presences, master_event, sub_events
 
 
 
