@@ -56,6 +56,8 @@ class PresenceTypeGQLModel(BaseGQLModel):
         result = await loader.filter_by(presencetype_id = self.id)
         return result
  
+PresenceWhereFilter = Annotated["PresenceWhereFilter", strawberry.lazy(".PresenceGQLModel")]
+
 @createInputs
 @dataclass
 class PresenceTypeWhereFilter:
@@ -68,7 +70,7 @@ class PresenceTypeWhereFilter:
     createdby: UUID 
     changedby: UUID 
 
-    #TODO presences
+    presences: PresenceWhereFilter
 
 
 

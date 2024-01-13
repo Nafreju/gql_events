@@ -69,6 +69,7 @@ class EventTypeGQLModel(BaseGQLModel):
         result = await EventCategoryGQLModel.resolve_reference(info=info, id=self.category_id)
         return result
 
+EventWhereFilter = Annotated["EventWhereFilter", strawberry.lazy(".EventGQLModel")]
 
 @createInputs
 @dataclass
@@ -83,9 +84,13 @@ class EventTypeWhereFilter:
     changedby: UUID
 
     category_id: UUID
-    #TODO category, events
-    #from .EventCategoryGQLModel import EventCategoryWhereFilter
-    #category: EventCategoryWhereFilter
+
+    from .EventCategoryGQLModel import EventCategoryWhereFilter
+    category: EventCategoryWhereFilter
+    
+    events: EventWhereFilter
+
+
 
 #Queries
 @strawberry.field(

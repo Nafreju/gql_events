@@ -33,9 +33,9 @@ services:
     #   # vnejsi port : port, kde sluzbu poskytuje kontejner
       - 33000:3000      
     depends_on:
-      - gql_ug
+      - gql_events
 
-  gql_ug:
+  gql_events:
     image: hrbolek/gql_ug:main
     environment:
       # promenne, ktere lze cist v kontejneru

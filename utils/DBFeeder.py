@@ -53,7 +53,6 @@ def get_demodata():
 async def initDB(asyncSessionMaker):
     demoMode = os.environ.get("DEMO", "False")
     if demoMode == "False":
-        print("No Demo mode")
         dbModels = [
             EventCategoryModel,
             EventTypeModel, 
@@ -64,7 +63,6 @@ async def initDB(asyncSessionMaker):
             PresenceModel
             ]
     else:
-        print("Demo mode")
         dbModels = [
             EventCategoryModel,
             EventTypeModel, 

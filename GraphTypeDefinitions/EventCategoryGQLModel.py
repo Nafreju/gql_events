@@ -76,8 +76,7 @@ class EventCategoryWhereFilter:
     createdby: UUID
     changedby: UUID
 
-    #TODO maybe createRootResolver.... _GraphResolvers
-    #types: EventTypeWhereFilter
+    event_types: EventTypeWhereFilter
 
 
 

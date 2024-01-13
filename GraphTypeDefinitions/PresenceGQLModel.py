@@ -105,7 +105,15 @@ class PresenceWhereFilter:
     createdby: UUID
     changedby: UUID
 
-    #TODO event, presence_type, invitation_type, user
+    from .EventGQLModel import EventWhereFilter
+    event: EventWhereFilter
+
+    from .PresenceTypeGQLModel import PresenceTypeWhereFilter
+    presence_type: PresenceTypeWhereFilter
+
+    from .InvitationTypeGQLModel import InvitationTypeWhereFilter
+    invitation_type: InvitationTypeWhereFilter
+    #TODO user
 
 #Queries
 @strawberry.field(

@@ -105,7 +105,10 @@ class EventGQLModel(BaseGQLModel):
         loader = getLoadersFromInfo(info).events
         result = await loader.filter_by(masterevent_id=self.id)
         return result
-    
+
+
+PresenceWhereFilter = Annotated["PresenceWhereFilter", strawberry.lazy(".PresenceGQLModel")]
+
 @createInputs
 @dataclass
 class EventWhereFilter: 
@@ -122,7 +125,17 @@ class EventWhereFilter:
     masterevent_id: UUID
     eventtype_id: UUID
 
-    #TODO eventtype, presences, master_event, sub_events
+    from .EventTypeGQLModel import EventTypeWhereFilter
+    event_type: EventTypeWhereFilter
+
+    presences: PresenceWhereFilter
+
+    EventWhereFilter = Annotated["EventWhereFilter", strawberry.lazy(".EventGQLModel")]
+    master_event: EventWhereFilter
+    sub_events: EventWhereFilter
+
+    #TODO groups
+
 
 
 

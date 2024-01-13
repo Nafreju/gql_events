@@ -6,72 +6,83 @@ import uuid
 @pytest_asyncio.fixture
 async def GQLInsertQueries():
     result = {
-        "forms": {
+        "events": {
             "create": """
-mutation ($id: UUID!, $name: String!, $type_id: UUID!, $name_en: String!) {
-  formInsert(
-    form: {id: $id, name: $name, typeId: $type_id, nameEn: $name_en}
+mutation ($id: UUID!, $name: String!, $eventtype_id: UUID!, $name_en: String!) {
+  eventInsert(
+    event: {id: $id, name: $name, eventtypeId: $type_id, nameEn: $name_en}
   ) {
     id
     msg
   }
 }""",
-            "read": """query($id: UUID!){ result: formById(id: $id) { id }}""",
+            "read": """query($id: UUID!){ result: eventById(id: $id) { id }}""",
 },
-        "formsections": {"create": """
-mutation ($id: UUID!, $name: String!, $order: Int!, $name_en: String!, $form_id: UUID!) {
-  formSectionInsert(
-    section: {id: $id, name: $name, order: $order, nameEn: $name_en, formId: $form_id}
-  ) {
-    id
-    msg
-  }
-}""",
-            "read": """query($id: UUID!){ result: formSectionById(id: $id) { id }}""",
-},
-        "formparts":{"create": """
-mutation ($id: UUID!, $name: String!, $order: Int!, $name_en: String!, $section_id: UUID!) {
-  formPartInsert(
-    part: {id: $id, name: $name, order: $order, nameEn: $name_en, sectionId: $section_id}
-  ) {
-    id
-    msg
-  }
-}""",
-            "read": """query($id: UUID!){ result: formPartById(id: $id) { id }}""",
-},
-        "formitems": {"create": """
-mutation ($id: UUID!, $name: String!, $order: Int!, $name_en: String!, $part_id: UUID!) {
-  formItemInsert(
-    item: {id: $id, name: $name, order: $order, nameEn: $name_en, partId: $part_id}
-  ) {
-    id
-    msg
-  }
-}""",
-            "read": """query($id: UUID!){ result: formItemById(id: $id) { id }}""",
-},
-        "formrequests": {"create": """
+        "eventcategories": {"create": """
 mutation ($id: UUID!, $name: String!) {
-  formRequestInsert(
-    request: {id: $id, name:$name }
+  eventCategoryInsert(
+    eventCategory: {id: $id, name: $name}
   ) {
     id
     msg
   }
 }""",
-            "read": """query($id: UUID!){ result: requestById(id: $id) { id }}""",
+            "read": """query($id: UUID!){ result: eventCategoryById(id: $id) { id }}""",
 },
-        "formhistories": {"create": """
-mutation ($id: UUID!, $name: String!, $form_id: UUID!, $request_id: UUID!) {
-  formHistoryInsert(
-    history: {id: $id, name:$name, requestId: $request_id, formId: $form_id}
+        "events_groups":{"create": """
+mutation ($event_id: UUID!, $group_id: UUID!) {
+  feventGroupInsert(
+    eventGroup: {eventId: $event_id, groupId: $group_id}
   ) {
     id
     msg
   }
 }""",
-            "read": """query($id: UUID!){ result: formHistoryById(id: $id) { id }}""",
+            "read": """query($id: UUID!){ result: eventGroupById(id: $id) { id }}""",
+},
+        "eventtypes": {"create": """
+mutation ($id: UUID!, $name: String!, $category_id: UUID!) {
+  eventTypeInsert(
+    eventType: {id: $id, name: $name, categoryId: $category_id}
+  ) {
+    id
+    msg
+  }
+}""",
+            "read": """query($id: UUID!){ result: eventTypeById(id: $id) { id }}""",
+},
+        "eventinvitationtypes": {"create": """
+mutation ($id: UUID!, $name: String!) {
+  invitationTypeInsert(
+    invitationType: {id: $id, name: $name }
+  ) {
+    id
+    msg
+  }
+}""",
+            "read": """query($id: UUID!){ result: invitationTypeById(id: $id) { id }}""",
+},
+        "events_users": {"create": """
+mutation ($user_id: UUID!, $event_id: UUID!, $invitationtype_id: UUID!, $presencetype_id: UUID!) {
+  presenceInsert(
+    presence: {userId: $user_id, eventId: $event_id, invitationtypeId: $invitationtype_id, presencetypeId: $presencetype_id}
+  ) {
+    id
+    msg
+  }
+}""",
+            "read": """query($id: UUID!){ result: presenceById(id: $id) { id }}""",
+},
+      "eventpresencetypes": {"create": """
+mutation ($id: UUID!, $name: String!) {
+  presenceTypeInsert(
+    presenceType: {id: $id, name: $name}
+  ) {
+    id
+    msg
+  }
+}""",
+            "read": """query($id: UUID!){ result: presenceTypeById(id: $id) { id }}""",
 },
 
     }

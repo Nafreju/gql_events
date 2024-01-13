@@ -32,7 +32,7 @@ def resolve_created(self) -> typing.Optional[datetime.datetime]:
 
 async def resolve_user(user_id):
     from .externals import UserGQLModel
-    result = None if user_id is None else await UserGQLModel.resolve_reference(user_id)
+    result = None if user_id is None else await UserGQLModel.resolve_reference(id=user_id, info=None)
     return result
     
 @strawberry.field(description="""Who created entity""")

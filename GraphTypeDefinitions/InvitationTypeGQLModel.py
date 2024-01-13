@@ -56,6 +56,7 @@ class InvitationTypeGQLModel(BaseGQLModel):
         return result
 
 
+PresenceWhereFilter = Annotated["PresenceWhereFilter", strawberry.lazy(".PresenceGQLModel")]
 
 @createInputs
 @dataclass
@@ -69,7 +70,7 @@ class InvitationTypeWhereFilter:
     createdby: UUID 
     changedby: UUID
 
-    #TODO presences
+    presences: PresenceWhereFilter
 
 
 
