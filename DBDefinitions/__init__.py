@@ -9,10 +9,6 @@ from .InvitationTypeModel import InvitationTypeModel
 from .PresenceModel import PresenceModel
 from .PresenceTypeModel import PresenceTypeModel
 
-from .uuid import UUIDColumn, UUIDFKey
-
-
-
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
@@ -43,7 +39,6 @@ async def startEngine(connectionstring, makeDrop=False, makeUp=True):
 
 
 import os
-
 
 def ComposeConnectionString():
     """Odvozuje connectionString z promennych prostredi (nebo z Docker Envs, coz je fakticky totez).

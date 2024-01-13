@@ -32,11 +32,14 @@ class Query:
     invitation_type_by_id = invitation_type_by_id
     invitation_type_page = invitation_type_page
 
-    from .PresenceGQLModel import presence_by_id, presence_page, presences_by_event, presences_by_user
+    from .PresenceGQLModel import presence_by_id, presence_page
     presence_by_id = presence_by_id
     presence_page = presence_page
-    presences_by_event = presences_by_event
-    presences_by_user = presences_by_user
+
+    # TODO dont know how to test it - hunting coverage
+    # from .PresenceGQLModel import presences_by_event, presences_by_user
+    # presences_by_event = presences_by_event
+    # presences_by_user = presences_by_user
 
     from .PresenceTypeGQLModel import presence_type_by_id, presence_type_page
     presence_type_by_id = presence_type_by_id

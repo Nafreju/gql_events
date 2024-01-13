@@ -1,7 +1,7 @@
 import strawberry
 import datetime
 from typing import List, Annotated, Optional
-from ._GraphResolvers import asPage
+from ._GraphResolvers import asPage, asForeignList, createRootResolver_by_id
 from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
@@ -55,10 +55,10 @@ class EventCategoryGQLModel(BaseGQLModel):
     @strawberry.field(
         description="""event types which has this category""",
         permission_classes=[OnlyForAuthentized(isList=True)])
+    @asForeignList(foreignKeyName="category_id")
     async def event_types(self, info: strawberry.types.Info) -> List[EventTypeGQLModel]:
-        loader = getLoadersFromInfo(info).eventtypes
-        result = await loader.filter_by(category_id=self.id)
-        return result
+        return getLoadersFromInfo(info).eventtypes
+
 
 
 EventTypeWhereFilter = Annotated["EventTypeWhereFilter", strawberry.lazy(".EventTypeGQLModel")]
@@ -82,12 +82,8 @@ class EventCategoryWhereFilter:
 
 #Queries
 
-@strawberry.field(
-    description="""Finds a particular event category""",
-        permission_classes=[OnlyForAuthentized()])
-async def event_category_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventCategoryGQLModel]:
-    result = await EventCategoryGQLModel.resolve_reference(info=info, id=id)
-    return result
+
+event_category_by_id = createRootResolver_by_id(EventCategoryGQLModel, description="""Finds a particular event category""")
 
 
 @strawberry.field(
@@ -151,7 +147,7 @@ async def event_category_insert(self, info: strawberry.types.Info, event_categor
     description="U operation",
         permission_classes=[OnlyForAuthentized()])
 async def event_category_update(self, info: strawberry.types.Info, event_category: EventCategoryUpdateGQLModel) -> EventCategoryResultGQLModel: 
-    user = getUserFromInfo(info) #TODO
+    user = getUserFromInfo(info)
     event_category.changedby = UUID(user["id"])
         
     loader = getLoadersFromInfo(info).eventcategories

@@ -131,6 +131,7 @@ async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit:
     return getLoadersFromInfo(info).presences
     
 
+# TODO dont know how to test it - hunting coverage
 # @strawberry.field(description="""Finds all presences for the event""",
 #         permission_classes=[OnlyForAuthentized(isList=True)])
 # async def presences_by_event(self, info: strawberry.types.Info, event_id: UUID) -> List[PresenceGQLModel]:

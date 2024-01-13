@@ -308,10 +308,7 @@ def OnlyForAuthentized(isList=False):
         @cached_property
         def isDEMO(self):
             DEMO = os.getenv("DEMO", None)
-            if DEMO == "True":
-                return True
-            else:
-                return False
+            return True if DEMO == "True" else False
             
     return OnlyForAuthentized
 

@@ -70,17 +70,18 @@ https://docs.docker.com/compose/
 
 
 TODO:
-1. Permissions
-2. conftest nejsou moje inserty!
-3. Udělat na pondělí delete
-4. Udělat na pondělí 70 % coverage
+1. Udělat na pondělí delete
+2. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
 
-
-kde je Autentizace u id,name,nameEn atd... kdyz je importovano
+otazky na konzultaci:
 where filter na vektorovou strukturu nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
+test, kde je default attributeNames id a name, tak sdílené tabulky nemají name - spadlo by to
+kde authorized u naimportovanych resolveru treba resolve_name; kde je Autentizace u id,name,nameEn atd... kdyz je importovano
+createRootResolver_by_id kde authorized?
+federace statements/where filters 
 
 
-
+buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
 
 delete u:
 PresenceModel
@@ -94,10 +95,10 @@ InvitationTypeModel
 PresenceTypeModel
 
 KEEP
-buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
 
 
-
+Co se SZ?
+jak sqlalchemy dědičnost?
 ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
 ExamModel bude 1:1 s EventModel - sdílíme presence (uživatel/skupina), eventtype
 ExamModel bude mít atributy "SubjectModel" z jiné federace?
