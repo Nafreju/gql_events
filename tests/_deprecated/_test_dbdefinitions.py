@@ -13,9 +13,13 @@ import pytest
 
 from DBDefinitions import (
     BaseModel,
-    EventModel, EventTypeModel, EventCategoryModel,
-    EventGroupModel, InvitationTypeModel, PresenceModel,
-    PresenceTypeModel
+            EventCategoryModel,
+            EventTypeModel, 
+            PresenceTypeModel, 
+            InvitationTypeModel,
+            EventModel, 
+            EventGroupModel, 
+            PresenceModel
 )
 
 from .shared import prepare_demodata, prepare_in_memory_sqllite, get_demodata

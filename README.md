@@ -1,4 +1,4 @@
-# GQL_Forms
+# GQL_Events
 
 ## Execution
 ```bash

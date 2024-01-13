@@ -1,12 +1,34 @@
-from uoishelpers.dataloaders import createIdLoader, createFkeyLoader
 from functools import cache
-
-from DBDefinitions import \
-    EventModel, EventTypeModel, EventCategoryModel, EventGroupModel, \
-        InvitationTypeModel, PresenceModel, PresenceTypeModel
-import os, asyncio, aiohttp
-from aiodataloader import DataLoader
 import logging
+
+from DBDefinitions import (
+    EventModel, 
+    EventTypeModel, 
+    EventCategoryModel,
+    EventGroupModel, 
+    PresenceModel,
+    InvitationTypeModel, 
+    PresenceTypeModel
+)
+
+
+dbmodels = {
+    "events": EventModel, 
+    "eventtypes": EventTypeModel, 
+    "eventcategories": EventCategoryModel,
+    "events_groups": EventGroupModel, 
+    "events_users": PresenceModel,
+    "eventinvitationtypes": InvitationTypeModel, 
+    "eventpresencetypes": PresenceTypeModel
+}
+
+import datetime
+import aiohttp
+import asyncio
+import os
+from aiodataloader import DataLoader
+from uoishelpers.resolvers import select, update, delete
+from uoishelpers.dataloaders import createIdLoader
 
 @cache
 def composeAuthUrl():
@@ -82,7 +104,16 @@ class AuthorizationLoader(DataLoader):
         indexedResult = {key:result for key, result in zip(reducedkeys, results)}
         results = [indexedResult[key] for key in keys]
         return results
-   
+    
+class Loaders:
+    events = None
+    eventtypes = None
+    eventcategories = None
+    presences = None
+    invitationtypes = None
+    presencetypes = None
+    eventgroups = None
+    pass
 
 def createLoaders(asyncSessionMaker):
 
@@ -128,6 +159,7 @@ def getLoadersFromInfo(info):
     context = info.context
     loaders = context["loaders"]
     return loaders
+
 
 
 demouser = {
@@ -178,13 +210,10 @@ def getAuthorizationToken(info):
     request = context.get("request", None)
     assert request is not None, "trying to get authtoken from None request"
 
-
 def createLoadersContext(asyncSessionMaker):
     return {
         "loaders": createLoaders(asyncSessionMaker)
     }
-
-
 
 def createUgConnectionContext(request):
     from .gql_ug_proxy import get_ug_connection

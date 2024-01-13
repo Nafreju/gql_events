@@ -33,15 +33,14 @@ def get_demodata():
                 
                 json_dict[key] = dateValueWOtzinfo
             
-            if (key in ["id", "changedby", "createdby"]) or ("_id" in key):
+            if (key in ["id", "changedby", "createdby", "rbacobject"]) or ("_id" in key):
                 
                 if key == "outer_id":
                     json_dict[key] = value
                 elif value not in ["", None]:
                     json_dict[key] = uuid.UUID(value)
                 else:
-                    pass
-                    #print(key, value)
+                    print(key, value)
 
         return json_dict
 
@@ -51,15 +50,19 @@ def get_demodata():
 
     return jsonData
 
-
 async def initDB(asyncSessionMaker):
     demoMode = os.environ.get("DEMO", "False")
     if demoMode == "False":
         print("No Demo mode")
         dbModels = [
-            EventTypeModel,           
+            EventCategoryModel,
+            EventTypeModel, 
             PresenceTypeModel, 
-            InvitationTypeModel        ]
+            InvitationTypeModel,
+            EventModel, 
+            EventGroupModel, 
+            PresenceModel
+            ]
     else:
         print("Demo mode")
         dbModels = [

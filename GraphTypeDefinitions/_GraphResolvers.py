@@ -253,12 +253,11 @@ def asForeignList(*, foreignKeyName: str):
 #         return result
 #     return foreignkeyVector
 
-from uuid import UUID
 def createRootResolver_by_id(scalarType: None, description="Retrieves item by its id"):
     assert scalarType is not None
     @strawberry.field(description=description)
     async def by_id(
-        self, info: strawberry.types.Info, id: UUID(id)
+        self, info: strawberry.types.Info, id: IDType
     ) -> typing.Optional[scalarType]:
         result = await scalarType.resolve_reference(info=info, id=id)
         return result

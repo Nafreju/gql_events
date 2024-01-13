@@ -71,8 +71,9 @@ https://docs.docker.com/compose/
 
 TODO:
 1. Permissions
-2. Udělat na pondělí delete
-3. Udělat na pondělí 70 % coverage
+2. conftest nejsou moje inserty!
+3. Udělat na pondělí delete
+4. Udělat na pondělí 70 % coverage
 
 neumím spustit forms ---- port 8125
 where filter na vektorovou strukturu nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
