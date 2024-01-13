@@ -34,13 +34,12 @@ test_insert_event_group = createFrontendQuery(
             msg
             eventGroup {
                 id
-                changedby
-                eventId
-                groupId
+                changedby { id }
                 created
-                createdby
-                resolveRbacobject { id }
+                createdby { id }
+                rbacobject { id }
                 event { id }
+                group { id }
             }
         }
     }""",

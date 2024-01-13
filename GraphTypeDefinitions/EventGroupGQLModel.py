@@ -1,65 +1,45 @@
 import strawberry
 import datetime
-from typing import Union, List, Annotated, Optional
-from ._GraphResolvers import asPage
+from typing import List, Annotated, Optional
+from ._GraphResolvers import asPage, resolve_result_msg
 from utils import getLoadersFromInfo, getUserFromInfo
-
-
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-
+from .BaseGQLModel import BaseGQLModel
+from GraphTypeDefinitions._GraphResolvers import (
+    resolve_id,
+    resolve_name,
+    resolve_name_en,
+    resolve_changedby,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_rbacobject,
+    asPage
+)
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
 
 
 
-@strawberry.federation.type(keys=["id"], description="""Describes a relation of an group to the event.""")
-class EventGroupGQLModel:
+@strawberry.federation.type(
+    keys=["id"], description="""Describes a relation of an group to the event.""")
+class EventGroupGQLModel(BaseGQLModel):
+
     @classmethod
-    async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoadersFromInfo(info).eventgroups
-        result = await loader.load(id)
-        if result is not None:
-            result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
-        return result
-    
-    @strawberry.field(description="""Primary key""")
-    def id(self) -> UUID:
-        return self.id
-    
-    @strawberry.field(description="""Event id""")
-    def event_id(self) -> UUID:
-        return self.event_id
-    
-    @strawberry.field(description="""Group id""")
-    def group_id(self) -> UUID:
-        return self.group_id
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).eventgroups
 
-    
-    @strawberry.field(description="""When this entity was created""")
-    def created(self) -> Optional[datetime.datetime]:
-        return self.created
-
-    @strawberry.field(description="""Time stamp""")
-    def lastchange(self) -> Optional[datetime.datetime]:
-        return self.lastchange
-    
-    @strawberry.field(description="""By whom this entity was created""")
-    def createdby(self) -> Optional[UUID]:
-        return self.createdby
-
-    @strawberry.field(description="""Who changed the this entity""")
-    def changedby(self) -> Optional[UUID]:
-        return self.changedby
-
-    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-    @strawberry.field(description="""Who made last change""")
-    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
-        from .externals import RBACObjectGQLModel
-        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
-        return result
+    id = resolve_id
+    name = resolve_name
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
+    rbacobject = resolve_rbacobject
 
 
     @strawberry.field(
@@ -67,6 +47,13 @@ class EventGroupGQLModel:
     async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
         from .EventGQLModel import EventGQLModel
         result = await EventGQLModel.resolve_reference(info=info, id=self.event_id)
+        return result
+    
+    @strawberry.field(
+        description="""Group assigned to event""")
+    async def group(self, info: strawberry.types.Info) -> Optional[GroupGQLModel]:
+        from .externals import GroupGQLModel
+        result = await GroupGQLModel.resolve_reference(info=info, id=self.group_id)
         return result
     
 @createInputs
@@ -83,10 +70,12 @@ class EventGroupWhereFilter:
     #TODO event
 
 #Queries
-@strawberry.field(description="""Finds a particular event-group entity""")
+@strawberry.field(
+    description="""Finds a particular event-group entity""")
 async def event_group_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGroupGQLModel]:
     result = await EventGroupGQLModel.resolve_reference(info=info, id=id)
     return result
+
 
 @strawberry.field(description="""Finds all events-groups paged""")
 @asPage
@@ -124,3 +113,5 @@ async def event_group_insert(self, info: strawberry.types.Info, event_group: Eve
     result = EventGroupResultGQLModel(id=row.id, msg="ok")
     return result
 
+
+#TODO delete

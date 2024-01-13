@@ -1,65 +1,58 @@
 import strawberry
 import datetime
-from typing import Union, List, Annotated, Optional
-from ._GraphResolvers import asPage
+from typing import List, Annotated, Optional
+from ._GraphResolvers import asPage, resolve_result_msg
+from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-from utils import getLoadersFromInfo, getUserFromInfo
+from .BaseGQLModel import BaseGQLModel
+from GraphTypeDefinitions._GraphResolvers import (
+    resolve_id,
+    resolve_name,
+    resolve_name_en,
+    resolve_changedby,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_rbacobject,
+    asPage
+)
 
 
+PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLModel")]
 
-@strawberry.federation.type(keys=["id"], description="""Represents type of invitation user obtained to event""")
-class InvitationTypeGQLModel:
+
+@strawberry.federation.type(
+    keys=["id"], description="""Represents type of invitation user obtained to event""")
+class InvitationTypeGQLModel(BaseGQLModel):
 
     @classmethod
-    async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoadersFromInfo(info).invitationtypes
-        result = await loader.load(id)
-        if result is not None:
-            result.__strawberry_definition__ = cls.__strawberry_definition__   # little hack :)
-        return result
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).invitationtypes
 
-    @strawberry.field(description="""Primary key""")
-    def id(self) -> UUID:
-        return self.id
+    id = resolve_id
+    name = resolve_name
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
+    rbacobject = resolve_rbacobject
 
-    @strawberry.field(description="""Name of invitation type""")
-    def name(self) -> str:
-        return self.name
-
-    @strawberry.field(description="""Name of invitation type in English""")
-    def name_en(self) -> str:
-        return self.name_en
 
     @strawberry.field(description="""Validity of invitation type""")
     def valid(self) -> Optional[bool]:
         return self.valid
     
-    @strawberry.field(description="""When invitation type was created""")
-    def created(self) -> Optional[datetime.datetime]:
-        return self.created
+    @strawberry.field(
+        description="""presences having this invitation""")
+    async def presences(self, info: strawberry.types.Info) -> List[PresenceGQLModel]:
+        loader = getLoadersFromInfo(info).presences
+        result = await loader.filter_by(invitationtype_id=self.id)
+        return result
 
-    @strawberry.field(description="""Time stamp""")
-    def lastchange(self) -> Optional[datetime.datetime]:
-        return self.lastchange
-    
-    @strawberry.field(description="""By whom invitation type was created""")
-    def createdby(self) -> Optional[UUID]:
-        return self.createdby
 
-    @strawberry.field(description="""Who changed the invitation type""")
-    def changedby(self) -> Optional[UUID]:
-        return self.changedby
-    
-    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-    @strawberry.field(description="""Who made last change""")
-    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
-        from .externals import RBACObjectGQLModel
-        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
-        return result  
-
-    #TODO def presences - need PresenceGQLModel which works
 
 @createInputs
 @dataclass

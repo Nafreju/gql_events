@@ -22,7 +22,7 @@ from tests.gqlshared import (
 
 
 test_reference_events = createResolveReferenceTest(tableName='events', gqltype='EventGQLModel', \
-            attributeNames=["id", "name", "lastchange"])
+            attributeNames=["id", "name", "lastchange", "groups { id }", "presences { id }", "subEvents { id }"])
 
 test_query_event_by_id = createByIdTest(tableName="events", queryEndpoint="eventById")
 test_query_event_page = createPageTest(tableName="events", queryEndpoint="eventPage")
@@ -35,16 +35,17 @@ test_insert_event = createFrontendQuery(
             event {
                 id
                 name
-                changedby
+                changedby { id }
                 nameEn
                 valid
                 created
                 startdate
                 enddate
                 mastereventId
-                createdby
+                masterEvent { id }
+                createdby { id }
                 eventtypeId
-                resolveRbacobject { id }
+                rbacobject { id }
                 eventType { id }
             }
         }

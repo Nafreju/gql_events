@@ -718,8 +718,8 @@
 
 
     "eventtypes": [
-        {"id": "c0a12392-ae0e-11ed-9bd8-0242ac110002", "name": "P", "name_en": ""},
-        {"id": "b87d3ff0-8fd4-11ed-a6d4-0242ac110002", "name": "Ostatní", "name_en": ""},
+        {"id": "c0a12392-ae0e-11ed-9bd8-0242ac110002", "name": "P", "name_en": "", "category_id": "5aaf820d-5acd-4406-b18d-47f161e75ebb"},
+        {"id": "b87d3ff0-8fd4-11ed-a6d4-0242ac110002", "name": "Ostatní", "name_en": "", "category_id": "5aaf820d-5acd-4406-b18d-47f161e75ebb"},
         {"id": "b87d7b28-8fd4-11ed-a6d4-0242ac110002", "name": "LAB", "name_en": "", "category_id": "5aaf820d-5acd-4406-b18d-47f161e75ebb"},
         {"id": "b87d7be6-8fd4-11ed-a6d4-0242ac110002", "name": "P", "name_en": ""},
         {"id": "b87d7c2c-8fd4-11ed-a6d4-0242ac110002", "name": "CV", "name_en": ""},
@@ -818,7 +818,7 @@
             "name": "2022/23 LS", 
             "name_en": "2022/23 SS", 
             "eventtype_id": "69ec2b0b-a39d-40df-9cea-e295b36749c9",
-            "masterevent_id": "5194663f-11aa-4775-91ed-5f3d79269fed",
+            "masterevent_id": "4dccf52f-4117-403c-932a-5691c0d020b1",
             
             "startdate": "2023-03-01T00:00:00", 
             "enddate": "2023-09-01T00:00:00",

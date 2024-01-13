@@ -80,9 +80,17 @@ where filter na vektorovou strukturu nefunguje ... ?
 apollo je potřeba jako autorizační server - jak to funguje?
 
 categorie a typ invalid
-presence delete do TODO, zdali delete zdává smysl "lidsky"
-eventgroup delete
-zbytek invalid
+
+delete u:
+PresenceModel
+EventGroupModel
+
+valid u:
+EventCategoryModel
+EventModel
+EventTypeModel
+InvitationTypeModel
+PresenceTypeModel
 
 
 

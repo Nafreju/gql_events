@@ -27,6 +27,7 @@ class PresenceModel(BaseModel):
     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
     
     #sql alchemy requirements
+    #user from federation
     event = relationship("EventModel", back_populates="presences", uselist=False)
     invitationtype = relationship("InvitationTypeModel", back_populates="presences", uselist=False)
     presencetype = relationship("PresenceTypeModel", back_populates="presences", uselist=False)

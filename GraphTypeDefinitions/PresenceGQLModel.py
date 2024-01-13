@@ -1,32 +1,44 @@
 import strawberry
 import datetime
-from typing import Union, List, Annotated, Optional
-from ._GraphResolvers import asPage
+from typing import List, Annotated, Optional
+from ._GraphResolvers import asPage, resolve_result_msg
+from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-from utils import getLoadersFromInfo, getUserFromInfo
-
-
+from .BaseGQLModel import BaseGQLModel
+from GraphTypeDefinitions._GraphResolvers import (
+    resolve_id,
+    resolve_name,
+    resolve_name_en,
+    resolve_changedby,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_rbacobject,
+    asPage
+)
 
 UserGQLModel = Annotated["UserGQLModel", strawberry.lazy(".externals")]
 PresenceTypeGQLModel = Annotated["PresenceTypeGQLModel", strawberry.lazy(".PresenceTypeGQLModel")]
 InvitationTypeGQLModel = Annotated["InvitationTypeGQLModel", strawberry.lazy(".InvitationTypeGQLModel")]
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
 
-@strawberry.federation.type(keys=["id"], description="""Describes a relation of an user to the event by invitation (like invited) and participation (like absent)""")
-class PresenceGQLModel:
-    @classmethod
-    async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoadersFromInfo(info).presences
-        result = await loader.load(id)
-        if result is not None:
-            result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
-        return result
+@strawberry.federation.type(
+    keys=["id"], description="""Describes a relation of an user to the event by invitation (like invited) and participation (like absent)""")
+class PresenceGQLModel(BaseGQLModel):
 
-    @strawberry.field(description="""Primary key""")
-    def id(self) -> UUID:
-        return self.id
+    @classmethod
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).presences
+
+    id = resolve_id
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    rbacobject = resolve_rbacobject
+
     
     @strawberry.field(description="""ID of event which is presence related to""")
     def event_id(self) -> Optional[UUID]:
@@ -44,38 +56,10 @@ class PresenceGQLModel:
     def presencetype_id(self) -> Optional[UUID]:
         return self.presencetype_id
 
-    # @strawberry.field(description="""Validity of presence""")
-    # def valid(self) -> Optional[bool]:
-    #     return self.valid
-    
-    @strawberry.field(description="""When presence was created""")
-    def created(self) -> Optional[datetime.datetime]:
-        return self.created
-    
-    @strawberry.field(description="""By whom presence was created""")
-    def createdby(self) -> Optional[UUID]:
-        return self.createdby
-
-    @strawberry.field(description="""Who changed the presence""")
-    def changedby(self) -> Optional[UUID]:
-        return self.changedby
-    
-    @strawberry.field(description="""Time stamp""")
-    def lastchange(self) -> Union[datetime.datetime, None]:
-        return self.lastchange
-    
-    
-    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-    @strawberry.field(description="""Who made last change""")
-    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
-        from .externals import RBACObjectGQLModel
-        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
-        return result  
-
 
     @strawberry.field(description="""Present, Vacation etc.""")
     async def presence_type(self, info: strawberry.types.Info) -> Optional[PresenceTypeGQLModel]:
-        from .PresenceGQLModel import PresenceGQLModel
+        from .PresenceTypeGQLModel import PresenceTypeGQLModel
         result = await PresenceTypeGQLModel.resolve_reference(info, self.presencetype_id)
         return result
 
@@ -109,6 +93,7 @@ class PresenceWhereFilter:
     presencetype_id: UUID
     createdby: UUID
     changedby: UUID
+
 #Queries
 @strawberry.field(
     description="""Finds a particular presence""")
@@ -127,19 +112,13 @@ async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit:
 async def presences_by_event(self, info: strawberry.types.Info, event_id: UUID) -> List[PresenceGQLModel]:
     loader = getLoadersFromInfo(info).presences
     result = await loader.filter_by(event_id=event_id)
+    #TODO
     return result
 
 @strawberry.field(description="""Finds all presences for the user in the period""")
 async def presences_by_user(self, info: strawberry.types.Info, user_id: UUID,) -> List[PresenceGQLModel]:
-    #assert startdate < enddate, "startdate must be sooner than enddate"
     loader = getLoadersFromInfo(info).presences
-    # stmt = loader.getSelectStatement()
-    # model = loader.getModel()
-    # filterstmt = or_(
-    #     and_(model.startdate >= startdate, model.enddate <= startdate),
-    #     and_(model.startdate >= enddate, model.enddate <= enddate))
     # TODO
-    # result = loader.execute_select(stmt.filter(filterstmt))
     result = await loader.filter_by(user_id=user_id)
     return result
 
@@ -149,7 +128,7 @@ class PresenceInsertGQLModel:
     user_id: UUID = strawberry.field(description="ID of user who is related to event")
     event_id: UUID = strawberry.field(description="ID of event which is related to user")
     invitationtype_id: UUID = strawberry.field(description="ID of invitation type related to event/user")#default value
-    presencetype_id: Optional[UUID] = strawberry.field(description="type of presence related to event/user")#default to n
+    presencetype_id: UUID = strawberry.field(description="type of presence related to event/user")#default to n
     
     id: Optional[UUID] = strawberry.field(description="primary key (UUID), could be client generated", default=None)
 
@@ -205,3 +184,6 @@ async def presence_update(self, info: strawberry.types.Info, presence: PresenceU
     result = PresenceResultGQLModel(id=presence.id, msg="ok")
     result.msg = "fail" if row is None else "ok"
     return result
+
+
+#TODO delete

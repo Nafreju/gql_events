@@ -1,69 +1,56 @@
 import strawberry
 import datetime
-from typing import Union, List, Annotated, Optional
-from ._GraphResolvers import asPage
+from typing import List, Annotated, Optional
+from ._GraphResolvers import asPage, resolve_result_msg
 from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-
+from .BaseGQLModel import BaseGQLModel
+from GraphTypeDefinitions._GraphResolvers import (
+    resolve_id,
+    resolve_name,
+    resolve_name_en,
+    resolve_changedby,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_rbacobject,
+    createRootResolver_by_id,
+    asPage
+)
 
 
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
 
-@strawberry.federation.type(keys=["id"], description="""Represents category of event""")
-class EventCategoryGQLModel:
+@strawberry.federation.type(
+    keys=["id"], description="""Represents category of event""")
+class EventCategoryGQLModel(BaseGQLModel):
+
     @classmethod
-    async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoadersFromInfo(info).eventcategories
-        result = await loader.load(id)
-        if result is not None:
-            result.__strawberry_definition__ = cls.__strawberry_definition__   # little hack :)
-        return result
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).eventcategories
 
-    @strawberry.field(description="""Primary key""")
-    def id(self) -> UUID:
-        return self.id
+    # @classmethod
+    # async def resolve_reference(cls, info: strawberry.types.Info, id: uuid.UUID):
+    # implementation is inherited
 
-    @strawberry.field(description="""Name of event category""")
-    def name(self) -> str:
-        return self.name
-
-    @strawberry.field(description=""""Name of event category in English""")
-    def name_en(self) -> str:
-        return self.name_en
+    id = resolve_id
+    name = resolve_name
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
+    rbacobject = resolve_rbacobject
 
     @strawberry.field(description="""Validity of event category""")
     def valid(self) -> Optional[bool]:
         return self.valid
-    
-    @strawberry.field(description="""When event category was created""")
-    def created(self) -> Optional[datetime.datetime]:
-        return self.created
-
-    @strawberry.field(description="""Time stamp""")
-    def lastchange(self) -> Optional[datetime.datetime]:
-        return self.lastchange
-    
-    @strawberry.field(description="""By whom event category was created""")
-    def createdby(self) -> Optional[UUID]:
-        return self.createdby
-
-    @strawberry.field(description="""Who changed the event category""")
-    def changedby(self) -> Optional[UUID]:
-        return self.changedby
-    
-    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-    @strawberry.field(description="""Who made last change""")
-    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
-        from .externals import RBACObjectGQLModel
-        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
-        return result
-
 
     @strawberry.field(
         description="""event types which has this category""")
-    async def eventTypes(self, info: strawberry.types.Info) -> List[EventTypeGQLModel]:
+    async def event_types(self, info: strawberry.types.Info) -> List[EventTypeGQLModel]:
         loader = getLoadersFromInfo(info).eventtypes
         result = await loader.filter_by(category_id=self.id)
         return result
@@ -90,11 +77,13 @@ class EventCategoryWhereFilter:
 
 
 #Queries
+
 @strawberry.field(
     description="""Finds a particular event category""")
 async def event_category_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventCategoryGQLModel]:
     result = await EventCategoryGQLModel.resolve_reference(info=info, id=id)
     return result
+
 
 @strawberry.field(
     description="""Finds all event categories paged""")
@@ -131,8 +120,9 @@ class EventCategoryUpdateGQLModel:
 @strawberry.type(description="Result of CUD operations")
 class EventCategoryResultGQLModel:
     id: UUID = strawberry.field(description="primary key of CUD operation object")
-    msg: str = strawberry.field(description=\
-        """Should be `ok` if descired state has been reached, otherwise `fail`. For update operation fail should be also stated when bad lastchange has been entered.""")
+    msg: str = strawberry.field(description="""Should be `ok` if descired state has been reached, otherwise `fail`.
+For update operation fail should be also stated when bad lastchange has been entered.""")
+
 
     @strawberry.field(description="""Result of event category operation""")
     async def category(self, info: strawberry.types.Info) -> Optional[EventCategoryGQLModel]:

@@ -1,59 +1,49 @@
 import strawberry
 import datetime
-from typing import Union, List, Annotated, Optional
-from ._GraphResolvers import asPage
-
+from typing import List, Annotated, Optional
+from ._GraphResolvers import asPage, resolve_result_msg
+from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-from utils import getLoadersFromInfo, getUserFromInfo
-
+from .BaseGQLModel import BaseGQLModel
+from GraphTypeDefinitions._GraphResolvers import (
+    resolve_id,
+    resolve_name,
+    resolve_name_en,
+    resolve_changedby,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_rbacobject,
+    asPage
+)
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
 PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLModel")]
 
-@strawberry.federation.type(keys=["id"], description="""Entity representing an event (calendar item)""")
-class EventGQLModel:
-    @classmethod
-    async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        eventsloader = getLoadersFromInfo(info).events
-        result = await eventsloader.load(id)
-        if result is not None:
-            result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
-        return result
-
-    @strawberry.field(description="""Primary key""")
-    def id(self) -> UUID:
-        return self.id
-
-    @strawberry.field(description="""Event name in Czech""")
-    def name(self) -> Optional[str]:
-        return self.name
+@strawberry.federation.type(
+    keys=["id"], description="""Entity representing an event (calendar item)""")
+class EventGQLModel(BaseGQLModel):
     
-    @strawberry.field(description="""Event name in English""")
-    def name_en(self) -> Optional[str]:
-        return self.name_en
+    @classmethod
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).events
+
+
+    id = resolve_id
+    name = resolve_name
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
+    rbacobject = resolve_rbacobject
 
     @strawberry.field(description="""Validity of event""")
     def valid(self) -> Optional[bool]:
         return self.valid
-    
-    @strawberry.field(description="""When event was created""")
-    def created(self) -> Optional[datetime.datetime]:
-        return self.created
-
-    @strawberry.field(description="""Time stamp""")
-    def lastchange(self) -> Optional[datetime.datetime]:
-        return self.lastchange
-    
-    @strawberry.field(description="""By whom event was created""")
-    def createdby(self) -> Optional[UUID]:
-        return self.createdby
-
-    @strawberry.field(description="""Who changed the event""")
-    def changedby(self) -> Optional[UUID]:
-        return self.changedby
     
     @strawberry.field(description="""Date&time of event begin""")
     def startdate(self) -> Optional[datetime.datetime]:
@@ -70,13 +60,6 @@ class EventGQLModel:
     @strawberry.field(description="""Type of event""")
     def eventtype_id(self) -> Optional[UUID]:
         return self.eventtype_id
-    
-    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-    @strawberry.field(description="""Who made last change""")
-    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
-        from .externals import RBACObjectGQLModel
-        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
-        return result  
 
     @strawberry.field(description="""Groups of users linked to the event""")
     async def groups(self, info: strawberry.types.Info) -> List["GroupGQLModel"]:
@@ -87,12 +70,10 @@ class EventGQLModel:
 
     @strawberry.field(
         description="""Participants of the event and if they were absent or so...""")
-    #TODO
-    async def presences(self, info: strawberry.types.Info, invitation_types: List[UUID] = []) -> List["PresenceGQLModel"]:
-        async with withInfo(info) as session:
-            #result = await resolvePresencesForEvent(session, self.id, invitation_types)
-            #return result
-            pass
+    async def presences(self, info: strawberry.types.Info) -> List["PresenceGQLModel"]:
+        loader = getLoadersFromInfo(info).presences
+        result = await loader.filter_by(event_id=self.id)
+        return result 
 
     @strawberry.field(
         description="""Type of the event""")
@@ -104,18 +85,13 @@ class EventGQLModel:
     @strawberry.field(
         description="""event which contains this event (aka semester of this lesson)""")
     async def master_event(self, info: strawberry.types.Info) -> Optional["EventGQLModel"]:
-        #TODO tests maybe need one line
-        if self.masterevent_id is None:
-            result = None
-        else:
-            result = await EventGQLModel.resolve_reference(info=info, id=self.masterevent_id)
-        return result
+        return None if self.masterevent_id is None \
+                    else await EventGQLModel.resolve_reference(info=info, id=self.masterevent_id)
 
     @strawberry.field(
         description="""events which are contained by this event (aka all lessons for the semester)""")
-    async def sub_events(self, info: strawberry.types.Info, startdate: datetime.datetime, enddate: datetime.datetime) -> List["EventGQLModel"]:
+    async def sub_events(self, info: strawberry.types.Info) -> List["EventGQLModel"]:
         loader = getLoadersFromInfo(info).events
-        #TODO
         result = await loader.filter_by(masterevent_id=self.id)
         return result
     
@@ -139,11 +115,14 @@ class EventWhereFilter:
 
 
 #Queries
+
 @strawberry.field(
     description="""Finds a particular event""")
 async def event_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGQLModel]:
-    result = await EventGQLModel.resolve_reference(info, id=id)
+    result = await EventGQLModel.resolve_reference(info=info, id=id)
     return result
+
+
 
 @strawberry.field(
     description="""Finds all events paged""")

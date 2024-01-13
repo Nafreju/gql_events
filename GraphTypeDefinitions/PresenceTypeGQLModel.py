@@ -1,72 +1,57 @@
 import strawberry
 import datetime
-from typing import Union, List, Annotated, Optional
-from ._GraphResolvers import asPage
+from typing import List, Annotated, Optional
+from ._GraphResolvers import asPage, resolve_result_msg
+from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
 from uoishelpers.resolvers import createInputs
-from utils import getLoadersFromInfo, getUserFromInfo
-
+from .BaseGQLModel import BaseGQLModel
+from GraphTypeDefinitions._GraphResolvers import (
+    resolve_id,
+    resolve_name,
+    resolve_name_en,
+    resolve_changedby,
+    resolve_created,
+    resolve_lastchange,
+    resolve_createdby,
+    resolve_rbacobject,
+    asPage
+)
 
 PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLModel")]
 
 
-@strawberry.federation.type(keys=["id"], description="""Represents a type of presence (like Present)""")
-class PresenceTypeGQLModel:
+@strawberry.federation.type(
+    keys=["id"], description="""Represents a type of presence (like Present)""")
+class PresenceTypeGQLModel(BaseGQLModel):
+
     @classmethod
-    async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
-        loader = getLoadersFromInfo(info).presencetypes
+    def getLoader(cls, info):
+        return getLoadersFromInfo(info).presencetypes
 
-        result = await loader.load(id)
-        if result is not None:
-            result.__strawberry_definition__ = cls.__strawberry_definition__  # little hack :)
-        return result
 
-    @strawberry.field(description="""Primary key""")
-    def id(self) -> UUID:
-        return self.id
+    id = resolve_id
+    name = resolve_name
+    changedby = resolve_changedby
+    lastchange = resolve_lastchange
+    created = resolve_created
+    createdby = resolve_createdby
+    name_en = resolve_name_en
+    rbacobject = resolve_rbacobject
 
-    @strawberry.field(description="""Name of presence type""")
-    def name(self) -> Optional[str]:
-        return self.name
-
-    @strawberry.field(description="""Name of presence type in English""")
-    def name_en(self) -> Optional[str]:
-        return self.name_en
 
     @strawberry.field(description="""Validity of presence type""")
     def valid(self) -> Optional[bool]:
         return self.valid
-    
-    @strawberry.field(description="""When presence type was created""")
-    def created(self) -> Optional[datetime.datetime]:
-        return self.created
-
-    @strawberry.field(description="""Time stamp""")
-    def lastchange(self) -> Optional[datetime.datetime]:
-        return self.lastchange
-    
-    @strawberry.field(description="""By whom presence type was created""")
-    def createdby(self) -> Optional[UUID]:
-        return self.createdby
-
-    @strawberry.field(description="""Who changed the presence type""")
-    def changedby(self) -> Optional[UUID]:
-        return self.changedby
-   
-    RBACObjectGQLModel = Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-    @strawberry.field(description="""Who made last change""")
-    async def resolve_rbacobject(self, info: strawberry.types.Info) -> Optional[RBACObjectGQLModel]:
-        from .externals import RBACObjectGQLModel
-        result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
-        return result  
-
 
 
     @strawberry.field(
         description="Presences who have this presence type")
-    async def presences(self, info: strawberry.types.Info) -> Optional[List[PresenceGQLModel]]:
-        return getLoadersFromInfo(info).presences
+    async def presences(self, info: strawberry.types.Info) -> List[PresenceGQLModel]:
+        loader = getLoadersFromInfo(info).presences
+        result = await loader.filter_by(presencetype_id = self.id)
+        return result
  
 @createInputs
 @dataclass
@@ -90,7 +75,8 @@ async def presence_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Op
 
 @strawberry.field(
     description="""Finds all presence types paged""")
-async def presence_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceTypeWhereFilter] = None) -> Optional[List[PresenceTypeGQLModel]]:
+@asPage
+async def presence_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[PresenceTypeWhereFilter] = None) -> List[PresenceTypeGQLModel]:
     return getLoadersFromInfo(info).presencetypes
 
 

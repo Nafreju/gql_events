@@ -8,7 +8,7 @@ from .InvitationTypeGQLModel import InvitationTypeGQLModel
 from .externals import UserGQLModel, GroupGQLModel
 from uuid import UUID
 from typing import Optional
-
+from utils.Dataloaders import getUserFromInfo
 
 
 @strawberry.type(description="""Type for query root""")
@@ -16,7 +16,8 @@ class Query:
 
     @strawberry.field(description="""Say hello world events""")
     async def say_hello_events(self, info: strawberry.types.Info, id: UUID) -> Optional[str]:
-        result = f"Hello {id}"
+        user = getUserFromInfo(info)
+        result = f"Hello {id} `{user}`"
         return result
 
     from .EventGQLModel import event_by_id, event_page

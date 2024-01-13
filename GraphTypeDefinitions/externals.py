@@ -8,15 +8,20 @@ from utils import getLoadersFromInfo
 
 from ._GraphResolvers import create_statement_for_user_events, create_statement_for_group_events
 
+@classmethod
+async def resolve_reference(cls, info: strawberry.types.Info, id: UUID):
+    return cls(id=id)
+
+class BaseEternal:
+    id: UUID = strawberry.federation.field(external=True)
+    
+
+
 
 @strawberry.federation.type(extend=True, keys=["id"])
 class UserGQLModel:
-
     id: UUID = strawberry.federation.field(external=True)
-
-    @classmethod
-    async def resolve_reference(cls, id: UUID):
-        return UserGQLModel(id=id)
+    resolve_reference = resolve_reference
 
     @strawberry.field(description="""Gets events related to the user in the specified interval""")
     async def events(
@@ -42,12 +47,8 @@ class UserGQLModel:
 #TODO events function
 @strawberry.federation.type(extend=True, keys=["id"])
 class GroupGQLModel:
-
     id: UUID = strawberry.federation.field(external=True)
-
-    @classmethod
-    async def resolve_reference(cls, id: UUID):
-        return GroupGQLModel(id=id)
+    resolve_reference = resolve_reference
 
     @strawberry.field(description="""Events related to a group""")
     async def events(
@@ -64,16 +65,10 @@ class GroupGQLModel:
         
 
 
-
-
-
 @strawberry.federation.type(extend=True, keys=["id"])
 class RBACObjectGQLModel:
     id: UUID = strawberry.federation.field(external=True)
-    
-    @classmethod
-    async def resolve_reference(cls, id: UUID):
-        return RBACObjectGQLModel(id=id)
+    resolve_reference = resolve_reference
 
     @classmethod
     async def resolve_roles(cls, info: strawberry.types.Info, id: UUID):
