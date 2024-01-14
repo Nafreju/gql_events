@@ -75,16 +75,16 @@ TODO:
 3. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
 
 otazky na konzultaci:
-where filter na vektorovou strukturu nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
+where filter na where filter nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
 where atribut musí být stejný jako v DBdefinitions ... co s type?
 where Event ma masterevent, DB definitions nema
+EventInsertGQLModel - masterevent_id je Foreignkey -> dát ho povinně? nebo raději system data dummy Event, ktery je nadřazeny všem?
 test, kde je default attributeNames id a name, tak sdílené tabulky nemají name - spadlo by to
 kde authorized u naimportovanych resolveru treba resolve_name; kde je Autentizace u id,name,nameEn atd... kdyz je importovano
 createRootResolver_by_id kde authorized?
 federace statements/where filters 
 
 
-buď povinně foreign key id nebo default hodnotu z system data - u GQLEntit při Insert classes
 
 delete u:
 PresenceModel
@@ -105,8 +105,6 @@ jak sqlalchemy dědičnost?
 ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
 ExamModel bude 1:1 s EventModel - sdílíme presence (uživatel/skupina), eventtype
 ExamModel bude mít atributy "SubjectModel" z jiné federace?
-
-
 
 
 

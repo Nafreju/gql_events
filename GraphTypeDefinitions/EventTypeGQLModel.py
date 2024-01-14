@@ -112,10 +112,10 @@ async def event_type_page(self, info: strawberry.types.Info, skip: int = 0, limi
 @strawberry.input(description="Input structure - C operation")
 class EventTypeInsertGQLModel:
     name: str = strawberry.field(description="name of event type")
+    category_id: UUID = strawberry.field(description="category of event type")
 
     id: Optional[UUID] = strawberry.field(description="primary key (UUID), could be client generated", default=None)
     name_en: Optional[str] = strawberry.field(description="name of event type in English", default="")
-    category_id: Optional[UUID] = strawberry.field(description="category of event type", default=None)
     
     valid: Optional[bool] = True
     createdby: strawberry.Private[UUID] = None
