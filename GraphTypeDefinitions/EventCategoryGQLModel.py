@@ -155,3 +155,6 @@ async def event_category_update(self, info: strawberry.types.Info, event_categor
     result = EventCategoryResultGQLModel(id=event_category.id, msg="ok")
     result.msg = "fail" if row is None else "ok"
     return result
+
+
+

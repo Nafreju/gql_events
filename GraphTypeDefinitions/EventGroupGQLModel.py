@@ -130,4 +130,13 @@ async def event_group_insert(self, info: strawberry.types.Info, event_group: Eve
     return result
 
 
-#TODO delete
+
+@strawberry.mutation(
+    description="D operation",
+        permission_classes=[OnlyForAuthentized()])
+async def event_group_delete(self, info: strawberry.types.Info, event_group_id: UUID) -> EventGroupResultGQLModel:
+    loader = getLoadersFromInfo(info).eventgroups
+    row = await loader.delete(event_group_id)
+    result = EventGroupResultGQLModel(id=event_group_id, msg="ok")
+    result.msg = "fail" if row is None else "ok"
+    return result

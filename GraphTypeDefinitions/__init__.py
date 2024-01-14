@@ -78,8 +78,9 @@ class Mutation:
     presence_type_insert = presence_type_insert
     presence_type_update = presence_type_update
 
-    from .EventGroupGQLModel import event_group_insert
+    from .EventGroupGQLModel import event_group_insert, event_group_delete
     event_group_insert = event_group_insert
+    event_group_delete = event_group_delete
 
     from .EventCategoryGQLModel import event_category_insert, event_category_update
     event_category_insert = event_category_insert
