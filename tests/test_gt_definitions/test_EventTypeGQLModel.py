@@ -27,8 +27,8 @@ test_query_event_type_by_id = createByIdTest(tableName="eventtypes", queryEndpoi
 test_query_event_type_page = createPageTest(tableName="eventtypes", queryEndpoint="eventTypePage")
 
 test_insert_event_type = createFrontendQuery(
-    query="""mutation ($id: UUID!, $name: String!) {
-        result: eventTypeInsert(eventType: {id: $id, name: $name}) {
+    query="""mutation ($id: UUID!, $name: String!, $category_id: UUID!) {
+        result: eventTypeInsert(eventType: {id: $id, name: $name, categoryId: $category_id}) {
             id
             msg
             type {
@@ -46,7 +46,7 @@ test_insert_event_type = createFrontendQuery(
             }
         }
     }""",
-    variables={"id": "f6f79926-ac0e-4833-9a38-4272cae33fa6", "name": "new name"}
+    variables={"id": "f6f79926-ac0e-4833-9a38-4272cae33fa6", "name": "new name", "category_id": "5aaf820d-5acd-4406-b18d-47f161e75ebb"}
 )
 
 test_update_event_type = createUpdateQuery(
