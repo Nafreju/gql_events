@@ -126,13 +126,13 @@ class EventWhereFilter:
     eventtype_id: UUID
 
     from .EventTypeGQLModel import EventTypeWhereFilter
-    event_type: EventTypeWhereFilter
+    eventtype: EventTypeWhereFilter
 
     presences: PresenceWhereFilter
-
-    EventWhereFilter = Annotated["EventWhereFilter", strawberry.lazy(".EventGQLModel")]
-    master_event: EventWhereFilter
-    sub_events: EventWhereFilter
+    # EventModel doesnt have master_event ... could it have?
+    # EventWhereFilter = Annotated["EventWhereFilter", strawberry.lazy(".EventGQLModel")]
+    # master_event: EventWhereFilter
+    # sub_events: EventWhereFilter
 
     #TODO groups
 

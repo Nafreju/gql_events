@@ -71,11 +71,13 @@ https://docs.docker.com/compose/
 
 TODO:
 1. Udělat na pondělí delete
-2. where nefunguje na další struktury
+2. where funguje, ale naimng convensions
 3. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
 
 otazky na konzultaci:
 where filter na vektorovou strukturu nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
+where atribut musí být stejný jako v DBdefinitions ... co s type?
+where Event ma masterevent, DB definitions nema
 test, kde je default attributeNames id a name, tak sdílené tabulky nemají name - spadlo by to
 kde authorized u naimportovanych resolveru treba resolve_name; kde je Autentizace u id,name,nameEn atd... kdyz je importovano
 createRootResolver_by_id kde authorized?

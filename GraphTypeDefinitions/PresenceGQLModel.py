@@ -109,10 +109,10 @@ class PresenceWhereFilter:
     event: EventWhereFilter
 
     from .PresenceTypeGQLModel import PresenceTypeWhereFilter
-    presence_type: PresenceTypeWhereFilter
+    presencetype: PresenceTypeWhereFilter
 
     from .InvitationTypeGQLModel import InvitationTypeWhereFilter
-    invitation_type: InvitationTypeWhereFilter
+    invitationtype: InvitationTypeWhereFilter
     #TODO user
 
 #Queries

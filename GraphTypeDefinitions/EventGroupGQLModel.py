@@ -78,7 +78,9 @@ class EventGroupWhereFilter:
     createdby: UUID
     changedby: UUID
 
-    #TODO event/group
+    from .EventGQLModel import EventWhereFilter
+    event: EventWhereFilter
+    #TODO group
 
 #Queries
 @strawberry.field(

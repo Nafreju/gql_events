@@ -27,4 +27,4 @@ class EventTypeModel(BaseModel):
 
     #sqlalchemy requirements
     events = relationship("EventModel", back_populates="eventtype", uselist=True)
-    category = relationship("EventCategoryModel", back_populates="types", uselist=False)
+    category = relationship("EventCategoryModel", back_populates="eventtypes", uselist=False)

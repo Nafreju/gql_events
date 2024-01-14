@@ -75,7 +75,7 @@ class EventCategoryWhereFilter:
     createdby: UUID
     changedby: UUID
 
-    event_types: EventTypeWhereFilter
+    eventtypes: EventTypeWhereFilter
 
 
 
