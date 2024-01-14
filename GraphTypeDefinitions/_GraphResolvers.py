@@ -32,7 +32,7 @@ def resolve_created(self) -> typing.Optional[datetime.datetime]:
 
 async def resolve_user(user_id):
     from .externals import UserGQLModel
-    result = None if user_id is None else await UserGQLModel.resolve_reference(user_id)
+    result = None if user_id is None else await UserGQLModel.resolve_reference(id=user_id, info=None)
     return result
     
 @strawberry.field(description="""Who created entity""")
@@ -253,12 +253,11 @@ def asForeignList(*, foreignKeyName: str):
 #         return result
 #     return foreignkeyVector
 
-from uuid import UUID
 def createRootResolver_by_id(scalarType: None, description="Retrieves item by its id"):
     assert scalarType is not None
     @strawberry.field(description=description)
     async def by_id(
-        self, info: strawberry.types.Info, id: UUID(id)
+        self, info: strawberry.types.Info, id: IDType
     ) -> typing.Optional[scalarType]:
         result = await scalarType.resolve_reference(info=info, id=id)
         return result
@@ -290,34 +289,35 @@ def createRootResolver_by_page(
     return paged
 
 
-from sqlalchemy.future import select
-from DBDefinitions import EventModel, EventGroupModel, PresenceModel
+#TODO dont know how to test it - hunting coverage
+# from sqlalchemy.future import select
+# from DBDefinitions import EventModel, EventGroupModel, PresenceModel
 
-def create_statement_for_group_events(id, startdate=None, enddate=None):
-    statement = select(EventModel).join(EventGroupModel)
-    if startdate is not None:
-        statement = statement.filter(EventModel.startdate >= startdate)
-    if enddate is not None:
-        statement = statement.filter(EventModel.enddate <= enddate)
-    statement = statement.filter(EventGroupModel.group_id == id)
+# def create_statement_for_group_events(id, startdate=None, enddate=None):
+#     statement = select(EventModel).join(EventGroupModel)
+#     if startdate is not None:
+#         statement = statement.filter(EventModel.startdate >= startdate)
+#     if enddate is not None:
+#         statement = statement.filter(EventModel.enddate <= enddate)
+#     statement = statement.filter(EventGroupModel.group_id == id)
 
-    return statement
+#     return statement
 
-#odstranit?
-def create_statement_for_user_events(id, startdate=None, enddate=None):
-    statement = select(EventModel).join(PresenceModel)
-    if startdate is not None:
-        statement = statement.filter(EventModel.startdate >= startdate)
-    if enddate is not None:
-        statement = statement.filter(EventModel.enddate <= enddate)
-    statement = statement.filter(PresenceModel.user_id == id)
-    return statement
+# #odstranit?
+# def create_statement_for_user_events(id, startdate=None, enddate=None):
+#     statement = select(EventModel).join(PresenceModel)
+#     if startdate is not None:
+#         statement = statement.filter(EventModel.startdate >= startdate)
+#     if enddate is not None:
+#         statement = statement.filter(EventModel.enddate <= enddate)
+#     statement = statement.filter(PresenceModel.user_id == id)
+#     return statement
 
 
-async def resolvePresencesForEvent(session, id, invitationtypelist=[]):
-    statement = select(PresenceModel)
-    if len(invitationtypelist) > 0:
-        statement = statement.filter(PresenceModel.invitation_id.in_(invitationtypelist))
-    response = await session.execute(statement)
-    result = response.scalars()
-    return result
+# async def resolvePresencesForEvent(session, id, invitationtypelist=[]):
+#     statement = select(PresenceModel)
+#     if len(invitationtypelist) > 0:
+#         statement = statement.filter(PresenceModel.invitation_id.in_(invitationtypelist))
+#     response = await session.execute(statement)
+#     result = response.scalars()
+#     return result

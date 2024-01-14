@@ -1,7 +1,7 @@
 import strawberry
 import datetime
 from typing import List, Annotated, Optional
-from ._GraphResolvers import asPage, resolve_result_msg
+from ._GraphResolvers import asPage, asForeignList, createRootResolver_by_id
 from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
@@ -16,9 +16,10 @@ from GraphTypeDefinitions._GraphResolvers import (
     resolve_lastchange,
     resolve_createdby,
     resolve_rbacobject,
-    createRootResolver_by_id,
     asPage
 )
+from ._GraphPermissions import OnlyForAuthentized
+
 
 
 EventTypeGQLModel = Annotated["EventTypeGQLModel", strawberry.lazy(".EventTypeGQLModel")]
@@ -39,7 +40,8 @@ class EventCategoryGQLModel(BaseGQLModel):
     name = resolve_name
     name_en = resolve_name_en
     
-    @strawberry.field(description="""Validity of event category""")
+    @strawberry.field(description="""Validity of event category""",
+        permission_classes=[OnlyForAuthentized()])
     def valid(self) -> Optional[bool]:
         return self.valid
     
@@ -51,11 +53,12 @@ class EventCategoryGQLModel(BaseGQLModel):
 
 
     @strawberry.field(
-        description="""event types which has this category""")
+        description="""event types which has this category""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
+    @asForeignList(foreignKeyName="category_id")
     async def event_types(self, info: strawberry.types.Info) -> List[EventTypeGQLModel]:
-        loader = getLoadersFromInfo(info).eventtypes
-        result = await loader.filter_by(category_id=self.id)
-        return result
+        return getLoadersFromInfo(info).eventtypes
+
 
 
 EventTypeWhereFilter = Annotated["EventTypeWhereFilter", strawberry.lazy(".EventTypeGQLModel")]
@@ -72,23 +75,20 @@ class EventCategoryWhereFilter:
     createdby: UUID
     changedby: UUID
 
-    #TODO maybe createRootResolver.... _GraphResolvers
-    #types: EventTypeWhereFilter
+    eventtypes: EventTypeWhereFilter
 
 
 
 
 #Queries
 
-@strawberry.field(
-    description="""Finds a particular event category""")
-async def event_category_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventCategoryGQLModel]:
-    result = await EventCategoryGQLModel.resolve_reference(info=info, id=id)
-    return result
+
+event_category_by_id = createRootResolver_by_id(EventCategoryGQLModel, description="""Finds a particular event category""")
 
 
 @strawberry.field(
-    description="""Finds all event categories paged""")
+    description="""Finds all event categories paged""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 @asPage
 async def event_category_page(self, info: strawberry.types.Info, \
             skip: int = 0, limit: int = 10, where: Optional[EventCategoryWhereFilter] = None) -> List[EventCategoryGQLModel]:
@@ -132,10 +132,11 @@ For update operation fail should be also stated when bad lastchange has been ent
         return result
     
 @strawberry.mutation(
-    description="C operation")
+    description="C operation",
+        permission_classes=[OnlyForAuthentized()])
 async def event_category_insert(self, info: strawberry.types.Info, event_category: EventCategoryInsertGQLModel) -> EventCategoryResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    event_category.createdby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).eventcategories
     row = await loader.insert(event_category)
@@ -143,10 +144,11 @@ async def event_category_insert(self, info: strawberry.types.Info, event_categor
     return result
 
 @strawberry.mutation(
-    description="U operation")
+    description="U operation",
+        permission_classes=[OnlyForAuthentized()])
 async def event_category_update(self, info: strawberry.types.Info, event_category: EventCategoryUpdateGQLModel) -> EventCategoryResultGQLModel: 
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    event_category.changedby = UUID(user["id"])
         
     loader = getLoadersFromInfo(info).eventcategories
     row = await loader.update(event_category)

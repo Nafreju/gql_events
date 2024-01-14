@@ -9,10 +9,6 @@ from .InvitationTypeModel import InvitationTypeModel
 from .PresenceModel import PresenceModel
 from .PresenceTypeModel import PresenceTypeModel
 
-from .uuid import UUIDColumn, UUIDFKey
-
-
-
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
@@ -20,6 +16,7 @@ from sqlalchemy.exc import NoReferencedTableError
 
 async def startEngine(connectionstring, makeDrop=False, makeUp=True):
     """Provede nezbytne ukony a vrati asynchronni SessionMaker"""
+
     asyncEngine = create_async_engine(connectionstring)
 
     async with asyncEngine.begin() as conn:
@@ -43,7 +40,6 @@ async def startEngine(connectionstring, makeDrop=False, makeUp=True):
 
 import os
 
-
 def ComposeConnectionString():
     """Odvozuje connectionString z promennych prostredi (nebo z Docker Envs, coz je fakticky totez).
     Lze predelat na napr. konfiguracni file.
@@ -57,3 +53,4 @@ def ComposeConnectionString():
     connectionstring = f"{driver}://{user}:{password}@{hostWithPort}/{database}"
 
     return connectionstring
+

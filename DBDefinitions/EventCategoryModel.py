@@ -25,4 +25,4 @@ class EventCategoryModel(BaseModel):
     rbacobject = UUIDFKey(nullable=True, comment="user or group id, determines access")
     
     #sqlalchemy requirements
-    types = relationship("EventTypeModel", back_populates="category", uselist=True)
+    eventtypes = relationship("EventTypeModel", back_populates="category", uselist=True)

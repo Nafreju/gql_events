@@ -1,7 +1,7 @@
 import strawberry
 import datetime
 from typing import List, Annotated, Optional
-from ._GraphResolvers import asPage, resolve_result_msg
+from ._GraphResolvers import asPage
 from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
@@ -18,7 +18,7 @@ from GraphTypeDefinitions._GraphResolvers import (
     resolve_rbacobject,
     asPage
 )
-
+from ._GraphPermissions import OnlyForAuthentized
 
 PresenceGQLModel = Annotated["PresenceGQLModel", strawberry.lazy(".PresenceGQLModel")]
 
@@ -35,7 +35,8 @@ class InvitationTypeGQLModel(BaseGQLModel):
     name = resolve_name
     name_en = resolve_name_en
 
-    @strawberry.field(description="""Validity of invitation type""")
+    @strawberry.field(description="""Validity of invitation type""",
+        permission_classes=[OnlyForAuthentized()])
     def valid(self) -> Optional[bool]:
         return self.valid
     
@@ -47,13 +48,15 @@ class InvitationTypeGQLModel(BaseGQLModel):
     rbacobject = resolve_rbacobject
     
     @strawberry.field(
-        description="""presences having this invitation""")
+        description="""presences having this invitation""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
     async def presences(self, info: strawberry.types.Info) -> List[PresenceGQLModel]:
         loader = getLoadersFromInfo(info).presences
         result = await loader.filter_by(invitationtype_id=self.id)
         return result
 
 
+PresenceWhereFilter = Annotated["PresenceWhereFilter", strawberry.lazy(".PresenceGQLModel")]
 
 @createInputs
 @dataclass
@@ -67,19 +70,21 @@ class InvitationTypeWhereFilter:
     createdby: UUID 
     changedby: UUID
 
-    #TODO presences
+    presences: PresenceWhereFilter
 
 
 
 #Queries
 @strawberry.field(
-    description="""Finds a particular invitation type""")
+    description="""Finds a particular invitation type""",
+        permission_classes=[OnlyForAuthentized()])
 async def invitation_type_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[InvitationTypeGQLModel]:
     result = await InvitationTypeGQLModel.resolve_reference(info=info, id=id)
     return result
 
 @strawberry.field(
-    description="""Finds all invitation types paged""")
+    description="""Finds all invitation types paged""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 @asPage
 async def invitation_type_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[InvitationTypeWhereFilter] = None) -> List[InvitationTypeGQLModel]:
     return getLoadersFromInfo(info).invitationtypes
@@ -123,10 +128,11 @@ class InvitationTypeResultGQLModel:
 
 
 @strawberry.mutation(
-    description="C operation")
+    description="C operation",
+        permission_classes=[OnlyForAuthentized()])
 async def invitation_type_insert(self, info: strawberry.types.Info, invitation_type: InvitationTypeInsertGQLModel) -> InvitationTypeResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    invitation_type.createdby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).invitationtypes
     row = await loader.insert(invitation_type)
@@ -135,10 +141,11 @@ async def invitation_type_insert(self, info: strawberry.types.Info, invitation_t
 
 
 @strawberry.mutation(
-    description="U operation")
+    description="U operation",
+        permission_classes=[OnlyForAuthentized()])
 async def invitation_type_update(self, info: strawberry.types.Info, invitation_type: InvitationTypeUpdateGQLModel) -> InvitationTypeResultGQLModel: 
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    invitation_type.changedby = UUID(user["id"])
         
     loader = getLoadersFromInfo(info).invitationtypes
     row = await loader.update(invitation_type)

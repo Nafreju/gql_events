@@ -2,6 +2,7 @@ import sqlalchemy
 import sys
 import asyncio
 import logging
+import os
 
 # setting path
 #sys.path.append("../gql_forms")
@@ -9,16 +10,17 @@ import logging
 import pytest
 
 # from ..uoishelpers.uuid import UUIDColumn
+os.environ.setdefault("DEMO", "True")
 
 from DBDefinitions import (
     BaseModel,
-    EventCategoryModel,
-    EventGroupModel,
-    EventModel,
-    EventTypeModel,
-    InvitationTypeModel,
-    PresenceModel,
-    PresenceTypeModel,
+            EventCategoryModel,
+            EventTypeModel, 
+            PresenceTypeModel, 
+            InvitationTypeModel,
+            EventModel, 
+            EventGroupModel, 
+            PresenceModel
 )
 
 
@@ -51,19 +53,19 @@ async def prepare_demodata(async_session_maker):
         async_session_maker,
         [
             EventCategoryModel,
-            EventGroupModel,
-            EventModel,
-            EventTypeModel,
+            EventTypeModel, 
+            PresenceTypeModel, 
             InvitationTypeModel,
-            PresenceModel,
-            PresenceTypeModel,
+            EventModel, 
+            EventGroupModel, 
+            PresenceModel
         ],
         data,
     )
 
 
 from utils.Dataloaders import createLoadersContext
-
+from utils.gql_ug_proxy import createProxy
 def createContext(asyncSessionMaker, withuser=True):
     loadersContext = createLoadersContext(asyncSessionMaker)
     user = {
@@ -74,6 +76,10 @@ def createContext(asyncSessionMaker, withuser=True):
     }
     if withuser:
         loadersContext["user"] = user
+
+    GQLUG_ENDPOINT_URL = os.environ.get("GQLUG_ENDPOINT_URL", None)
+    proxy = createProxy(GQLUG_ENDPOINT_URL)
+    loadersContext["ug_connection"] = proxy.connection(authorizationToken=None)
     
     return loadersContext
 

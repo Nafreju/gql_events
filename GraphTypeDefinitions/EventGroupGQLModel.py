@@ -1,7 +1,7 @@
 import strawberry
 import datetime
 from typing import List, Annotated, Optional
-from ._GraphResolvers import asPage, resolve_result_msg
+from ._GraphResolvers import asPage
 from utils import getLoadersFromInfo, getUserFromInfo
 from uuid import UUID
 from dataclasses import dataclass
@@ -9,8 +9,7 @@ from uoishelpers.resolvers import createInputs
 from .BaseGQLModel import BaseGQLModel
 from GraphTypeDefinitions._GraphResolvers import (
     resolve_id,
-    resolve_name,
-    resolve_name_en,
+
     resolve_changedby,
     resolve_created,
     resolve_lastchange,
@@ -18,6 +17,7 @@ from GraphTypeDefinitions._GraphResolvers import (
     resolve_rbacobject,
     asPage
 )
+from ._GraphPermissions import OnlyForAuthentized
 
 GroupGQLModel = Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 EventGQLModel = Annotated["EventGQLModel", strawberry.lazy(".EventGQLModel")]
@@ -34,11 +34,13 @@ class EventGroupGQLModel(BaseGQLModel):
 
     id = resolve_id
 
-    @strawberry.field(description="""Event id""")
+    @strawberry.field(description="""Event id""",
+        permission_classes=[OnlyForAuthentized()])
     def event_id(self) -> UUID:
         return self.event_id
     
-    @strawberry.field(description="""Group id""")
+    @strawberry.field(description="""Group id""",
+        permission_classes=[OnlyForAuthentized()])
     def group_id(self) -> UUID:
         return self.group_id
 
@@ -50,14 +52,16 @@ class EventGroupGQLModel(BaseGQLModel):
 
 
     @strawberry.field(
-        description="""Event assigned to group""")
+        description="""Event assigned to group""",
+        permission_classes=[OnlyForAuthentized()])
     async def event(self, info: strawberry.types.Info) -> Optional[EventGQLModel]:
         from .EventGQLModel import EventGQLModel
         result = await EventGQLModel.resolve_reference(info=info, id=self.event_id)
         return result
     
     @strawberry.field(
-        description="""Group assigned to event""")
+        description="""Group assigned to event""",
+        permission_classes=[OnlyForAuthentized()])
     async def group(self, info: strawberry.types.Info) -> Optional[GroupGQLModel]:
         from .externals import GroupGQLModel
         result = await GroupGQLModel.resolve_reference(info=info, id=self.group_id)
@@ -74,17 +78,21 @@ class EventGroupWhereFilter:
     createdby: UUID
     changedby: UUID
 
-    #TODO event/group
+    from .EventGQLModel import EventWhereFilter
+    event: EventWhereFilter
+    #TODO group
 
 #Queries
 @strawberry.field(
-    description="""Finds a particular event-group entity""")
+    description="""Finds a particular event-group entity""",
+        permission_classes=[OnlyForAuthentized()])
 async def event_group_by_id(self, info: strawberry.types.Info, id: UUID) -> Optional[EventGroupGQLModel]:
     result = await EventGroupGQLModel.resolve_reference(info=info, id=id)
     return result
 
 
-@strawberry.field(description="""Finds all events-groups paged""")
+@strawberry.field(description="""Finds all events-groups paged""",
+        permission_classes=[OnlyForAuthentized(isList=True)])
 @asPage
 async def event_group_page(self, info: strawberry.types.Info, skip: int = 0, limit: int = 10, where: Optional[EventGroupWhereFilter] = None ) -> List[EventGroupGQLModel]:
     return getLoadersFromInfo(info).eventgroups
@@ -110,10 +118,11 @@ class EventGroupResultGQLModel:
         return result
     
 @strawberry.mutation(
-    description="C operation")
+    description="C operation",
+        permission_classes=[OnlyForAuthentized()])
 async def event_group_insert(self, info: strawberry.types.Info, event_group: EventGroupInsertGQLModel) -> EventGroupResultGQLModel:
-    user = getUserFromInfo(info) #TODO
-    #event.changedby = UUID(user["id"])
+    user = getUserFromInfo(info)
+    event_group.createdby = UUID(user["id"])
 
     loader = getLoadersFromInfo(info).eventgroups
     row = await loader.insert(event_group)

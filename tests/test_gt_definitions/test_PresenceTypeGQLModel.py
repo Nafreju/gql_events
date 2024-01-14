@@ -12,7 +12,7 @@ import pytest
 #     createUpdateQuery
 # )
 
-from tests.gqlshared import (
+from .gt_utils import (
     createByIdTest, 
     createPageTest, 
     createResolveReferenceTest, 
