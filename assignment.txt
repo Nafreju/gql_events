@@ -71,11 +71,10 @@ https://docs.docker.com/compose/
 
 TODO:
 where filter na where filter nefunguje na pythonu 3.9 .... python 3.10. už v pohodě (nevím proč)
-resolvers dodělat OnlyForAuthentized
-přepsat lokálně u konkrétních testů attributeNames
-1. Udělat na pondělí delete
-2. where funguje, ale naimng convensions    
-3. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
+
+
+1. Udělat na pondělí delete  
+2. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
 
 otazky na konzultaci:
 staci u delete OnlyForAuthentized zatim ano

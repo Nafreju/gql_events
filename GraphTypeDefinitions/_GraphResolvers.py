@@ -5,28 +5,33 @@ import typing
 import logging
 
 from .BaseGQLModel import IDType
-
+from ._GraphPermissions import OnlyForAuthentized
 UserGQLModel = typing.Annotated["UserGQLModel", strawberry.lazy(".externals")]
 GroupGQLModel = typing.Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 
-@strawberry.field(description="""Entity primary key""")
+@strawberry.field(description="""Entity primary key""",
+        permission_classes=[OnlyForAuthentized()])
 def resolve_id(self) -> IDType:
     return self.id
 
-@strawberry.field(description="""Name """)
+@strawberry.field(description="""Name """,
+        permission_classes=[OnlyForAuthentized()])
 def resolve_name(self) -> str:
     return self.name
 
-@strawberry.field(description="""English name""")
+@strawberry.field(description="""English name""",
+        permission_classes=[OnlyForAuthentized()])
 def resolve_name_en(self) -> str:
     result = self.name_en if self.name_en else ""
     return result
 
-@strawberry.field(description="""Time of last update""")
+@strawberry.field(description="""Time of last update""",
+        permission_classes=[OnlyForAuthentized()])
 def resolve_lastchange(self) -> datetime.datetime:
     return self.lastchange
 
-@strawberry.field(description="""Time of entity introduction""")
+@strawberry.field(description="""Time of entity introduction""",
+        permission_classes=[OnlyForAuthentized()])
 def resolve_created(self) -> typing.Optional[datetime.datetime]:
     return self.created
 
@@ -35,16 +40,19 @@ async def resolve_user(user_id):
     result = None if user_id is None else await UserGQLModel.resolve_reference(id=user_id, info=None)
     return result
     
-@strawberry.field(description="""Who created entity""")
+@strawberry.field(description="""Who created entity""",
+        permission_classes=[OnlyForAuthentized()])
 async def resolve_createdby(self) -> typing.Optional["UserGQLModel"]:
     return await resolve_user(self.createdby)
 
-@strawberry.field(description="""Who made last change""")
+@strawberry.field(description="""Who made last change""",
+        permission_classes=[OnlyForAuthentized()])
 async def resolve_changedby(self) -> typing.Optional["UserGQLModel"]:
     return await resolve_user(self.changedby)
 
 RBACObjectGQLModel = typing.Annotated["RBACObjectGQLModel", strawberry.lazy(".externals")]
-@strawberry.field(description="""Who made last change""")
+@strawberry.field(description="""Who made last change""",
+        permission_classes=[OnlyForAuthentized()])
 async def resolve_rbacobject(self, info: strawberry.types.Info) -> typing.Optional[RBACObjectGQLModel]:
     from .externals import RBACObjectGQLModel
     result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)

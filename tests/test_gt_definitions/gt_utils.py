@@ -3,7 +3,7 @@ import logging
 import uuid
 import sqlalchemy
 
-def createByIdTest(tableName, queryEndpoint, attributeNames=["id"]):
+def createByIdTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
     @pytest.mark.asyncio
     async def result_test(SQLite, DemoData, ClientExecutorDemo, SchemaExecutorDemo, Env_GQLUG_ENDPOINT_URL_8124):
         
@@ -41,7 +41,7 @@ def createByIdTest(tableName, queryEndpoint, attributeNames=["id"]):
 
     return result_test
 
-def createPageTest(tableName, queryEndpoint, attributeNames=["id"]):
+def createPageTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
     @pytest.mark.asyncio
     async def result_test(SQLite, DemoData, ClientExecutorDemo, SchemaExecutorDemo):
 
@@ -76,7 +76,7 @@ def createPageTest(tableName, queryEndpoint, attributeNames=["id"]):
         
     return result_test
 
-def createResolveReferenceTest(tableName, gqltype, attributeNames=["id"]):
+def createResolveReferenceTest(tableName, gqltype, attributeNames=["id", "name"]):
     @pytest.mark.asyncio
     async def result_test(SQLite, DemoData, ClientExecutorDemo, SchemaExecutorDemo, Context, Env_GQLUG_ENDPOINT_URL_8124):
 

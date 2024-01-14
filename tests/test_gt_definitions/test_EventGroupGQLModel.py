@@ -24,8 +24,8 @@ from .gt_utils import (
 test_reference_events_groups = createResolveReferenceTest(tableName='events_groups', gqltype='EventGroupGQLModel', \
             attributeNames=["id", "lastchange"])
 
-test_query_events_groups_by_id = createByIdTest(tableName="events_groups", queryEndpoint="eventGroupById")
-test_query_events_groups_page = createPageTest(tableName="events_groups", queryEndpoint="eventGroupPage")
+test_query_events_groups_by_id = createByIdTest(tableName="events_groups", queryEndpoint="eventGroupById", attributeNames=["id"])
+test_query_events_groups_page = createPageTest(tableName="events_groups", queryEndpoint="eventGroupPage", attributeNames=["id"])
 
 test_insert_event_group = createFrontendQuery(
     query="""mutation ($event_id: UUID!, $group_id: UUID!) {

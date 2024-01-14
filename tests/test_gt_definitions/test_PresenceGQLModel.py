@@ -24,8 +24,8 @@ from .gt_utils import (
 test_reference_events_users = createResolveReferenceTest(tableName='events_users', gqltype='PresenceGQLModel', \
             attributeNames=["id", "lastchange"])
 
-test_query_events_users_by_id = createByIdTest(tableName="events_users", queryEndpoint="presenceById")
-test_query_events_users_page = createPageTest(tableName="events_users", queryEndpoint="presencePage")
+test_query_events_users_by_id = createByIdTest(tableName="events_users", queryEndpoint="presenceById", attributeNames=["id"])
+test_query_events_users_page = createPageTest(tableName="events_users", queryEndpoint="presencePage", attributeNames=["id"])
 
 test_insert_events_users = createFrontendQuery(
     query="""mutation ($user_id: UUID!, $event_id: UUID!, $invitationtype_id: UUID!, $presencetype_id: UUID!) {
