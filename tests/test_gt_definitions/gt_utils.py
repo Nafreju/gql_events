@@ -235,3 +235,41 @@ def createUpdateQuery(query="{}", variables={}, tableName=""):
         
 
     return test_update
+
+from .._deprecated.shared import prepare_demodata, prepare_in_memory_sqllite, createContext, schema
+from .._deprecated.gqlshared import append
+
+def createDeleteQuery(query="{}", variables={}, table_name=""):
+
+    @pytest.mark.asyncio
+    async def test_delete() -> None:
+        logging.debug("test_delete")
+        assert variables.get("id", None) is not None, "variables must contain id"
+        assert table_name != "", "missing table name"
+
+        async_session_maker = await prepare_in_memory_sqllite()
+        await prepare_demodata(async_session_maker)
+
+        context_value = createContext(async_session_maker)
+        logging.debug(f"query {query} with {variables}")
+        print(f"query {query} with {variables}")
+
+        # Perform the delete operation
+        response = await schema.execute(
+            query=query,
+            variable_values=variables,
+            context_value=context_value
+        )
+
+        # Check for errors in the response
+        assert response.errors is None, response.errors[0]
+
+        # Verify the deletion
+        async with async_session_maker() as session:
+            result = await session.execute(sqlalchemy.text(f"SELECT * FROM {table_name} WHERE id=:id"), {'id': variables['id']})
+            assert result.fetchone() is None, "Record not deleted"
+
+        # Append the query for record-keeping or further testing
+        append(queryname=f"delete_{table_name}", mutation=query, variables=variables)
+
+    return test_delete

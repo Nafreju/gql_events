@@ -17,7 +17,8 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery
+    createUpdateQuery,
+    createDeleteQuery
 )
 
 
@@ -47,6 +48,20 @@ test_insert_event_group = createFrontendQuery(
     }""",
     variables={"event_id": "45b2df80-ae0f-11ed-9bd8-0242ac110002", "group_id": "9baf3b54-ae0f-11ed-9bd8-0242ac110002"}
 )
+
+test_event_group_delete = createDeleteQuery(
+    query="""
+        mutation($id: UUID!) {
+            eventGroupDelete(eventGroupId: $id) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={"id": "9baf3aaa-ae0f-11ed-9bd8-0242ac110002"},
+    table_name="events_groups"
+)
+
 
 # test_update_event_group = createUpdateQuery(
 #     query="""mutation ($id: UUID!, $groupId: UUID!, $lastchange: DateTime!) {

@@ -179,7 +179,7 @@ async def test_low_role_say_hello(DemoFalse, OAuthServer, ClientExecutorNoDemo, 
         result: sayHelloEvents(id: $id)
     }
     """
-    variable_values = {"id": "190d578c-afb1-11ed-9bd8-0242ac110002"}
+    variable_values = {"id": "4dccf52f-4117-403c-932a-5691c0d020b1"}
     result = await ClientExecutorNoDemo(query=query, variable_values=variable_values)
     logging.info(f"test_low_role_say_hello: \n {result}")
     print(result)

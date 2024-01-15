@@ -197,4 +197,12 @@ async def presence_update(self, info: strawberry.types.Info, presence: PresenceU
     return result
 
 
-#TODO delete
+@strawberry.mutation(
+    description="D operation",
+        permission_classes=[OnlyForAuthentized()])
+async def presence_delete(self, info: strawberry.types.Info, presence_id: UUID) -> PresenceResultGQLModel:
+    loader = getLoadersFromInfo(info).presences
+    row = await loader.delete(presence_id)
+    result = PresenceResultGQLModel(id=presence_id, msg="ok")
+    result.msg = "fail" if row is None else "ok"
+    return result

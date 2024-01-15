@@ -17,7 +17,8 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery
+    createUpdateQuery,
+    createDeleteQuery
 )
 
 
@@ -67,4 +68,19 @@ test_update_events_users = createUpdateQuery(
     }""",
     variables={"id": "89d1f2d2-ae0f-11ed-9bd8-0242ac110002", "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002"},
     tableName="events_users"
+)
+
+test_presence_delete = createDeleteQuery(
+    query="""
+        mutation($id: UUID!) {
+            presenceDelete(presenceId: $id) {
+                id
+                msg
+            }
+        }
+    """,
+    variables={
+         "id": "89d1e684-ae0f-11ed-9bd8-0242ac110002",
+    },
+    table_name="events_users"
 )
