@@ -36,11 +36,6 @@ class Query:
     presence_by_id = presence_by_id
     presence_page = presence_page
 
-    # TODO dont know how to test it - hunting coverage
-    # from .PresenceGQLModel import presences_by_event, presences_by_user
-    # presences_by_event = presences_by_event
-    # presences_by_user = presences_by_user
-
     from .PresenceTypeGQLModel import presence_type_by_id, presence_type_page
     presence_type_by_id = presence_type_by_id
     presence_type_page = presence_type_page

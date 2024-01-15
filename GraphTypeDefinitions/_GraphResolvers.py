@@ -298,28 +298,28 @@ def createRootResolver_by_page(
 
 
 #TODO dont know how to test it - hunting coverage
-# from sqlalchemy.future import select
-# from DBDefinitions import EventModel, EventGroupModel, PresenceModel
+from sqlalchemy.future import select
+from DBDefinitions import EventModel, EventGroupModel, PresenceModel
 
-# def create_statement_for_group_events(id, startdate=None, enddate=None):
-#     statement = select(EventModel).join(EventGroupModel)
-#     if startdate is not None:
-#         statement = statement.filter(EventModel.startdate >= startdate)
-#     if enddate is not None:
-#         statement = statement.filter(EventModel.enddate <= enddate)
-#     statement = statement.filter(EventGroupModel.group_id == id)
+def create_statement_for_group_events(id, startdate=None, enddate=None):
+    statement = select(EventModel).join(EventGroupModel)
+    if startdate is not None:
+        statement = statement.filter(EventModel.startdate >= startdate)
+    if enddate is not None:
+        statement = statement.filter(EventModel.enddate <= enddate)
+    statement = statement.filter(EventGroupModel.group_id == id)
 
-#     return statement
+    return statement
 
-# #odstranit?
-# def create_statement_for_user_events(id, startdate=None, enddate=None):
-#     statement = select(EventModel).join(PresenceModel)
-#     if startdate is not None:
-#         statement = statement.filter(EventModel.startdate >= startdate)
-#     if enddate is not None:
-#         statement = statement.filter(EventModel.enddate <= enddate)
-#     statement = statement.filter(PresenceModel.user_id == id)
-#     return statement
+#odstranit?
+def create_statement_for_user_events(id, startdate=None, enddate=None):
+    statement = select(EventModel).join(PresenceModel)
+    if startdate is not None:
+        statement = statement.filter(EventModel.startdate >= startdate)
+    if enddate is not None:
+        statement = statement.filter(EventModel.enddate <= enddate)
+    statement = statement.filter(PresenceModel.user_id == id)
+    return statement
 
 
 # async def resolvePresencesForEvent(session, id, invitationtypelist=[]):

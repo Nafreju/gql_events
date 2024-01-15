@@ -131,23 +131,6 @@ async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit:
     return getLoadersFromInfo(info).presences
     
 
-# TODO dont know how to test it - hunting coverage
-# @strawberry.field(description="""Finds all presences for the event""",
-#         permission_classes=[OnlyForAuthentized(isList=True)])
-# async def presences_by_event(self, info: strawberry.types.Info, event_id: UUID) -> List[PresenceGQLModel]:
-#     loader = getLoadersFromInfo(info).presences
-#     result = await loader.filter_by(event_id=event_id)
-#     #TODO
-#     return result
-
-# @strawberry.field(description="""Finds all presences for the user in the period""",
-#         permission_classes=[OnlyForAuthentized(isList=True)])
-# async def presences_by_user(self, info: strawberry.types.Info, user_id: UUID,) -> List[PresenceGQLModel]:
-#     loader = getLoadersFromInfo(info).presences
-#     # TODO
-#     result = await loader.filter_by(user_id=user_id)
-#     return result
-
 #Mutations
 @strawberry.input(description="Input structure - C operation")
 class PresenceInsertGQLModel:
