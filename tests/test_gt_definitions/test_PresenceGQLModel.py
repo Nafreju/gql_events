@@ -24,8 +24,8 @@ from .gt_utils import (
 test_reference_events_users = createResolveReferenceTest(tableName='events_users', gqltype='PresenceGQLModel', \
             attributeNames=["id", "lastchange"])
 
-test_query_events_users_by_id = createByIdTest(tableName="events_users", queryEndpoint="presenceById")
-test_query_events_users_page = createPageTest(tableName="events_users", queryEndpoint="presencePage")
+test_query_events_users_by_id = createByIdTest(tableName="events_users", queryEndpoint="presenceById", attributeNames=["id"])
+test_query_events_users_page = createPageTest(tableName="events_users", queryEndpoint="presencePage", attributeNames=["id"])
 
 test_insert_events_users = createFrontendQuery(
     query="""mutation ($user_id: UUID!, $event_id: UUID!, $invitationtype_id: UUID!, $presencetype_id: UUID!) {
@@ -66,5 +66,20 @@ test_update_events_users = createUpdateQuery(
         }
     }""",
     variables={"id": "89d1f2d2-ae0f-11ed-9bd8-0242ac110002", "invitationtype_id": "e871403c-a79c-11ed-b76e-0242ac110002"},
+    tableName="events_users"
+)
+
+
+test_delete_presence = createUpdateQuery(
+    query="""mutation ($id: UUID!, $lastchange: DateTime!) {
+        result: presenceDelete(presence: {id: $id, lastchange: $lastchange}) {
+            id
+            msg
+            presence {
+                id
+            }
+        }
+    }""",
+    variables={"id": "89d1e684-ae0f-11ed-9bd8-0242ac110002"},
     tableName="events_users"
 )

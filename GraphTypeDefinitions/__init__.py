@@ -70,9 +70,10 @@ class Mutation:
     invitation_type_insert = invitation_type_insert
     invitation_type_update = invitation_type_update
 
-    from .PresenceGQLModel import presence_insert, presence_update
+    from .PresenceGQLModel import presence_insert, presence_update, presence_delete
     presence_insert = presence_insert
     presence_update = presence_update
+    presence_delete = presence_delete
 
     from .PresenceTypeGQLModel import presence_type_insert, presence_type_update
     presence_type_insert = presence_type_insert
