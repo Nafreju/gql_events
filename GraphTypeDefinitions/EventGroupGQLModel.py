@@ -138,9 +138,9 @@ class EventGroupDeleteGQLModel:
 @strawberry.mutation(
     description="D operation",
         permission_classes=[OnlyForAuthentized()])
-async def event_group_delete(self, info: strawberry.types.Info, event_group: EventGroupDeleteGQLModel) -> EventGroupResultGQLModel:
+async def event_group_delete(self, info: strawberry.types.Info, id: UUID) -> EventGroupResultGQLModel:
     loader = getLoadersFromInfo(info).eventgroups
-    row = await loader.filter_by(id=event_group.id)
-    result = EventGroupResultGQLModel(id=event_group.id, msg="ok")
+    row = await loader.delete(id=id)
+    result = EventGroupResultGQLModel(id=id, msg="ok")
     result.msg = "fail" if row is None else "ok"
     return result

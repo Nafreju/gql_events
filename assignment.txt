@@ -70,7 +70,10 @@ https://docs.docker.com/compose/
 
 
 TODO:
-delete testovat spravne
+otázky na konzultaci:
+createByIdTest clientExecutor = schemaExecutor? wtf?
+test_presence_delete nebo test_events_users_delete?
+
 Co se SZ?
 jak sqlalchemy dědičnost?
 ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl

@@ -31,7 +31,7 @@ mutation ($id: UUID!, $name: String!) {
 },
         "events_groups":{"create": """
 mutation ($event_id: UUID!, $group_id: UUID!) {
-  feventGroupInsert(
+  eventGroupInsert(
     eventGroup: {eventId: $event_id, groupId: $group_id}
   ) {
     id
