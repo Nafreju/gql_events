@@ -71,8 +71,10 @@ https://docs.docker.com/compose/
 
 TODO:
 otázky na konzultaci:
+check federační funkce .... events(where: ... )
 createByIdTest clientExecutor = schemaExecutor? wtf?
 test_presence_delete nebo test_events_users_delete?
+DBFeeder funkce initBD - proč dbModels při demo False jiné než demo True
 
 Co se SZ?
 jak sqlalchemy dědičnost?

@@ -246,7 +246,7 @@ queryBase must be for example "eventGroup"
 to queryBase is added string "Page" and "Delete" i.e. eventGroupPage and eventGroupDelete must exist
 """
 def createDeleteQuery(tableName, queryBase, id, attributeNames=["id", "name"]):
-    # test if given id is located in sql lite and gql response
+    # check pages
     # do delete in sql lite and gql
     # test if given id is NOT located in sql lite and gql response
     @pytest.mark.asyncio

@@ -60,15 +60,11 @@ class UserGQLModel:
 
 
 
-
-
-
 @strawberry.federation.type(extend=True, keys=["id"])
 class GroupGQLModel:
     id: UUID = strawberry.federation.field(external=True)
     resolve_reference = resolve_reference
 
-    # TODO dont know how to test it - hunting coverage
     @strawberry.field(description="""Events related to a group""")
     async def events(
         self,
