@@ -305,30 +305,23 @@ def createRootResolver_by_page(
 from sqlalchemy.future import select
 from DBDefinitions import EventModel, EventGroupModel, PresenceModel
 
-def create_statement_for_group_events(id, startdate=None, enddate=None):
-    statement = select(EventModel).join(EventGroupModel)
-    if startdate is not None:
-        statement = statement.filter(EventModel.startdate >= startdate)
-    if enddate is not None:
-        statement = statement.filter(EventModel.enddate <= enddate)
-    statement = statement.filter(EventGroupModel.group_id == id)
-    return statement
-
-#odstranit?
-def create_statement_for_user_events(id, startdate=None, enddate=None):
-    statement = select(EventModel).join(PresenceModel)
-    if startdate is not None:
-        statement = statement.filter(EventModel.startdate >= startdate)
-    if enddate is not None:
-        statement = statement.filter(EventModel.enddate <= enddate)
+from uoishelpers.dataloaders import prepareSelect
+def create_statement_for_user_events(id, where: dict= None):
+    if where is None:
+        statement = select(EventModel)
+    else:    
+        statement = prepareSelect(EventModel, where)
+    statement = statement.join(PresenceModel)
     statement = statement.filter(PresenceModel.user_id == id)
     return statement
 
+def create_statement_for_group_events(id, where: dict= None):
+    if where is None:
+        statement = select(EventModel)
+    else:    
+        statement = prepareSelect(EventModel, where)
+    statement = statement.join(EventGroupModel)
+    statement = statement.filter(EventGroupModel.group_id == id)
+    return statement
 
-# async def resolvePresencesForEvent(session, id, invitationtypelist=[]):
-#     statement = select(PresenceModel)
-#     if len(invitationtypelist) > 0:
-#         statement = statement.filter(PresenceModel.invitation_id.in_(invitationtypelist))
-#     response = await session.execute(statement)
-#     result = response.scalars()
-#     return result
+
