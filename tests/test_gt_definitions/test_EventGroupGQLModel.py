@@ -50,6 +50,6 @@ test_insert_event_group = createFrontendQuery(
 )
 
 # id should exist in systemdata
-test_delete_event_group = createDeleteQuery(tableName="events_groups", queryBase="eventGroup", attributeNames=["id"],
-        id="9baf3aaa-ae0f-11ed-9bd8-0242ac110002")
+test_delete_event_group = createDeleteQuery(tableName="events_groups", 
+        queryBase="eventGroup", id="9baf3aaa-ae0f-11ed-9bd8-0242ac110002")
 

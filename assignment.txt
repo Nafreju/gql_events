@@ -71,12 +71,17 @@ https://docs.docker.com/compose/
 
 TODO:
 otázky na konzultaci:
-check federační funkce .... events(where: ... )
-createByIdTest clientExecutor = schemaExecutor? wtf?
+email
+check my delete
+
 test_presence_delete nebo test_events_users_delete?
+jak RB object test? classmethod - natvrdo az helpers? externals.py 92-94 testovat vůbec?
 DBFeeder funkce initBD - proč dbModels při demo False jiné než demo True
 
-Co se SZ?
+
+Co se SZ - je jako jiný předmět
+Exam bude dědit z Events a dalších ... jaký formát návrhu chcete?
+
 jak sqlalchemy dědičnost?
 ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
 ExamModel bude 1:1 s EventModel - sdílíme presence (uživatel/skupina), eventtype

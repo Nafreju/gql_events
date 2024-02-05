@@ -245,7 +245,7 @@ test compares pages before and after delete
 queryBase must be for example "eventGroup"
 to queryBase is added string "Page" and "Delete" i.e. eventGroupPage and eventGroupDelete must exist
 """
-def createDeleteQuery(tableName, queryBase, id, attributeNames=["id", "name"]):
+def createDeleteQuery(tableName, queryBase, id, attributeNames=["id"]):
     # check pages
     # do delete in sql lite and gql
     # test if given id is NOT located in sql lite and gql response
@@ -284,8 +284,8 @@ def createDeleteQuery(tableName, queryBase, id, attributeNames=["id", "name"]):
             # testResultPage(resp)
         
         # Test if pages are consistent with demo data
-        tmp = await testConsistentPages(testSchema=True)
-        tmp = await testConsistentPages(testSchema=False)
+        await testConsistentPages(testSchema=True)
+        await testConsistentPages(testSchema=False)
 
         ######################################## 
         query = """
@@ -308,7 +308,7 @@ def createDeleteQuery(tableName, queryBase, id, attributeNames=["id", "name"]):
         DemoData[tableName] = [ element for element in DemoData[tableName] if str(element["id"]) != id]
         
         # Test if sqlite and demodata are consistent
-        tmp = await testConsistentPages(testSchema=True)
+        await testConsistentPages(testSchema=True)
         
         # Delete via gql api
         resp = await ClientExecutorDemo(query=query, variable_values=variables)
@@ -317,7 +317,7 @@ def createDeleteQuery(tableName, queryBase, id, attributeNames=["id", "name"]):
         logging.info(f"query for \n{query} with \n{variables} got response: \n{respdata}")
 
         # Test if gql is consistent with demodata
-        tmp = await testConsistentPages(testSchema=False)
+        await testConsistentPages(testSchema=False)
 
 
     return result_test
