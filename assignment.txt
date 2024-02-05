@@ -72,10 +72,10 @@ https://docs.docker.com/compose/
 TODO:
 otázky na konzultaci:
 email
-check my delete
+check my delete, done
 
-test_presence_delete nebo test_events_users_delete?
-jak RB object test? classmethod - natvrdo az helpers? externals.py 92-94 testovat vůbec?
+test_presence_delete nebo test_events_users_delete?, done
+jak RB object test? classmethod - natvrdo az helpers? externals.py 92-94 testovat vůbec?, zatím nechat
 DBFeeder funkce initBD - proč dbModels při demo False jiné než demo True
 
 
