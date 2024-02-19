@@ -70,32 +70,18 @@ https://docs.docker.com/compose/
 
 
 TODO:
+otázky na konzultaci:
+email
+check my delete, done
+
+test_presence_delete nebo test_events_users_delete?, done
+jak RB object test? classmethod - natvrdo az helpers? externals.py 92-94 testovat vůbec?, zatím nechat
+DBFeeder funkce initBD - proč dbModels při demo False jiné než demo True
 
 
-1. Udělat delete - je ošklivej
-2. Udělat na pondělí 70 % coverage - některé věci nevím, jak testovat - jsou zakomentovány
+Co se SZ - je jako jiný předmět
+Exam bude dědit z Events a dalších ... jaký formát návrhu chcete?
 
-otazky na konzultaci:
-
-
-
-
-
-delete u:
-PresenceModel
-EventGroupModel
-
-valid u:
-EventCategoryModel
-EventModel
-EventTypeModel
-InvitationTypeModel
-PresenceTypeModel
-
-KEEP
-
-
-Co se SZ?
 jak sqlalchemy dědičnost?
 ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
 ExamModel bude 1:1 s EventModel - sdílíme presence (uživatel/skupina), eventtype

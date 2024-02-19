@@ -129,14 +129,18 @@ async def event_group_insert(self, info: strawberry.types.Info, event_group: Eve
     result = EventGroupResultGQLModel(id=row.id, msg="ok")
     return result
 
+@strawberry.input(description="Input structure - D operation")
+class EventGroupDeleteGQLModel:
+    id: UUID = strawberry.field(description="The ID of the project")
+    lastchange: datetime.datetime = strawberry.field(description="timestamp of last change = TOKEN")
 
 
 @strawberry.mutation(
     description="D operation",
         permission_classes=[OnlyForAuthentized()])
-async def event_group_delete(self, info: strawberry.types.Info, event_group_id: UUID) -> EventGroupResultGQLModel:
+async def event_group_delete(self, info: strawberry.types.Info, id: UUID) -> EventGroupResultGQLModel:
     loader = getLoadersFromInfo(info).eventgroups
-    row = await loader.delete(event_group_id)
-    result = EventGroupResultGQLModel(id=event_group_id, msg="ok")
+    row = await loader.delete(id=id)
+    result = EventGroupResultGQLModel(id=id, msg="ok")
     result.msg = "fail" if row is None else "ok"
     return result

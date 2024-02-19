@@ -4,13 +4,13 @@ import pytest
 # os.environ["GQLUG_ENDPOINT_URL"] = "http://localhost:8124/gql"
 # print(os.environ.get("GQLUG_ENDPOINT_URL", None))
 
-# from ..gqlshared import (
-#     createByIdTest, 
-#     createPageTest, 
-#     createResolveReferenceTest, 
-#     createFrontendQuery, 
-#     createUpdateQuery
-# )
+# # from ..gqlshared import (
+# #     createByIdTest, 
+# #     createPageTest, 
+# #     createResolveReferenceTest, 
+# #     createFrontendQuery, 
+# #     createUpdateQuery
+# # )
 
 from .gt_utils import (
     createByIdTest, 
@@ -70,17 +70,7 @@ test_update_events_users = createUpdateQuery(
     tableName="events_users"
 )
 
-test_presence_delete = createDeleteQuery(
-    query="""
-        mutation($id: UUID!) {
-            presenceDelete(presenceId: $id) {
-                id
-                msg
-            }
-        }
-    """,
-    variables={
-         "id": "89d1e684-ae0f-11ed-9bd8-0242ac110002",
-    },
-    table_name="events_users"
-)
+
+# id should exist in systemdata
+test_delete_events_users = createDeleteQuery(tableName="events_users", queryBase="presence", attributeNames=["id"],
+        id="89d1e684-ae0f-11ed-9bd8-0242ac110002")

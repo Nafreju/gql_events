@@ -58,9 +58,9 @@ async def initDB(asyncSessionMaker):
             EventTypeModel, 
             PresenceTypeModel, 
             InvitationTypeModel,
-            EventModel, 
-            EventGroupModel, 
-            PresenceModel
+            # EventModel, 
+            # EventGroupModel, 
+            # PresenceModel
             ]
     else:
         dbModels = [

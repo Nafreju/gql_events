@@ -17,7 +17,6 @@ from .gt_utils import (
     createPageTest, 
     createResolveReferenceTest, 
     createFrontendQuery, 
-    createUpdateQuery,
     createDeleteQuery
 )
 
@@ -63,16 +62,7 @@ test_event_group_delete = createDeleteQuery(
 )
 
 
-# test_update_event_group = createUpdateQuery(
-#     query="""mutation ($id: UUID!, $groupId: UUID!, $lastchange: DateTime!) {
-#         result: eventGroupUpdate(event: {id: $id, groupId: $group_id, lastchange: $lastchange}) {
-#             id
-#             msg
-#             event {
-#                 id
-#             }
-#         }
-#     }""",
-#     variables={"id": "9baf3aaa-ae0f-11ed-9bd8-0242ac110002", "group_id": "9baf3de8-ae0f-11ed-9bd8-0242ac110002"},
-#     tableName="events_groups"
-# )
+# id should exist in systemdata
+test_delete_event_group = createDeleteQuery(tableName="events_groups", 
+        queryBase="eventGroup", id="9baf3aaa-ae0f-11ed-9bd8-0242ac110002")
+

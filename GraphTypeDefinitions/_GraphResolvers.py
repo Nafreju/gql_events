@@ -6,6 +6,8 @@ import logging
 
 from .BaseGQLModel import IDType
 from ._GraphPermissions import OnlyForAuthentized
+
+
 UserGQLModel = typing.Annotated["UserGQLModel", strawberry.lazy(".externals")]
 GroupGQLModel = typing.Annotated["GroupGQLModel", strawberry.lazy(".externals")]
 
@@ -58,9 +60,11 @@ async def resolve_rbacobject(self, info: strawberry.types.Info) -> typing.Option
     result = None if self.rbacobject is None else await RBACObjectGQLModel.resolve_reference(info, self.rbacobject)
     return result
 
-resolve_result_id: IDType = strawberry.field(description="primary key of CU operation object")
+resolve_result_id: IDType = strawberry.field(description="primary key of CU operation object",
+        permission_classes=[OnlyForAuthentized()])
 resolve_result_msg: str = strawberry.field(description="""Should be `ok` if descired state has been reached, otherwise `fail`.
-For update operation fail should be also stated when bad lastchange has been entered.""")
+For update operation fail should be also stated when bad lastchange has been entered.""",
+        permission_classes=[OnlyForAuthentized()])
 
 
 
@@ -301,31 +305,17 @@ def createRootResolver_by_page(
 from sqlalchemy.future import select
 from DBDefinitions import EventModel, EventGroupModel, PresenceModel
 
-def create_statement_for_group_events(id, startdate=None, enddate=None):
-    statement = select(EventModel).join(EventGroupModel)
-    if startdate is not None:
-        statement = statement.filter(EventModel.startdate >= startdate)
-    if enddate is not None:
-        statement = statement.filter(EventModel.enddate <= enddate)
-    statement = statement.filter(EventGroupModel.group_id == id)
-
-    return statement
-
-#odstranit?
-def create_statement_for_user_events(id, startdate=None, enddate=None):
-    statement = select(EventModel).join(PresenceModel)
-    if startdate is not None:
-        statement = statement.filter(EventModel.startdate >= startdate)
-    if enddate is not None:
-        statement = statement.filter(EventModel.enddate <= enddate)
+from uoishelpers.dataloaders import prepareSelect
+def create_statement_for_user_events(id, where: dict= None):
+    statement = select(EventModel) if where is None else prepareSelect(EventModel, where)
+    statement = statement.join(PresenceModel)
     statement = statement.filter(PresenceModel.user_id == id)
     return statement
 
+def create_statement_for_group_events(id, where: dict= None):
+    statement = select(EventModel) if where is None else prepareSelect(EventModel, where)
+    statement = statement.join(EventGroupModel)
+    statement = statement.filter(EventGroupModel.group_id == id)
+    return statement
 
-# async def resolvePresencesForEvent(session, id, invitationtypelist=[]):
-#     statement = select(PresenceModel)
-#     if len(invitationtypelist) > 0:
-#         statement = statement.filter(PresenceModel.invitation_id.in_(invitationtypelist))
-#     response = await session.execute(statement)
-#     result = response.scalars()
-#     return result
+
