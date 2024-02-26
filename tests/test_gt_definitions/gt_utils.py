@@ -2,6 +2,9 @@ import pytest
 import logging
 import uuid
 import sqlalchemy
+import re
+import json
+
 
 def createByIdTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
     @pytest.mark.asyncio
@@ -31,7 +34,6 @@ def createByIdTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
 
         variable_values = {"id": f'{datarow["id"]}'}
         
-        # append(queryname=f"{queryEndpoint}_{tableName}", query=query, variables=variable_values)        
         logging.debug(f"query for {query} with {variable_values}")
 
         resp = await schemaExecutor(query, variable_values)
@@ -66,7 +68,6 @@ def createPageTest(tableName, queryEndpoint, attributeNames=["id", "name"]):
         content = "{" + ", ".join(attributeNames) + "}"
         query = "query{" f"{queryEndpoint}" f"{content}" "}"
 
-        # append(queryname=f"{queryEndpoint}_{tableName}", query=query)
 
         resp = await schemaExecutor(query)
         testResult(resp)
@@ -132,7 +133,6 @@ def createResolveReferenceTest(tableName, gqltype, attributeNames=["id", "name"]
             resp = await schemaExecutor(query, {**variable_values})
             testResult(resp)
 
-        # append(queryname=f"{gqltype}_representation", query=query)
 
     return result_test
 
@@ -146,7 +146,6 @@ def createFrontendQuery(query="{}", variables={}, asserts=[]):
         logging.debug(f"query for {query} with {variables}")
         print(f"query for {query} with {variables}")
 
-        # append(queryname=f"query", query=query, variables=variables)
         resp = await SchemaExecutorDemo(
             query=query, 
             variable_values=variables
@@ -197,7 +196,6 @@ def createUpdateQuery(query="{}", variables={}, tableName=""):
         logging.debug(f"query for {query} with {variables}")
         print(f"query for {query} with {variables}")
 
-        # append(queryname=f"query_{tableName}", mutation=query, variables=variables)
         resp = await SchemaExecutorDemo(
             query=query, 
             variable_values=variables
@@ -237,8 +235,6 @@ def createUpdateQuery(query="{}", variables={}, tableName=""):
 
 
 
-# from .._deprecated.shared import prepare_demodata, prepare_in_memory_sqllite, createContext, schema
-# from .._deprecated.gqlshared import append
 
 """
 test compares pages before and after delete

@@ -1,0 +1,158 @@
+{
+    "comment1": "******************** QUERIES ************************************************",
+    "comment2": "**** POZOR !!! => pri dotazech a mutacich vzdy zkontroluj, ze dane id je v DB, a ze u delete neni vztah foreignkey ****",
+
+    "eventCategoryPage": {
+        "query": "query MyQuery { eventCategoryPage { id created createdby { id } lastchange name nameEn valid } }",
+        "variables": {}
+    },
+
+    "eventGroupPage": {
+        "query": "query MyQuery { eventGroupPage { changedby { id } created createdby { id } eventId group { id } groupId id lastchange event { id } } }",
+        "variables": {}
+    },
+    
+    "eventPage": {
+        "query": "query MyQuery { eventPage { changedby { id } created createdby { id } enddate eventType { id name } eventtypeId id lastchange mastereventId name nameEn presences { id eventId } startdate valid } }",
+        "variables": {}
+    },
+    
+    "eventTypePage": {
+        "query": "query MyQuery { eventTypePage { category { id } categoryId changedby { id } created createdby { id } id lastchange name nameEn valid } }",
+        "variables": {}
+    },
+    
+    "invitationTypePage": {
+        "query": "query MyQuery { invitationTypePage { changedby { id } created createdby { id } id lastchange name nameEn valid } }",
+        "variables": {}
+    },
+    
+    "presencePage": {
+        "query": "query MyQuery { presencePage { changedby { id } created createdby { id } event { id name } eventId id invitationType { id name } invitationtypeId lastchange presenceType { id name } presencetypeId userId user { id } } }",
+        "variables": {}
+    },
+    
+    "presenceTypePage": {
+        "query": "query MyQuery { presenceTypePage { changedby { id } created createdby { id } id lastchange name nameEn valid } }",
+        "variables": {}
+    },
+
+    "eventById": {
+        "query": "query MyQuery($id: UUID!) { eventById(id: $id) { created createdby { id } enddate eventType { id } eventtypeId id lastchange mastereventId name nameEn presences { id } startdate valid } }",
+        "variables": {
+            "id": "4dccf52f-4117-403c-932a-5691c0d020b1"
+        }
+    },
+    
+    "eventCategoryById": {
+        "query": "query MyQuery($id: UUID!) { eventCategoryById(id: $id) { created createdby { id } id lastchange name nameEn valid } }",
+        "variables": {
+            "id": "061470d7-3463-44ad-9d3f-c4275951edf6"
+        }
+    },
+    
+    "eventGroupById": {
+        "query": "query MyQuery($id: UUID!) { eventGroupById(id: $id) { changedby { id } created createdby { id } event { id } eventId group { id } groupId id lastchange } }",
+        "variables": {
+            "id": "9baf3aaa-ae0f-11ed-9bd8-0242ac110002"
+        }
+    },
+    
+    "eventTypeById": {
+        "query": "query MyQuery($id: UUID!) { eventTypeById(id: $id) { categoryId changedby { id } created createdby { id } id lastchange name nameEn valid } }",
+        "variables": {
+            "id": "b87d7ce0-8fd4-11ed-a6d4-0242ac110002"
+        }
+    },
+    
+    "invitationTypeById": {
+        "query": "query MyQuery($id: UUID!) { invitationTypeById(id: $id) { changedby { id } created createdby { id } id lastchange name valid nameEn } }",
+        "variables": {
+            "id": "e8713b6e-a79c-11ed-b76e-0242ac110002"
+        }
+    },
+    
+    "presenceById": {
+        "query": "query MyQuery($id: UUID!) { presenceById(id: $id) { created changedby { id } createdby { id } eventId event { id name } id invitationType { id name } invitationtypeId lastchange presenceType { name id } presencetypeId userId user { id } } }",
+        "variables": {
+            "id": "89d1e684-ae0f-11ed-9bd8-0242ac110002"
+        }
+    },
+    
+    "presenceTypeById": {
+        "query": "query MyQuery($id: UUID!) { presenceTypeById(id: $id) { changedby { id } created createdby { id } id lastchange nameEn name valid } }",
+        "variables": {
+            "id": "466398c6-a79c-11ed-b76e-0242ac110002"
+        }
+    },
+
+    "comment3": "***************************** MUTATIONS ************************************************",
+
+    "eventCategoryInsert": {
+        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+        "variables": {
+            "data": {
+              "name": "new category with new name"
+            }
+        }
+    },
+    #TODO dodelat od eventGroupInsert
+    "eventCategoryInsert": {
+        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+        "variables": {
+            "data": {
+              "name": "new category with new name"
+            }
+        }
+    },
+
+    "eventCategoryInsert": {
+        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+        "variables": {
+            "data": {
+              "name": "new category with new name"
+            }
+        }
+    },
+
+    "eventCategoryInsert": {
+        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+        "variables": {
+            "data": {
+              "name": "new category with new name"
+            }
+        }
+    },
+
+    "eventCategoryInsert": {
+        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+        "variables": {
+            "data": {
+              "name": "new category with new name"
+            }
+        }
+    },
+
+    "eventCategoryInsert": {
+        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+        "variables": {
+            "data": {
+              "name": "new category with new name"
+            }
+        }
+    },
+
+    "eventCategoryInsert": {
+        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+        "variables": {
+            "data": {
+              "name": "new category with new name"
+            }
+        }
+    },
+
+
+
+
+}
+
