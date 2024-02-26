@@ -136,7 +136,7 @@ async def presence_page(self, info: strawberry.types.Info, skip: int = 0, limit:
 class PresenceInsertGQLModel:
     user_id: UUID = strawberry.field(description="ID of user who is related to event")
     event_id: UUID = strawberry.field(description="ID of event which is related to user")
-    invitationtype_id: UUID = strawberry.field(description="ID of invitation type related to event/user")#default value?
+    invitationtype_id: UUID = strawberry.field(description="ID of invitation type related to event/user")#TODO default value?
     presencetype_id: UUID = strawberry.field(description="type of presence related to event/user")#default?
     
     id: Optional[UUID] = strawberry.field(description="primary key (UUID), could be client generated", default=None)

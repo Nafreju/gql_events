@@ -130,7 +130,7 @@ def Info(Request, Context):
 
 @pytest.fixture
 def QueriesFile():
-    file = open("queries.txt", "w+", encoding="utf-8")
+    file = open("event_queries.txt", "w+", encoding="utf-8")
     def writequery(query=None, mutation=None, variables={}):
         if (query is not None) and ("mutation" in query):
             jsonData = {

@@ -36,7 +36,7 @@ services:
       - gql_events
 
   gql_events:
-    image: hrbolek/gql_ug:main
+    image: nafreju2/gql_events:latest
     environment:
       # promenne, ktere lze cist v kontejneru
       - POSTGRES_USER=postgres
@@ -54,6 +54,8 @@ services:
     restart: on-failure:3 # nedojde k restartu pokud je kontejner "unhealthy", maximalne 3 pokusy
     depends_on:
       - postgres
+    ports:
+      - 31125:8000
 
   postgres:
     image: postgres
