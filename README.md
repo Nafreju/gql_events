@@ -2,7 +2,7 @@
 
 ## Execution
 ```bash
-uvicorn main:app --env-file environment.txt --port 8001 --reload
+uvicorn main:app --env-file environment.txt --port 8000 --reload
 ```
 
 ```bash
