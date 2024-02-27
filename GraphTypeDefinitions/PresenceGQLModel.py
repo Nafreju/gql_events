@@ -196,7 +196,7 @@ async def presence_update(self, info: strawberry.types.Info, presence: PresenceU
     result.msg = "fail" if row is None else "ok"
     return result
 
-
+#since loader.delete requires only ID, this input structure is not currently used
 @strawberry.input(description="Input structure - D operation")
 class PresenceDeleteGQLModel:
     id: UUID = strawberry.field(description="The ID of the project")

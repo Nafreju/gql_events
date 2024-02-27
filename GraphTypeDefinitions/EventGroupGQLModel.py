@@ -129,6 +129,7 @@ async def event_group_insert(self, info: strawberry.types.Info, event_group: Eve
     result = EventGroupResultGQLModel(id=row.id, msg="ok")
     return result
 
+#since loader.delete requires only ID, this input structure is not currently used
 @strawberry.input(description="Input structure - D operation")
 class EventGroupDeleteGQLModel:
     id: UUID = strawberry.field(description="The ID of the project")

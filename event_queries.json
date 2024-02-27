@@ -96,60 +96,146 @@
             }
         }
     },
-    #TODO dodelat od eventGroupInsert
-    "eventCategoryInsert": {
-        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+    
+    "eventGroupInsert": {
+        "query": "mutation MyMutation($data: EventGroupInsertGQLModel!) { eventGroupInsert(eventGroup: $data) { id msg eventGroup { id eventId } } }",
         "variables": {
             "data": {
-              "name": "new category with new name"
+                "eventId": "4dccf52f-4117-403c-932a-5691c0d020b1",
+                "groupId": "2d9dcd22-a4a2-11ed-b9df-0242ac120003"
             }
         }
     },
 
-    "eventCategoryInsert": {
-        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+    "eventInsert": {
+        "query": "mutation MyMutation($data: EventInsertGQLModel!) { eventInsert(event: $data) { id msg event { id name } } }",
         "variables": {
             "data": {
-              "name": "new category with new name"
+                "eventtypeId": "c0a12392-ae0e-11ed-9bd8-0242ac110002",
+                "name": "new name event insert"
             }
         }
     },
 
-    "eventCategoryInsert": {
-        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+    "eventTypeInsert": {
+        "query": "mutation MyMutation($data: EventTypeInsertGQLModel!) { eventTypeInsert(eventType: $data) { id msg type { id name } } }",
         "variables": {
             "data": {
-              "name": "new category with new name"
+                "categoryId": "5aaf820d-5acd-4406-b18d-47f161e75ebb",
+                "name": "new name event type insert"
             }
         }
     },
 
-    "eventCategoryInsert": {
-        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+    "invitationTypeInsert": {
+        "query": "mutation MyMutation($data: InvitationTypeInsertGQLModel!) { invitationTypeInsert(invitationType: $data) { id msg type { id name } } }",
         "variables": {
             "data": {
-              "name": "new category with new name"
+              "name": "new name invitation type insert"
             }
         }
     },
 
-    "eventCategoryInsert": {
-        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+    "presenceInsert": {
+        "query": "mutation MyMutation($data: PresenceInsertGQLModel!) { presenceInsert(presence: $data) { id msg presence { id created } } }",
         "variables": {
             "data": {
-              "name": "new category with new name"
+                "userId": "89d1e724-ae0f-11ed-9bd8-0242ac110002",
+                "eventId": "45b2df80-ae0f-11ed-9bd8-0242ac110002",
+                "invitationtypeId": "e871403c-a79c-11ed-b76e-0242ac110002",
+                "presencetypeId": "466398c6-a79c-11ed-b76e-0242ac110002"
             }
         }
     },
 
-    "eventCategoryInsert": {
-        "query": "mutation MyMutation($data: EventCategoryInsertGQLModel!) { eventCategoryInsert(eventCategory: $data) { category { id name } id msg } }",
+    "presenceTypeInsert": {
+        "query": "mutation MyMutation($data: PresenceTypeInsertGQLModel!) { presenceTypeInsert(presenceType: $data) { id msg type { id name } } }",
         "variables": {
             "data": {
-              "name": "new category with new name"
+              "name": "new name presence type insert"
             }
         }
     },
+
+    "eventCategoryUpdate": {
+        "query": "mutation MyMutation($data: EventCategoryUpdateGQLModel!) { eventCategoryUpdate(eventCategory: $data) { id msg category { id name nameEn } } }",
+        "variables": {
+            "data": {
+                "id": "061470d7-3463-44ad-9d3f-c4275951edf6",
+                "name": "Pluk nove",
+                "lastchange": "2024-02-27 07:34:27.304339"
+            }
+        }
+    },
+    
+    "eventTypeUpdate": {
+        "query": "mutation MyMutation($data: EventTypeUpdateGQLModel!) { eventTypeUpdate(eventType: $data) { id msg type { id name } } }",
+        "variables": {
+            "data": {
+                "id": "c0a12392-ae0e-11ed-9bd8-0242ac110002",
+                "name": "P nove",
+                "lastchange": "2024-02-27 07:34:27.338159"
+            }
+        }
+    },
+    
+    "eventUpdate": {
+        "query": "mutation MyMutation($data: EventUpdateGQLModel!) { eventUpdate(event: $data) { id msg event { id name nameEn } } }",
+        "variables": {
+            "data": {
+                "id": "08ff1c5d-9891-41f6-a824-fc6272adc189",
+                "name": "2022/23 ZS nove",
+                "lastchange": "2024-02-27 07:34:27.446881"
+            }
+        }
+    },
+    
+    "invitationTypeUpdate": {
+        "query": "mutation MyMutation($data: InvitationTypeUpdateGQLModel!) { invitationTypeUpdate(invitationType: $data) { id msg type { id name } } }",
+        "variables": {
+            "data": {
+                "id": "e8714104-a79c-11ed-b76e-0242ac110002",
+                "name": "prijal nove",
+                "lastchange": "2024-02-27 07:34:27.403396"
+            }
+        }
+    },
+    
+    "presenceTypeUpdate": {
+        "query": "mutation MyMutation($data: PresenceTypeUpdateGQLModel!) { presenceTypeUpdate(presenceType: $data) { id msg type { id } } }",
+        "variables": {
+            "data": {
+                "id": "4663984e-a79c-11ed-b76e-0242ac110002",
+                "name": "dovolena nove",
+                "lastchange": "2024-02-27 07:34:27.373086"
+            }
+        }
+    },
+    
+    "presenceUpdate": {
+        "query": "mutation MyMutation($data: PresenceUpdateGQLModel!) { presenceUpdate(presence: $data) { id msg presence { id } } }",
+        "variables": {
+            "data": {
+                "id": "89d1f2d2-ae0f-11ed-9bd8-0242ac110002",
+                "presencetypeId": "4663988a-a79c-11ed-b76e-0242ac110002",
+                "lastchange": "2024-02-27 07:34:27.541794"
+            }
+        }
+    },
+
+    "eventGroupDelete": {
+        "query": "mutation MyMutation($id: UUID!) { eventGroupDelete(id: $id) { id msg eventGroup { id } } }",
+        "variables": {
+            "id": "9baf3dca-ae0f-11ed-9bd8-0242ac110002"
+        }
+    },
+
+    "presenceDelete": {
+        "query": "mutation MyMutation($id: UUID!) { presenceDelete(id: $id) { id msg presence { id } } }",
+        "variables": {
+            "id": "89d1f412-ae0f-11ed-9bd8-0242ac110002"
+        }
+    }
 
 
 
