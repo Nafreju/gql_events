@@ -393,13 +393,6 @@ def runUserInfo(port, user):
     print(f"UserInfoServer stopped at {port}")
     logging.info(f"UserInfoServer stopped at {port}")
 
-# @pytest.fixture(scope=serversTestscope)
-# def UserInfoServer(monkeypatch, AdminUser):
-#     UserInfoServerPort = 8126
-#     monkeypatch.setenv("JWTRESOLVEUSERPATHURL", f"http://localhost:{UserInfoServerPort}/oauth/userinfo") #/oauth/publickey
-#     logging.info(f"JWTRESOLVEUSERPATHURL set to `http://localhost:{UserInfoServerPort}/oauth/userinfo`")
-#     yield from runUserInfo(UserInfoServerPort, AdminUser)
-
 @pytest.fixture(scope=serversTestscope)
 def OAuthServer(monkeypatch, OAuthport, AdminUser):
     monkeypatch.setenv("JWTPUBLICKEYURL", f"http://localhost:{OAuthport}/oauth/publickey") #/oauth/publickey

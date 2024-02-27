@@ -1,16 +1,5 @@
 import pytest
 
-# import os
-# os.environ["GQLUG_ENDPOINT_URL"] = "http://localhost:8124/gql"
-# print(os.environ.get("GQLUG_ENDPOINT_URL", None))
-
-# from ..gqlshared import (
-#     createByIdTest, 
-#     createPageTest, 
-#     createResolveReferenceTest, 
-#     createFrontendQuery, 
-#     createUpdateQuery
-# )
 
 from .gt_utils import (
     createByIdTest, 

@@ -21,10 +21,6 @@ def test_getAuthorizationToken_without_request():
 
     # Check if the function has a __wrapped__ attribute (if it's wrapped with @cache)
     original_function = getAuthorizationToken
-    # if hasattr(getAuthorizationToken, '__wrapped__'):
-    #     original_function = getAuthorizationToken.__wrapped__
-    # else:
-    #     original_function = getAuthorizationToken
 
     try:
         # Call the function and check if it raises an AttributeError
