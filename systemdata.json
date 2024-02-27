@@ -991,7 +991,8 @@
         {"id": "e8713fce-a79c-11ed-b76e-0242ac110002", "name": "pozvaný nepovinně", "name_en": "invited voluntary"},
         {"id": "e871403c-a79c-11ed-b76e-0242ac110002", "name": "přijal", "name_en": "accepted"},
         {"id": "e87140aa-a79c-11ed-b76e-0242ac110002", "name": "přijal nejistě", "name_en": "tentatively accepted"},
-        {"id": "e8714104-a79c-11ed-b76e-0242ac110002", "name": "odmítl", "name_en": "rejected"}
+        {"id": "e8714104-a79c-11ed-b76e-0242ac110002", "name": "odmítl", "name_en": "rejected"},
+        {"id": "e8714104-a79c-11ed-b76e-0242ac110003", "name": "", "name_en": ""}
     ],
     "eventpresencetypes": [
         {"id": "466398c6-a79c-11ed-b76e-0242ac110002", "name": "Přítomen", "name_en": ""},
