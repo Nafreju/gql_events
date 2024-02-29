@@ -32,3 +32,12 @@ class EventModel(BaseModel):
     #sqlalchemy requirements
     eventtype = relationship("EventTypeModel", back_populates="events", uselist=False)
     presences = relationship("PresenceModel", back_populates="event", uselist=True)
+
+
+    """
+    #https://docs.sqlalchemy.org/en/20/orm/inheritance.html#joined-table-inheritance
+    __mapper_args__ = {
+        "polymorphic_identity": "event",
+        "polymorphic_on": "type",
+    }
+    """

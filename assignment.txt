@@ -71,13 +71,8 @@ https://docs.docker.com/compose/
 
 TODO:
 
-Co se SZ - je jako jiný předmět
-Exam bude dědit z Events a dalších ... jaký formát návrhu chcete?
+Exam "is an" Event (not has an Event)
 
-jak sqlalchemy dědičnost?
-ExamModel - má alternovat eventtype!? - jakmile budou všechny modely vytvořeny, eventtype ztratí smysl
-ExamModel bude 1:1 s EventModel - sdílíme presence (uživatel/skupina), eventtype
-ExamModel bude mít atributy "SubjectModel" z jiné federace?
 
 
 
