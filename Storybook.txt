@@ -1,0 +1,90 @@
+Storybook – GQL EVENTS 
+Timeline: 
+-16. 10 init commit, compose context path
+-8. 11  db feeder systemdata
+-13. 11 evenTypeById works 
+-15. 11
+o	presenceTypeById, invitationTypeById, event, presence GQL model by id 
+o	Demo mode in main 
+o	Read done, update in progress
+
+-16. 11 
+o	1.PROJEKTOVÝ DEN
+o	InvitationTypeGQLModel update
+o	PresencetypeGQLModel update 
+o	after consultation updates
+-20. 11 
+o	StateExam creating
+o	eventModel refactor 
+-21.11  event graph, presence graph 
+-22.11
+o	DBdefinitions splitted into files 
+o	DB changed attributes 
+o	Relationships 
+-23. 11
+o	GQL Model splitted into files 
+o	StateExamGQLModel 
+o	Docker works
+o	StateExamModel created 
+o	Containers
+o	Loaders deleted, prepared for queries 
+-25. 11
+o	Create docker-image.yml 
+o	Update docker-image.yml
+-26.11 
+o	StateExam not working 
+o	Event valid changed
+o	InvitationType done change default values 
+o	CRUD done 
+
+-27.11 2. PROJEKTOVÝ DEN 
+-29.11    Preparing for testing 
+-11. 12   Tests refactoring not working 
+-12. 12   67 % coverage 
+-4. 1 TO DO 
+-9. 1 
+o	Where in eventcategory 
+o	Skip limit eventcategory 
+-10. 1
+o	Dockerfile unitests deleted 
+o	Permissions 
+o	Where in GQLModels
+o	UUID
+-11. 11
+o	Where filters 
+o	Stateexam deleted 
+o	Attributes 
+o	Permissions classes
+o	Trying tests
+-12. 11 65 % coverage 
+-13.11 
+o	78 % coverage without permissions
+o	Minor refactor 
+o	Minor updates in DBdefinitions 
+o	Permission classes
+o	Where 
+o	Coverage 89 % 
+-14. 11
+o	Minor Test updates
+o	Resolver 
+
+-15. 11 3. PROJEKTOVÝ DEN 
+o	Statement for federations 
+-17. 11 
+o	89 % coverage 
+-18. 11
+o	Trying tests to do 90%
+o	Federation events with tests done 
+o	Test delete work 
+-5. 2
+o	Demo models
+o	Tests
+-19. 2 Merge test mistake 
+-26. 2 
+o	Hunting points for final project day 
+o	Coverage 90 %
+o	Event queries manuály added
+27. 2 
+o	Event_queries done 
+o	Commented code deleted 
+o	Read me 
