@@ -47,6 +47,105 @@ def ReadAllRoles():
     roles = list(map(lambda item: {**item, "nameEn": item["name_ne"]}, roles))
     return [*roles]
 
+# async def getRoles(userId="", roleUrlEndpoint="http://localhost:8088/gql/", isDEMO=True):
+#     query = """query($userid: UUID!){
+#             roles: roleByUser(userId: $userid) {
+#                 id
+#                 valid
+#                 roletype { id }
+#                 group { id }
+#                 user { id }
+#             }
+#         }
+# """
+#     variables = {"userid": userId}
+#     headers = {}
+#     json = {
+#         "query": query,
+#         "variables": variables
+#     }
+
+#     print("roleUrlEndpoint", roleUrlEndpoint)
+#     async with aiohttp.ClientSession() as session:
+#         print(f"query {roleUrlEndpoint} for json={json}")
+#         async with session.post(url=roleUrlEndpoint, json=json, headers=headers) as resp:
+#             print(resp.status)
+#             if resp.status != 200:
+#                 text = await resp.text()
+#                 print(text)
+#                 return []
+#             else:
+#                 respJson = await resp.json()
+
+#     print(respJson)
+
+#     assert respJson.get("errors", None) is None
+#     respdata = respJson.get("data", None)
+#     assert respdata is not None
+#     roles = respdata.get("roles", None)
+#     assert roles is not None
+#     print("roles", roles)
+#     return [*roles]
+
+#     pass
+
+
+
+# async def ReadRoles(
+#     userId="2d9dc5ca-a4a2-11ed-b9df-0242ac120003", 
+#     roleUrlEndpoint="http://localhost:8088/gql/",
+#     demo=True):
+
+#     query = """query($userid: UUID!){
+#             roles: roleByUser(userId: $userid) {
+#                 id
+#                 valid
+#                 roletype { id }
+#                 group { id }
+#                 user { id }
+#             }
+#         }
+# """
+#     variables = {"userid": userId}
+#     headers = {}
+#     json = {
+#         "query": query,
+#         "variables": variables
+#     }
+
+#     print("roleUrlEndpoint", roleUrlEndpoint)
+#     async with aiohttp.ClientSession() as session:
+#         print(f"query {roleUrlEndpoint} for json={json}")
+#         async with session.post(url=roleUrlEndpoint, json=json, headers=headers) as resp:
+#             print(resp.status)
+#             if resp.status != 200:
+#                 text = await resp.text()
+#                 print(text)
+#                 return []
+#             else:
+#                 respJson = await resp.json()
+
+#     print(respJson)
+
+#     assert respJson.get("errors", None) is None
+#     respdata = respJson.get("data", None)
+#     assert respdata is not None
+#     roles = respdata.get("roles", None)
+#     assert roles is not None
+#     print("roles", roles)
+#     return [*roles]
+
+# def WhereAuthorized(userRoles, roleIdsNeeded=[]):
+
+#     # 👇 filtrace roli, ktere maji pozadovanou uroven autorizace
+#     roletypesFiltered = filter(lambda item: item["roletype"]["id"] in roleIdsNeeded, userRoles)
+#     # 👇 odvozeni, pro ktere skupiny ma tazatel patricnou uroven autorizace
+#     groupsAuthorizedIds = map(lambda item: item["group"]["id"], roletypesFiltered)
+#     # 👇 konverze na list
+#     groupsAuthorizedIds = list(groupsAuthorizedIds)
+#     # cokoliv se tyka techto skupin, na to autor muze
+#     print("groupsAuthorizedIds", groupsAuthorizedIds)
+#     return groupsAuthorizedIds
 
 rolelist = ReadAllRoles() if not isDEMO else [
         {
